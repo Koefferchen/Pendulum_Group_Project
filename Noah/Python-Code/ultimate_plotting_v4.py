@@ -1,17 +1,15 @@
-#
-#   Info an Korrektur:  Dies ist ein Pythonhilfsprogramm, welches von plotting_data genutzt wird
-#
-# ------------------ ultimate_plotting.py ---- Version 01 ---- Last Update: 13.03.24 --------------------
+
+# ------------------ ultimate_plotting.py ---- Version 04 ---- Last Update: 17.07.24 --------------------
 
 
-import numpy as np                      # falls noch nicht installiert, run:   !pip install numpy
-import matplotlib.pyplot as plt         # falls noch nicht installiert, run:   !pip install matplotlib
-import seaborn as sns                   # falls noch nicht installiert, run:   !pip install seaborn
-from scipy.optimize import curve_fit    # falls noch nicht installiert, run:   !pip install scipy
+import numpy as np                      # if not installed, run:   !pip install numpy
+import matplotlib.pyplot as plt         # if not installed, run:   !pip install matplotlib
+import seaborn as sns                   # if not installed, run:   !pip install seaborn
+from scipy.optimize import curve_fit    # if not installed, run:   !pip install scipy
 
 
-# ----------------------- Dies ist das Hauptprogramm zum erstellen eines Plots ---------------------------
-#--------------------- Es soll durch die Funktion ultimate_plot aufgerufen werden ------------------------ 
+# ----------------------- This is the main program to create plots from data points ---------------------------
+#-------------------------------- It is meant to be casted by "ultimate_plot" ---------------------------------
 
 def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict):
     
@@ -39,7 +37,11 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
     plt.rc ('ytick',  labelsize = gfd["y_tick_font_size"]) 
     plt.rc ('legend', fontsize  = gfd["legend_font_size"])     
 
-    
+    if( gfd["log_scaling_xy"][0] == True ):                                               # Stellt logarithmische Skalierung der Achsen ein (Basis 10)
+        ax.set_xscale("log", base=gfd["log_scaling_xy"][2])
+    if( gfd["log_scaling_xy"][1] == True ):
+        ax.set_yscale("log", base=gfd["log_scaling_xy"][2])
+
     ax.set_title(writtings["titel"])                                                      # Beschrifte die Achsen mit Text
     ax.set_xlabel(writtings["x_beschriftung"])
     ax.set_ylabel(writtings["y_beschriftung"])
@@ -55,18 +57,23 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
 
     for i in range( len(all_sample_format_dicts) ):
         
-        sample_format_dict = all_sample_format_dicts[i]           # trage nacheinander alle Messdaten mit ihren Farben & Größen ein
+        sample_format_dict = all_sample_format_dicts[i]             # trage nacheinander alle Messdaten mit ihren Farben & Größen ein
                
         x_data     = all_data[0 + 4*i]
         x_data_err = all_data[1 + 4*i]
         y_data     = all_data[2 + 4*i]
         y_data_err = all_data[3 + 4*i]
         
-        if (isinstance(x_data_err, float) == True):                    # implementiere shortcut zur Eingabe von überall gleichen Fehlern
+        if (isinstance(x_data_err, float) == True):                 # implementiere shortcut zur Eingabe von überall gleichen Fehlern
               x_data_err = np.full( len(x_data), x_data_err )
         if (isinstance(y_data_err, float) == True):
               y_data_err = np.full( len(y_data), y_data_err )
         
+        if ( x_data_err == False):                                  # damit errorbar versteht, dass keine Fehlerbalken gezeichnet werden (shortcut)       
+            x_data_err = None
+        if ( y_data_err == False):
+            y_data_err = None
+
         ax.errorbar(x_data, y_data , xerr = x_data_err, yerr = y_data_err, **sample_format_dict)
          
         if (zoom_parameters["do_zooming"] == True):                # trage in das Subwindow mit Zoom alle Messdaten ein
@@ -124,7 +131,8 @@ standard_format_dict = {
     "x_tick_font_size"     : 8,                     # Schriftgröße der x-Tick-Labels
     "y_tick_font_size"     : 8,                     # Schriftgröße der y-Tick-Labels
     "custom_x_range"       : [ False, 0, 100 ],     # Wahl des Bildausschnitts vom Koordinatensystem (Hauptplot)
-    "custom_y_range"       : [ False, 0, 100 ]      # Format: [ ja/nein, unteres Limit, oberes Limit ]
+    "custom_y_range"       : [ False, 0, 100 ],     # Format: [ ja/nein, unteres Limit, oberes Limit ]
+    "log_scaling_xy"       : [ False, False, 10 ]   # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
 }  
 # ---> als 'general_format_dict'
 
@@ -201,7 +209,7 @@ def least_sqare_fit():
     return x_fit, y_fit
 
 
-def linear_fit(x_data, y_data, fit_range, y_err = None):
+def linear_fit(x_data, y_data, fit_range , y_err = None):
     
     def function(x, a, b):
         return a * x + b
@@ -217,4 +225,4 @@ def linear_fit(x_data, y_data, fit_range, y_err = None):
     x_fit = np.linspace(fit_range[0], fit_range[1], 300)
     y_fit = function(x_fit, parameters[0], parameters[1])
     
-    return x_fit, y_fit
+    return x_fit, y_fit, parameters[0], parameters[1]
