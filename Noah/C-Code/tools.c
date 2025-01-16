@@ -1,9 +1,3 @@
-// "gcc -o ./out/made main.c my_RK4.c solve_DGLs.c DGLs.c tools.c header.h -lm"           (kompilieren)
-// "./out/made"                                                                           (ausfuehren)
-// Tobias Neuhoff, Noah Reinhardt                                                         (Autoren)
-
-// alternativ: "make"                                                                     (kompilieren & ausfuehren)
-
 
 #include "header.h"
 
@@ -21,7 +15,7 @@ int display_numb_list( double* numb_list)               // should read out all e
     return 0;
 }
 
-    // speichert 7 double-Listen spaltenweise in einer txt
+    // saves 7 double-lists by columns in a .txt
 int save_numb_list7 ( double* numb_list1, double* numb_list2, double* numb_list3, double* numb_list4, double* numb_list5, double* numb_list6, double* numb_list7, char* save_as )
 {
     int length = (int)numb_list1[0];                 // extract length from first element of list
@@ -38,30 +32,7 @@ int save_numb_list7 ( double* numb_list1, double* numb_list2, double* numb_list3
     return 0;
 }
 
-    // Interpoliert linear zwischen den Werten eines Arrays --> Aufruf mit nicht-ganzzaligen Indizes möglich
-double interpolation( double array[], double index )
-{
-    int length = (int)array[0];
-    for(int i = 1; i <= length ; i++ )
-    {
-        if( ((double)i <= index) && (index < (double)(i+1)) )
-        {
-            return ( array[i] + ( array[i+1] - array[i] )*(index - i) );
-        }
-    }
-    if ((0.0 <= index) && (index < 1.0))
-    {
-        return array[1];
-    } 
-    else
-    {
-        printf("Etwas ist schief gelaufen bei der Interpolation einer arrays!\n");
-        return 0.0;
-    }
-}
-
-
-    // erstellt einen double-array voller Nullen gewünschter Länge
+    // creates an array full of "0" of given length
 double *create_null( int length )
 {
     double *array = (double *)malloc( (length+1) * sizeof(double) );
