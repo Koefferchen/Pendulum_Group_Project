@@ -3,20 +3,107 @@
 
 int main(void)
 {
-
-    double t_end    = 50.0;                 // simulation time [seconds]            
-    double h        = 0.001;                 // step size [steps per second]
+    simple_pendulum();
+    double_pendulum();
+    triple_pendulum();
     
-    int    steps = (int)(t_end/h);          // Initialisation
+    return 0;
+}
+
+int simple_pendulum(void)
+{
+
+    double t_end        = 50.0;             // simulation time [seconds]            
+    double h            = 0.001;            // step size [steps per second]
+    double g_grav       = 9.81;
+    double length       = 2.0;       
+    double theta_0      = 0.3 * M_PI; 
+    double theta_dot_0  = -0.2; 
+
+    int    steps = (int)(t_end/h);      // Initialisation
+    double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0};
+    double params_extended[steps+1];
     double t_values[steps+1];
-    double theta[steps+1];                     // theta(t)
-    double theta_dot[steps+1];                     // theta_dot(t)
+    double theta[steps+1];              // theta(t)
+    double theta_dot[steps+1];          // theta_dot(t)
     double theta_analy[steps+1];
-    double* null = create_null(steps);      // null
+    double* null = create_null(steps);  // null
+    merge_arrays(6, params, steps, params_extended);
 
-    solve_DE_pend( h, t_end, t_values, theta, theta_dot );       
-    solve_analyt_pend( h, t_end, theta_analy);                                  // solve DE using RK4
-    save_numb_list7(t_values, theta, theta_dot, theta_analy, null, null, null, "../data/data_pend.txt" );   // save data in .txt
+    solve_simp_pend( params, t_values, theta, theta_dot );       
+    solve_analyt_pend( params, theta_analy );                                  // solve DE using RK4
+    save_numb_list7(t_values, theta, theta_dot, theta_analy, params_extended, null, null, "../data/data_simp_pend.txt" );   // save data in .txt
 
+    free(null);
+    return 0;
+}
+
+int double_pendulum(void)
+{
+    double t_end        = 50.0;             // simulation time [seconds]            
+    double h            = 0.01;            // step size [steps per second]
+    double g_grav2      = 9.81;
+    double mass_up      = 1.0;
+    double mass_down    = 1.0;
+    double length_up    = 1.0;
+    double length_down  = 1.0;
+    double theta1_0     = -0.5 *M_PI;
+    double theta1_dot_0 = 0.0;
+    double theta2_0     = 0.4 *M_PI;
+    double theta2_dot_0 = 0.0;
+    
+    int    steps = (int)(t_end/h);      // Initialisation
+    double params[] = {t_end, h, g_grav2, mass_up, mass_down, length_up, length_down, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0};
+    double params_extended[steps+1];
+    double t_values[steps+1];
+    double theta1[steps+1];
+    double theta1_dot[steps+1];
+    double theta2[steps+1];
+    double theta2_dot[steps+1];
+    double* null = create_null(steps);
+    merge_arrays(11, params, steps, params_extended);
+  
+    solve_doub_pend( params, t_values, theta1, theta1_dot, theta2, theta2_dot );
+    save_numb_list7( t_values, theta1, theta1_dot, theta2, theta2_dot, params_extended, null, "../data/data_doub_pend.txt" );
+
+    free(null);
+    return 0;
+}
+
+int triple_pendulum(void)
+{
+    double t_end         = 50.0;             // simulation time [seconds]            
+    double h             = 0.0005;            // step size [steps per second]
+    double g_grav        = 9.81;
+    double mass_1        = 1.0;
+    double mass_2        = 1.0;
+    double mass_3        = 1.0;
+    double length_1      = 1.0;
+    double length_2      = 1.0;
+    double length_3      = 1.0;
+    double theta_1_0     = 0.4 *M_PI;
+    double theta_1_dot_0 = 0.0 *M_PI;
+    double theta_2_0     = 0.42 *M_PI;
+    double theta_2_dot_0 = 0.0 *M_PI;
+    double theta_3_0     = 0.44 *M_PI;
+    double theta_3_dot_0 = 0.0 *M_PI;
+
+    int    steps = (int)(t_end/h); 
+    double params[] = { t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
+    double params_extended[steps+1];
+    double t_values[steps+1];
+    double theta1[steps+1];
+    double theta1_dot[steps+1];
+    double theta2[steps+1];
+    double theta2_dot[steps+1];
+    double theta3[steps+1];
+    double theta3_dot[steps+1];
+    double* null = create_null(steps);
+    merge_arrays(15, params, steps, params_extended);
+
+    solve_trip_pend( params, t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot );
+    save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, null, "../data/data_trip_pend.txt" );
+
+    free(null);
     return 0;
 }

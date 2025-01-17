@@ -32,6 +32,23 @@ int save_numb_list7 ( double* numb_list1, double* numb_list2, double* numb_list3
     return 0;
 }
 
+    // saves 7 double-lists by columns in a .txt
+int save_numb_list9 ( double* numb_list1, double* numb_list2, double* numb_list3, double* numb_list4, double* numb_list5, double* numb_list6, double* numb_list7, double* numb_list8, double* numb_list9, char* save_as )
+{
+    int length = (int)numb_list1[0];                 // extract length from first element of list
+   
+    FILE *file_pointer;                             // open file in write-mode and save its address
+    file_pointer = fopen(save_as, "w"); 
+    
+    for( int i = 0 ; i < length+1 ; i++ )
+    {
+        fprintf( file_pointer, "%lf    %lf    %lf    %lf    %lf    %lf    %lf    %lf    %lf\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i], numb_list8[i], numb_list9[i] );
+    }
+
+    fclose(file_pointer);
+    return 0;
+}
+
     // creates an array full of "0" of given length
 double *create_null( int length )
 {
@@ -42,4 +59,21 @@ double *create_null( int length )
         array[i+1] = 0.0;
     }
     return array;
+}
+
+    // copies the entries of the shorter array "old_array" into the empty longer array "new_array" (from left to right)
+int merge_arrays( int old_length, double old_array[], int new_length, double new_array[] )
+{
+    new_array[0] = new_length;
+
+    for( int i = 0; i < old_length; i++ )
+    {
+        new_array[i+1] = old_array[i];
+    }
+    for( int i = old_length; i < new_length; i++ )
+    {
+        new_array[i+1] = 0.0;
+    }
+
+    return 0;
 }

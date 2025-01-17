@@ -1,7 +1,12 @@
 #!/bin/bash
+
 cd ./C-Code
 make
+
 cd ../Python-Code
-python3 create_plots.py
+python3 plotting_simp_pend.py
+python3 plotting_doub_pend.py
+python3 plotting_trip_pend.py
+
 cd ..
 
