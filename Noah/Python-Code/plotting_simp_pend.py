@@ -38,7 +38,7 @@ def ultimate_plot_pend():
     all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2 ]
     
     writtings = {
-        "titel"           : r"Solving $\ddot{\theta} = - \omega^{2} \cdot \theta$",
+        "titel"           : r"Solving $\ddot{\theta} = - \sqrt{ \frac{g}{l} } \cdot \sin{(\theta)}$",
         "x_beschriftung"  : r"Time $t$ [$s$]",
         "y_beschriftung"  : r"Angle $\theta$ [$rad$]"
     }
@@ -53,6 +53,7 @@ def ultimate_plot_pend():
     save_plot = True, "../plots/plot_simp_pend.jpg"                                      
         
     ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
+ultimate_plot_pend()
 ultimate_plot_pend()
 
 

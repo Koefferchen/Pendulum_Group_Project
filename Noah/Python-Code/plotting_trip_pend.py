@@ -75,7 +75,7 @@ ultimate_plot_pend()
 def ultimate_plot_pend_phasespace():
     
     sample_format_dict_1 = {
-        "label"      : r"upper mass $(\theta_{1},\dot{\theta_{1}})$",         
+        "label"      : r"upper mass $(\theta_{1},\dot{\theta}_1)$",         
         "fmt"        : '-', 
         "color"      : sns.color_palette("dark")[0],                            
         "markersize" : 1, 
@@ -84,7 +84,7 @@ def ultimate_plot_pend_phasespace():
         "alpha"      : 1                                   
     }
     sample_format_dict_2 = {
-        "label"      : r"middle mass $(\theta_{2},\dot{\theta_{2}})$",         
+        "label"      : r"middle mass $(\theta_{2},\dot{\theta}_2)$",         
         "fmt"        : '-', 
         "color"      : sns.color_palette("dark")[6],                            
         "markersize" : 1, 
@@ -93,7 +93,7 @@ def ultimate_plot_pend_phasespace():
         "alpha"      : 1                                   
     }
     sample_format_dict_3 = {
-        "label"      : r"lower mass $(\theta_{3},\dot{\theta_{3}})$",         
+        "label"      : r"lower mass $(\theta_{3},\dot{\theta}_3)$",         
         "fmt"        : '-', 
         "color"      : sns.color_palette("dark")[9],                            
         "markersize" : 1, 
