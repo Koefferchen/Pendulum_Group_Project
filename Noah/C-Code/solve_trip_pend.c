@@ -50,11 +50,11 @@ void derhs_trip_pend( int nDifEqu, double t, double y[], double y_dot[], double 
     double v_2 = a_2 * c_1 / (a_1 * c_3) - c_2/c_3;
     double v_3 = a_3 * b_1 / (a_1 * b_2) - b_3/b_2;
 
-    y_dot[5] = ( k_13/e_3 + v_2 * k_12 / (e_2 * e_3) )*( 1.0 / (1.0 - v_2*v_3 / (e_2*e_3)) );
+    y_dot[5] = ( k_13/e_3 + v_2 * k_12 / (e_2 * e_3) ) / (1.0 - v_2*v_3 / (e_2*e_3)) ;
 
     y_dot[3] =  k_12/e_2 + v_3/e_2 * y_dot[5]; 
 
-    y_dot[1] =  -1.0/a_1 * ( a_2*y_dot[3] + a_3*y_dot[5] );
+    y_dot[1] =  -1.0/a_1 * ( a_2*y_dot[3] + a_3*y_dot[5] + g_1 );
 
     y_dot[0] = y[1];
 
@@ -65,7 +65,7 @@ void derhs_trip_pend( int nDifEqu, double t, double y[], double y_dot[], double 
 
 }
 
-int solve_trip_pend( double params[], double t_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[], double theta3_sol[], double theta3_dot_sol[] ) 
+int solve_trip_pend( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[], double theta3_sol[], double theta3_dot_sol[] ) 
 {
     int     nDifEqu = 6;                    // here: 6 DEs
     double  t_end   = params[0];
@@ -79,6 +79,7 @@ int solve_trip_pend( double params[], double t_values[], double theta1_sol[], do
     double  k3[nDifEqu];
     double  k4[nDifEqu];
     t_values[0]         = steps;            // first entry = length of array
+    E_values[0]         = steps;
     theta1_sol[0]       = steps;      
     theta1_dot_sol[0]   = steps;
     theta2_sol[0]       = steps;
@@ -104,9 +105,41 @@ int solve_trip_pend( double params[], double t_values[], double theta1_sol[], do
         theta2_dot_sol[j+1]  = y[3];
         theta3_sol[j+1]      = y[4];
         theta3_dot_sol[j+1]  = y[5];
-    
+        calc_trip_energy( y, params, &E_values[j+1] );
         t = t + h; 
     } 
     
+    return 0;
+}
+
+int calc_trip_energy( double y[], double params[], double *E_value )
+{
+        // unpacking parameters
+    double g_grav        = params[2];
+    double mass_1        = params[3];
+    double mass_2        = params[4];
+    double mass_3        = params[5];
+    double length_1      = params[6];
+    double length_2      = params[7];
+    double length_3      = params[8];
+    double theta1        = y[0];
+    double theta1_dot    = y[1];
+    double theta2        = y[2];
+    double theta2_dot    = y[3];
+    double theta3        = y[4];
+    double theta3_dot    = y[5];
+    double mass_123 = mass_1 + mass_2 + mass_3;
+    double mass_23  = mass_2 + mass_3; 
+
+    *E_value =  0.5 * mass_123 * length_1*length_1 * theta1_dot*theta1_dot +
+                0.5 * mass_23 * length_2*length_2 * theta2_dot*theta2_dot + 
+                0.5 * mass_3 * length_3*length_3 * theta3_dot*theta3_dot + 
+                mass_23 * length_1*length_2 * theta1_dot*theta2_dot * cos(theta1-theta2) +
+                mass_3 * length_1*length_3 * theta1_dot*theta3_dot * cos(theta1-theta3) + 
+                mass_3 * length_2*length_3 * theta2_dot*theta3_dot * cos(theta2-theta3) +
+                mass_123 * g_grav * length_1 * (1 - cos(theta1)) +
+                mass_23 * g_grav * length_2 * (1 - cos(theta2)) + 
+                mass_3 * g_grav * length_3 * (1 - cos(theta3));
+ 
     return 0;
 }

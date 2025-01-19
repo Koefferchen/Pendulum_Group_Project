@@ -25,7 +25,7 @@ int save_numb_list7 ( double* numb_list1, double* numb_list2, double* numb_list3
     
     for( int i = 0 ; i < length+1 ; i++ )
     {
-        fprintf( file_pointer, "%lf    %lf    %lf    %lf    %lf    %lf    %lf\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i] );
+        fprintf( file_pointer, "%+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i] );
     }
 
     fclose(file_pointer);
@@ -42,7 +42,7 @@ int save_numb_list9 ( double* numb_list1, double* numb_list2, double* numb_list3
     
     for( int i = 0 ; i < length+1 ; i++ )
     {
-        fprintf( file_pointer, "%lf    %lf    %lf    %lf    %lf    %lf    %lf    %lf    %lf\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i], numb_list8[i], numb_list9[i] );
+        fprintf( file_pointer, "%+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i], numb_list8[i], numb_list9[i] );
     }
 
     fclose(file_pointer);
