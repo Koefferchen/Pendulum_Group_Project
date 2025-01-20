@@ -8,6 +8,8 @@ int main(void)
     triple_pendulum();
 
     triple_chaos();
+
+    double_poincare();
     
     return 0;
 }
@@ -158,6 +160,54 @@ int triple_chaos(void)
     solve_trip_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot );
     save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_chaos_c.txt" );
 
+
+    free(null);
+    return 0;
+}
+
+int double_poincare(void)
+{    
+    
+    double t_end        = 20.0;             // simulation time [seconds]            
+    double h            = 0.01;            // step size [steps per second]
+    double g_grav2      = 9.81;
+    double mass_1       = 5.0;
+    double mass_2       = 1.0;
+    double length_1     = 1.0;
+    double length_2     = 1.0;
+
+    double theta1_0     = -0.5 *M_PI;       // fixed for given Poincare-Section
+    double theta1_dot_0 = 0.0;              // fixed for given Poincare-Section
+    double theta2_0     = 0.0;        // 
+    double theta2_dot_0 = 0.0;
+    int    repitions    = 20;
+    
+    int    steps = (int)(t_end/h);      // Initialisation
+    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0};
+
+
+    double **data = create_2d_matrix( 4*repitions, steps+1, 0.0)
+
+    for(int j = 0; j < repitions; j++)
+    {
+        double *t_values    = data[4*j +0];
+        double *theta2      = data[4*j +1];
+        double *theta2_dot  = data[4*j +2];
+        double *params_ext  = data[4*j +3];
+        params[8] = j * M_PI / repitions;
+        params[10] = calc_doub_theta2_0(...);
+        merge_arrays(11, params, steps, params_extended);
+        solve_doub_poincare( params, t_values, theta2, theta2_dot );
+
+
+    }
+
+
+        
+
+  
+
+    
 
     free(null);
     return 0;

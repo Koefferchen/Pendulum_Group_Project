@@ -31,7 +31,11 @@
     int     solve_doub_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[] ); 
     void    derhs_doub_pend     ( int nDifEqu, double t, double y[], double y_dot[], double params[] );
     int     calc_doub_energy    ( double y[], double params[], double *E_value );
-    
+    int     double_poincare     (void);
+    int     calc_doub_theta2_0  ( double params[], double E_value );
+    int     solve_doub_poincare ( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[] ); 
+
+
         // triple pendulum
     int     triple_chaos        (void);    
     int     triple_pendulum     (void);
@@ -46,4 +50,9 @@
     int     save_numb_list7     ( double* numb_list1, double* numb_list2, double* numb_list3, double* numb_list4, double* numb_list5, double* numb_list6, double* numb_list7, char* save_as );
     int     save_numb_list9     ( double* numb_list1, double* numb_list2, double* numb_list3, double* numb_list4, double* numb_list5, double* numb_list6, double* numb_list7, double* numb_list8, double* numb_list9, char* save_as );
     int     merge_arrays        ( int old_length, double old_array[], int new_length, double new_array[] );
+    double  **create_2d_matrix  (int x_dim, int y_dim, double initial_value);
+    int     save_matrix         ( double **matrix, int x_dim, int y_dim, char* save_as );
+    int     free_2d_matrix      ( double **matrix );
+
+
 #endif
