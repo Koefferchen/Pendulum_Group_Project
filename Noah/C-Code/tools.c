@@ -77,3 +77,52 @@ int merge_arrays( int old_length, double old_array[], int new_length, double new
 
     return 0;
 }
+
+
+    // gibt pointer zu 2D-Matrix mit Dimensionen [x_dim, y_dim] zurück, aufgefüllt mit initial_value
+double **create_2d_matrix (int x_dim, int y_dim, double initial_value)
+{
+    double *linear_matrix      = (double *)malloc(x_dim * y_dim * sizeof(double));        // Initialisierung
+    double **quadratic_matrix  = (double **)malloc(x_dim * sizeof(double *));  
+
+    if( linear_matrix == NULL || quadratic_matrix == NULL ){ printf("Matrix konnte nicht angelegt werden!\n"); }    // Fehlercode bei Speicherversagen
+
+    for( int j = 0 ; j < x_dim * y_dim ; j++ )
+    {
+        linear_matrix[j] = initial_value;       // setze alle Elemente auf initial_value
+    }
+
+    for( int i = 0 ; i < x_dim ; i++ )
+    {
+        quadratic_matrix[i] = linear_matrix + i * y_dim;        // weise Zeiger zu
+    }
+
+    return quadratic_matrix;
+}
+
+    // gibt dynamisch Speicher einer 2D-Matrix frei
+int free_2d_matrix( double **matrix )
+{
+    free(matrix[0]);        // free "linear_matrix"
+    free(matrix);           // free "quadratic_matrix"
+    return 0;
+}
+
+    // speichert Matrix in txt
+int save_matrix( double **matrix, int x_dim, int y_dim, char* save_as )
+{
+    FILE *file_pointer;                             // open file in write-mode and save its address
+    file_pointer = fopen(save_as, "w"); 
+
+    for( int y = 0 ; y < y_dim ; y++ )
+    {
+        for( int x = 0 ; x < x_dim ; x++ )
+        {
+            fprintf(file_pointer, "%+.8e ", matrix[x][y]);
+        }
+        fprintf(file_pointer, "\n");
+    }
+
+    fclose(file_pointer);
+    return 0;
+}

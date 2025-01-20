@@ -44,7 +44,7 @@ void derhs_doub_pend( int nDifEqu, double t, double y[], double y_dot[], double 
 
 int solve_doub_pend( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[] ) 
 {
-    int     nDifEqu = 4;                    // here: 2 DEs
+    int     nDifEqu = 4;                    // here: 4 DEs
     double  t_end = params[0];
     double  h     = params[1];
     int     steps = (int)(t_end/h);
@@ -84,7 +84,7 @@ int solve_doub_pend( double params[], double t_values[], double E_values[], doub
     return 0;
 }
 
-
+    // calculates current energy from current position in phase space for the double pendulum
 int calc_doub_energy( double y[], double params[], double *E_value )
 {
         // unpacking parameters
@@ -103,6 +103,79 @@ int calc_doub_energy( double y[], double params[], double *E_value )
                 mass_2 * length_1*length_2 * theta1_dot*theta2_dot * cos(theta1-theta2) +
                 (mass_1+mass_2) * g_grav * length_1 * (1 - cos(theta1)) +
                 mass_2 * g_grav * length_2 * (1 - cos(theta2));
+
+    return 0;
+}
+
+    // calculates the theta2_dot_0 from given (theta1_0, theta1_dot_0, theta2_0, E) from energy conservation
+int calc_doub_theta2_0( double params[], double E_value )
+{
+    double g_grav       = params[2];
+    double mass_1       = params[3];
+    double mass_2       = params[4];
+    double length_1     = params[5];
+    double length_2     = params[6]; 
+    double theta1_0     = params[7];
+    double theta1_dot_0 = params[8];
+    double theta2_0     = params[9];
+    double* theta2_dot_0 = &params[10];
+
+    double alpha    = 0.5 * mass_2 * length_2*length_2;
+    double p        = mass_2 * theta1_dot_0 * length_1*length_2 * cos(theta1_0-theta2_0);
+    double q        = 0.5 * (mass_1+mass_2) * length_1*length_1 * theta1_dot_0*theta1_dot_0 -
+                        (mass_1+mass_2) * g_grav * length_1 * cos(theta1_0) -
+                        mass_2 * g_grav * length_2 * cos(theta2_0) -
+                        E_value;
+
+    *theta2_dot_0   = p/(2.0*alpha) * ( sqrt(1.0 - 4*alpha*q /p /p) - 1.0 );
+
+    return 0;
+}
+
+
+int solve_doub_poincare( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[] ) 
+{
+    int     nDifEqu = 4;                    // here: 4 DEs
+    double  t_end = params[0];
+    double  h     = params[1];
+    int     steps = (int)(t_end/h);
+    double  t = 0;
+    double  y[nDifEqu];                     // Initialisation 
+    double  yh[nDifEqu];
+    double  k1[nDifEqu];
+    double  k2[nDifEqu];
+    double  k3[nDifEqu];
+    double  k4[nDifEqu];
+
+    double theta1_sol[steps+1];
+    double theta1_dot_sol[steps+1];
+
+    y[0] = params[7];                         // Initial conditions at t_0
+    y[1] = params[8];                     
+    y[2] = params[9];
+    y[3] = params[10];
+
+    int i = 0;
+    for(int j = 0; j < steps; j++)
+    {
+        RuKu_4( nDifEqu, h, t, y, yh, k1, k2, k3, k4, &derhs_doub_pend, params);
+        
+        theta1_sol[j+1]     = y[0];
+        theta1_dot_sol[j+1] = y[1];
+        
+        if( (theta1_sol[j] < 0.0) && (theta1_sol[j+1] > 0.0) )
+            t_values[i+1]       = t;           
+            theta2_sol[i+1]     = y[2];
+            theta2_dot_sol[i+1] = y[3];
+            i++;
+    
+        t = t + h; 
+    } 
+    
+    t_values[0]         = i;            // first entry = length of array
+    theta2_sol[0]       = i;
+    theta2_dot_sol[0]   = i;
+
 
     return 0;
 }
