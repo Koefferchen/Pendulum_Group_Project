@@ -17,12 +17,12 @@ int main(void)
 int simple_pendulum(void)
 {
 
-    double t_end        = 15.0;             // simulation time [seconds]            
-    double h            = 0.001;            // step size [steps per second]
+    double t_end        = 10.0;             // simulation time [seconds]            
+    double h            = 0.01;            // step size [steps per second]
     double g_grav       = 9.81;
-    double length       = 2.0;       
+    double length       = 0.7;       
     double theta_0      = 0.3 * M_PI; 
-    double theta_dot_0  = -0.2; 
+    double theta_dot_0  = stand_up_theta_dot(length, g_grav, theta_0); 
 
     int    steps = (int)(t_end/h);      // Initialisation
     double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0};
@@ -168,25 +168,24 @@ int triple_chaos(void)
 int double_poincare(void)
 {    
     
-    double t_end        = 20.0;             // simulation time [seconds]            
-    double h            = 0.01;            // step size [steps per second]
+    double t_end        = 400.0;            // simulation time [seconds]            
+    double h            = 0.01;             // step size [steps per second]
     double g_grav2      = 9.81;
-    double mass_1       = 5.0;
+    double mass_1       = 1.0;
     double mass_2       = 1.0;
     double length_1     = 1.0;
     double length_2     = 1.0;
 
     double theta1_0     = -0.5 *M_PI;       // fixed for given Poincare-Section
     double theta1_dot_0 = 0.0;              // fixed for given Poincare-Section
-    double theta2_0     = 0.0;        // 
-    double theta2_dot_0 = 0.0;
+    double theta2_0;                        // iterates through [0, Pi]
+    double theta2_dot_0;                    // calculated to make the energy stay the same
+    double E_value      = 40.0;
     int    repitions    = 20;
     
     int    steps = (int)(t_end/h);      // Initialisation
-    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0};
-
-
-    double **data = create_2d_matrix( 4*repitions, steps+1, 0.0)
+    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions};
+    double **data = create_2d_matrix( 4*repitions, steps+1, 0.0);
 
     for(int j = 0; j < repitions; j++)
     {
@@ -194,21 +193,13 @@ int double_poincare(void)
         double *theta2      = data[4*j +1];
         double *theta2_dot  = data[4*j +2];
         double *params_ext  = data[4*j +3];
-        params[8] = j * M_PI / repitions;
-        params[10] = calc_doub_theta2_0(...);
-        merge_arrays(11, params, steps, params_extended);
+        params[8] = j * M_PI / (double)(repitions);
+        params[10] = calc_doub_theta2_0(params, E_value);
+        merge_arrays(13, params, steps, params_ext);
         solve_doub_poincare( params, t_values, theta2, theta2_dot );
-
 
     }
 
-
-        
-
-  
-
-    
-
-    free(null);
+    save_matrix( data, 4*repitions, steps+1, "../data/data_doub_poincare.txt");
     return 0;
 }

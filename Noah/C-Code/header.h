@@ -21,7 +21,7 @@
 
         // simple pendulum
     int     simple_pendulum     (void);
-    double  stand_up_theta_dot  ( double omega, double theta_0 );
+    double  stand_up_theta_dot  ( double length, double g_grav, double theta_0 );
     int     solve_simp_pend     ( double params[], double t_values[], double y1_sol[], double y2_sol[] );
     int     solve_analyt_pend   ( double params[], double* y_analytic );
     void    derhs_pend          ( int nDifEqu, double t, double y[], double k[], double params[] );
