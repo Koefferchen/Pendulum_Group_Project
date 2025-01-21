@@ -18,7 +18,7 @@ int simple_pendulum(void)
 {
 
     double t_end        = 10.0;             // simulation time [seconds]            
-    double h            = 0.01;            // step size [steps per second]
+    double h            = 0.0001;            // step size [steps per second]
     double g_grav       = 9.81;
     double length       = 0.7;       
     double theta_0      = 0.3 * M_PI; 
@@ -44,20 +44,20 @@ int simple_pendulum(void)
 
 int double_pendulum(void)
 {
-    double t_end        = 20.0;             // simulation time [seconds]            
-    double h            = 0.01;            // step size [steps per second]
+    double t_end        = 5.0;             // simulation time [seconds]            
+    double h            = 0.001;            // step size [steps per second]
     double g_grav2      = 9.81;
-    double mass_1       = 5.0;
+    double mass_1       = 1.0;
     double mass_2       = 1.0;
     double length_1     = 1.0;
     double length_2     = 1.0;
-    double theta1_0     = -0.5 *M_PI;
+    double theta1_0     = 3.0;
     double theta1_dot_0 = 0.0;
-    double theta2_0     = 0.4 *M_PI;
+    double theta2_0     = 3.0;
     double theta2_dot_0 = 0.0;
     
     int    steps = (int)(t_end/h);      // Initialisation
-    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0};
+    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta1_dot_0, theta2_0, theta2_dot_0};
     double params_extended  [steps+1];
     double t_values         [steps+1];
     double E_values         [steps+1];
@@ -180,8 +180,8 @@ int double_poincare(void)
     double theta1_dot_0 = 0.0;              // fixed for given Poincare-Section
     double theta2_0;                        // iterates through [0, Pi]
     double theta2_dot_0;                    // calculated to make the energy stay the same
-    double E_value      = 40.0;
-    int    repitions    = 20;
+    double E_value      = 10.0;
+    int    repitions    = 40;
     
     int    steps = (int)(t_end/h);      // Initialisation
     double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions};

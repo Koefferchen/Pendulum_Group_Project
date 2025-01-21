@@ -42,14 +42,14 @@ def ultimate_plot_pend():
 
     for i in range(repitions):
         
-        sample_format_dict["color"] = cycl_colormap[i]
-        print(sample_format_dict["color"])
+        sample_format_dict["color"] = cycl_colormap[i] 
         sample_size     = int(data[ 0 , 1 +4*i ])
-        theta2          = data[ 1:sample_size , 1 +4*i ]     
+        theta2          = data[ 1:sample_size , 1 +4*i ]
+        theta2          = (theta2 + np.pi) % (2*np.pi) - np.pi   
         theta2_dot      = data[ 1:sample_size , 2 +4*i ]
         data_set        = theta2, None, theta2_dot, None    
 
-        all_sample_format_dicts.append(sample_format_dict)
+        all_sample_format_dicts.append(sample_format_dict.copy())
         all_data = all_data + data_set
                            
     save_plot = True, "../plots/plot_doub_poincare.jpg"                                      

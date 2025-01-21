@@ -1,11 +1,14 @@
 
-# ------------------ ultimate_plotting.py ---- Version 05 ---- Last Update: 20.01.25 --------------------
+# ------------------ ultimate_plotting.py ---- Version 05 ---- Last Update: 21.01.25 --------------------
 
 
 import numpy as np                      # if not installed, run:   !pip install numpy
 import matplotlib.pyplot as plt         # if not installed, run:   !pip install matplotlib
+from matplotlib.colors import Normalize
+from matplotlib.cm import ScalarMappable
 import seaborn as sns                   # if not installed, run:   !pip install seaborn
 from scipy.optimize import curve_fit    # if not installed, run:   !pip install scipy
+
 
 
 # ----------------------- This is the main program to create plots from data points ---------------------------
@@ -46,6 +49,8 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
     ax.set_xlabel(writtings["x_beschriftung"])
     ax.set_ylabel(writtings["y_beschriftung"])
     
+    if not(gfd["colorbar"][0] == None ):
+        add_colorbar( fig, gfd )
     
     if (zoom_parameters["do_zooming"] == True):                                           # erstelle ein Subwindow im Plot mit Zoom
         sub_axes = plt.axes(zoom_parameters["window_position"] + zoom_parameters["window_size"])
@@ -136,7 +141,8 @@ standard_format_dict = {
     "y_tick_font_size"     : 8,                     # Schriftgröße der y-Tick-Labels
     "custom_x_range"       : [ False, 0, 100 ],     # Wahl des Bildausschnitts vom Koordinatensystem (Hauptplot)
     "custom_y_range"       : [ False, 0, 100 ],     # Format: [ ja/nein, unteres Limit, oberes Limit ]
-    "log_scaling_xy"       : [ False, False, 10 ]   # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
+    "log_scaling_xy"       : [ False, False, 10 ],  # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
+    "colorbar"             : [ None, "colorbar", -1, 1 ]   # add a colorbar to the right side of your plot ranging [-1, 1]
 }  
 # ---> als 'general_format_dict'
 
@@ -230,3 +236,16 @@ def linear_fit(x_data, y_data, fit_range , y_err = None):
     y_fit = function(x_fit, parameters[0], parameters[1])
     
     return x_fit, y_fit, parameters[0], parameters[1]
+
+
+def add_colorbar(fig, format_dict):
+
+    cbar_width = 0.02
+    cbar_heigh = 0.8
+    cbar_x_pos = 0.9
+    cbar_y_pos = 0.1
+
+    cbar_ax = fig.add_axes(cbar_x_pos, cbar_y_pos, cbar_width, cbar_heigh) 
+    sm = ScalarMappable(Normalize(vmin=format_dict["colorbar"][2], vmax=format_dict["colorbar"][3]), cmap=format_dict["colorbar"][0])  # Create ScalarMappable
+    sm.set_array([]) 
+    fig.colorbar(sm, cax=cbar_ax).set_label(format_dict["colorbar"][1]) 

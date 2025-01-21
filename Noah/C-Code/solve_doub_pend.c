@@ -160,7 +160,7 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     {
         RuKu_4( nDifEqu, h, t, y, yh, k1, k2, k3, k4, &derhs_doub_pend, params);
         
-        theta1_sol[j+1]     = fmod( (y[0] + M_PI), 2*M_PI ) - M_PI;
+        theta1_sol[j+1]     = y[0];
         theta1_dot_sol[j+1] = y[1];
 
         if( (theta1_sol[j] < 0.0) && (theta1_sol[j+1] > 0.0) && (theta1_dot_sol[j] > 0.0))
