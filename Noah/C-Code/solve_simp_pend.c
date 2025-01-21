@@ -19,9 +19,9 @@ void derhs_pend( int nDifEqu, double t, double y[], double y_dot[], double param
 }
    
     // compute initial angular velocity to make pendulum stand upright
-double stand_up_theta_dot( double omega, double theta_0 )
+double stand_up_theta_dot( double length, double g_grav, double theta_0 )
 {
-    return omega * pow( 2 * (1+cos(theta_0)), 0.5 );
+    return sqrt(g_grav / length) * pow( 2 * (1+cos(theta_0)), 0.5 );
 }
 
     // fully solve the DE of a simple pendulum numerically
