@@ -44,20 +44,20 @@ int simple_pendulum(void)
 
 int double_pendulum(void)
 {
-    double t_end        = 5.0;             // simulation time [seconds]            
+    double t_end        = 10.0;             // simulation time [seconds]            
     double h            = 0.001;            // step size [steps per second]
-    double g_grav2      = 9.81;
+    double g_grav       = 9.81;
     double mass_1       = 1.0;
     double mass_2       = 1.0;
     double length_1     = 1.0;
     double length_2     = 1.0;
-    double theta1_0     = 3.0;
+    double theta1_0     = 0.5*M_PI;
     double theta1_dot_0 = 0.0;
-    double theta2_0     = 3.0;
+    double theta2_0     = 0.0;
     double theta2_dot_0 = 0.0;
     
     int    steps = (int)(t_end/h);      // Initialisation
-    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta1_dot_0, theta2_0, theta2_dot_0};
+    double params[] = {t_end, h, g_grav, mass_1, mass_2, length_1, length_2, theta1_0, theta1_dot_0, theta2_0, theta2_dot_0};
     double params_extended  [steps+1];
     double t_values         [steps+1];
     double E_values         [steps+1];
