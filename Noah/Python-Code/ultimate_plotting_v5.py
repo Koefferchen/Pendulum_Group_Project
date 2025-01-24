@@ -240,12 +240,12 @@ def linear_fit(x_data, y_data, fit_range , y_err = None):
 
 def add_colorbar(fig, format_dict):
 
-    cbar_width = 0.02
-    cbar_heigh = 0.8
-    cbar_x_pos = 0.9
-    cbar_y_pos = 0.1
+    cbar_width = 0.03
+    cbar_heigh = 0.70
+    cbar_x_pos = 0.92
+    cbar_y_pos = 0.15
 
-    cbar_ax = fig.add_axes(cbar_x_pos, cbar_y_pos, cbar_width, cbar_heigh) 
+    cbar_ax = fig.add_axes([cbar_x_pos, cbar_y_pos, cbar_width, cbar_heigh]) 
     sm = ScalarMappable(Normalize(vmin=format_dict["colorbar"][2], vmax=format_dict["colorbar"][3]), cmap=format_dict["colorbar"][0])  # Create ScalarMappable
     sm.set_array([]) 
     fig.colorbar(sm, cax=cbar_ax).set_label(format_dict["colorbar"][1]) 

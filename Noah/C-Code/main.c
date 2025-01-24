@@ -180,11 +180,11 @@ int double_poincare(void)
     double theta1_dot_0 = 0.0;              // fixed for given Poincare-Section
     double theta2_0;                        // iterates through [0, Pi]
     double theta2_dot_0;                    // calculated to make the energy stay the same
-    double E_value      = 10.0;
+    double E_value      = 0.05;
     int    repitions    = 40;
     
     int    steps = (int)(t_end/h);      // Initialisation
-    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions};
+    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions, E_value};
     double **data = create_2d_matrix( 4*repitions, steps+1, 0.0);
 
     for(int j = 0; j < repitions; j++)
@@ -195,7 +195,7 @@ int double_poincare(void)
         double *params_ext  = data[4*j +3];
         params[8] = j * M_PI / (double)(repitions);
         params[10] = calc_doub_theta2_0(params, E_value);
-        merge_arrays(13, params, steps, params_ext);
+        merge_arrays(14, params, steps, params_ext);
         solve_doub_poincare( params, t_values, theta2, theta2_dot );
 
     }
