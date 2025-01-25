@@ -22,9 +22,10 @@
         // simple pendulum
     int     simple_pendulum     (void);
     double  stand_up_theta_dot  ( double length, double g_grav, double theta_0 );
-    int     solve_simp_pend     ( double params[], double t_values[], double y1_sol[], double y2_sol[] );
+    int     solve_simp_pend     ( double params[], double t_values[], double y1_sol[], double y2_sol[] , void (*derhs) ( int, double, double[], double[], double[] ) );
     int     solve_analyt_pend   ( double params[], double* y_analytic );
-    void    derhs_pend          ( int nDifEqu, double t, double y[], double k[], double params[] );
+    void    derhs_simp_pend     ( int nDifEqu, double t, double y[], double k[], double params[] );
+    void    derhs_analyt_pend   ( int nDifEqu, double t, double y[], double k[], double params[] );
         
         // double pendulum
     int     double_pendulum     (void);
@@ -43,6 +44,8 @@
     void    derhs_trip_pend     ( int nDifEqu, double t, double y[], double y_dot[], double params[] );
     int     calc_trip_energy    ( double y[], double params[], double *E_value );
 
+        // test numerical solver
+    int     test_RK4             (void);
 
         // helper functions
     double  *create_null        ( int length);
@@ -53,6 +56,8 @@
     double  **create_2d_matrix  (int x_dim, int y_dim, double initial_value);
     int     save_matrix         ( double **matrix, int x_dim, int y_dim, char* save_as );
     int     free_2d_matrix      ( double **matrix );
+    double  average_diff        ( double array1[], double array2[] );
+    int     modulus             ( double array[], double limit_up );
 
 
 #endif

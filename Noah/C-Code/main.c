@@ -11,6 +11,10 @@ int main(void)
 
     double_poincare();
     
+    test_RK4();
+
+    printf("%.2lf \n", fmod(-5.3, 3.0));
+
     return 0;
 }
 
@@ -34,7 +38,7 @@ int simple_pendulum(void)
     double* null = create_null(steps);  
     merge_arrays(6, params, steps, params_extended);
 
-    solve_simp_pend( params, t_values, theta, theta_dot );       
+    solve_simp_pend( params, t_values, theta, theta_dot, &derhs_simp_pend );       
     solve_analyt_pend( params, theta_analy );                                  
     save_numb_list7(t_values, theta, theta_dot, theta_analy, params_extended, null, null, "../data/data_simp_pend.txt" );   // save data in .txt
 
@@ -169,23 +173,29 @@ int double_poincare(void)
 {    
     
     double t_end        = 400.0;            // simulation time [seconds]            
-    double h            = 0.01;             // step size [steps per second]
+    double h            = 0.1;             // step size [steps per second]
     double g_grav2      = 9.81;
     double mass_1       = 1.0;
     double mass_2       = 1.0;
     double length_1     = 1.0;
     double length_2     = 1.0;
-
+    
     double theta1_0     = -0.5 *M_PI;       // fixed for given Poincare-Section
     double theta1_dot_0 = 0.0;              // fixed for given Poincare-Section
     double theta2_0;                        // iterates through [0, Pi]
     double theta2_dot_0;                    // calculated to make the energy stay the same
-    double E_value      = 0.05;
+    double E_value;
     int    repitions    = 40;
     
     int    steps = (int)(t_end/h);      // Initialisation
-    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions, E_value};
+    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions};
     double **data = create_2d_matrix( 4*repitions, steps+1, 0.0);
+
+    double condition_eq_1[] = {0.0, 0.0, M_PI, 0.0};
+    double condition_eq_2[] = {M_PI, 0.0, 0.0, 0.0};
+    double condition_eq_3[] = {M_PI, 0.0, M_PI, 0.0};
+    calc_doub_energy(condition_eq_2, params, &params[11]);
+
 
     for(int j = 0; j < repitions; j++)
     {
@@ -195,11 +205,61 @@ int double_poincare(void)
         double *params_ext  = data[4*j +3];
         params[8] = j * M_PI / (double)(repitions);
         params[10] = calc_doub_theta2_0(params, E_value);
-        merge_arrays(14, params, steps, params_ext);
+        merge_arrays(13, params, steps, params_ext);
         solve_doub_poincare( params, t_values, theta2, theta2_dot );
 
     }
 
     save_matrix( data, 4*repitions, steps+1, "../data/data_doub_poincare.txt");
+    return 0;
+}
+
+
+int test_RK4(void)
+{
+    double t_end        = 10.0;             // simulation time [seconds]                                           // step size [steps per second]
+    double g_grav       = 9.81;
+    double length       = 1.0;       
+    double theta_0      = 0.5 * M_PI; 
+    double theta_dot_0  = 0.0 * M_PI; 
+    int    steps;
+    double h;
+    int    h_steps      = 100;
+    double h_end        = 0.1;
+    double h_delta      = h_end / (double)h_steps;
+    double h_array  [h_steps+1];
+    double dev_array[h_steps+1];
+    double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0};
+    double params_ext[h_steps+1];
+    h_array[0]   = h_steps;
+    dev_array[0] = h_steps;
+
+    for( int i = 0; i < h_steps; i++ )
+    {
+        h = h_end - i * h_delta;
+        params[1]   = h;
+        steps       = (int)(t_end/h);      
+        double *t_values      = (double *)malloc( (steps+1) * sizeof(double) );
+        double *theta         = (double *)malloc( (steps+1) * sizeof(double) );         
+        double *theta_dot     = (double *)malloc( (steps+1) * sizeof(double) );    
+        double *theta_analyt  = (double *)malloc( (steps+1) * sizeof(double) );
+        
+        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend );       
+        solve_analyt_pend( params, theta_analyt );
+
+        modulus(theta, +2*M_PI);
+        modulus(theta_analyt, +2*M_PI);
+
+        h_array[i+1]    = h;
+        dev_array[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          // average_diff( theta, theta_analyt);
+
+        free(theta_analyt); free(t_values); free(theta); free(theta_dot); 
+    }
+    
+    double *null = create_null(h_steps);
+    merge_arrays(6, params, h_steps, params_ext);                           
+    save_numb_list7(h_array, dev_array, params_ext, null, null, null, null, "../data/data_test_RK4.txt" );   // save data in .txt
+    
+    free(null);
     return 0;
 }

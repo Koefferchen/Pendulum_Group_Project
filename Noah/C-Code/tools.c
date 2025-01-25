@@ -126,3 +126,33 @@ int save_matrix( double **matrix, int x_dim, int y_dim, char* save_as )
     fclose(file_pointer);
     return 0;
 }
+
+    // calculate the average of the absolute difference between array1 and array2 (elementwise)
+double average_diff( double array1[], double array2[] )
+{
+        // assume: array1[0] = array2[0] = length(array1) = length(array2)
+    double diff = 0.0;  
+
+    for(int i = 0; i < array1[0]; i++ )     //
+    {
+        diff = diff + fmin( fabs( array1[i+1] - array2[i+1] ), fabs( array1[i+1] + array2[i+1] )  );
+    }
+
+    return diff/array1[0];
+}
+
+    // translates all values of an array into the range [0, limit_up] the way modulo should
+int modulus( double array[], double limit_up )
+{
+    for(int i = 0; i < array[0]; i++)
+    {
+        if( array[i+1] > 0)
+        {
+            array[i+1] = fmod(array[i+1], limit_up ) ;
+        } else {
+            array[i+1] = fmod(array[i+1] , limit_up ) + limit_up;
+        }
+    }
+
+    return 0;
+}

@@ -12,6 +12,7 @@ cd ../Python-Code
 #python3 animating_trip_pend.py
 #python3 plotting_trip_chaos.py
 #python3 animating_trip_chaos.py
-python3 plotting_doub_poincare.py
+#python3 plotting_doub_poincare.py
+python3 plotting_RK4_dev.py
 cd ..
 
