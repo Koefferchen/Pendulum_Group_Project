@@ -11,7 +11,7 @@ data        = np.loadtxt("../data/data_doub_poincare.txt", skiprows=0 )
 
 params      = data[ : , 3 ]
 repitions   = int(params[13])                # how many sets of data pairs there are
-E_value     = params[14]
+E_value     = params[12]
 theta2_0    = data[ 9 , 3::4]
 cmap = "magma"
 cycl_colormap    = sns.color_palette( cmap, n_colors=repitions ) # + sns.color_palette("hls", repitions//2)[::-1]
