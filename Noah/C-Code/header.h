@@ -41,12 +41,14 @@
 
 
         // triple pendulum
+    int     triple_compare      (void);
     int     triple_chaos        (void);    
     int     triple_pendulum     (void);
     int     solve_trip_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[], double theta3_sol[], double theta3_dot_sol[],
                                     void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) );
     void    derhs_trip_pend     ( int nDifEqu, double t, double y[], double y_dot[], double params[] );
     int     calc_trip_energy    ( double y[], double params[], double *E_value );
+    
 
         // helper functions
     double  *create_null        ( int length);
