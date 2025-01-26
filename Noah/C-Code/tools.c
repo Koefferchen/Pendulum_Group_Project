@@ -156,3 +156,56 @@ int modulus( double array[], double limit_up )
 
     return 0;
 }
+
+
+   // adds two arrays of size "length" elementwise and returns a pointer to the result
+double *add_IP( double *array1, double *array2, double *result, int length)
+{
+   for(int i = 0; i < length; i++)
+   {
+      result[i] = array1[i] + array2[i];
+   }
+   return result;
+}
+
+   // multiplies an array of size "length" elementwise by a scalar and return pointer to the result
+double *scale_IP( double *array1, double scalar, double *result, int length)
+{
+   for(int i = 0; i < length; i++)
+   {
+      result[i] = array1[i] * scalar;
+   }
+   return result;
+}
+
+    // calculates the result array of the linearcombination of (# = "array_numb") given arrays of size "array_length" and their scalar coefficients. Returns result array
+double *linear_comb_arrays( double** arrays, double* coeffs, double *result, int array_length, int array_numb )
+{
+    for( int i = 0; i < array_numb; i++ )
+    {
+        for( int j = 0; j < array_length; j++ )
+        {
+            if( i == 0 ){ result[j] = 0.0; }
+            result[j] = result[j] + coeffs[i] * arrays[i][j];
+        }
+    }
+    return result;
+}
+
+int zeros( double array[], int length )
+{
+    for( int i = 0; i < length; i++ )
+    {
+        array[i] = 0.0;
+    }
+    return 0;
+}
+
+int copy_array( double array[], double copy[], int length)
+{
+    for( int i = 0; i < length; i++ )
+    {
+        copy[i] = array[i];
+    }
+    return 0;
+}

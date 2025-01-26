@@ -9,43 +9,44 @@
     #include <stdlib.h>         // for using "maloc"
     #include <string.h>         // for using "memcopy"
 
-    void RuKu_4 ( int nDifEqu,  // number of Differential Equations (DE)
-              double h,         // step size 
-              double t,         // curve parameter (time) 
-              double y[],       // trajectory [nDifEqu] with input: y(t) and output; y(t+h) 
-              double yh[],      // help array [nDifEqu] 
-              double k1[], double k2[], double k3[], double k4[],           // help parameters [nDifEqu] 
-              void (*derhs) ( int, double, double[], double[], double[] ),  // function that calculates the right-hand-side of the DE 
-              double params[]               
-    );  
+        // numerical solver
+    void    Euler               ( int n_ODE, double h, double t, double y[], 
+                                    void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
+    void    RuKu_4              ( int n_ODE, double h, double t, double y[], 
+                                    void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
+    void    RuKu_6              ( int n_ODE, double h, double t, double y[], 
+                                    void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
+    int     test_RK4            ( void );
 
         // simple pendulum
     int     simple_pendulum     (void);
     double  stand_up_theta_dot  ( double length, double g_grav, double theta_0 );
-    int     solve_simp_pend     ( double params[], double t_values[], double y1_sol[], double y2_sol[] , void (*derhs) ( int, double, double[], double[], double[] ) );
+    int     solve_simp_pend     ( double params[], double t_values[], double theta_sol[], double theta_dot_sol[], 
+                                    void (*derhs)( int, double, double[], double[], double[] ), 
+                                    void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
     int     solve_analyt_pend   ( double params[], double* y_analytic );
     void    derhs_simp_pend     ( int nDifEqu, double t, double y[], double k[], double params[] );
     void    derhs_analyt_pend   ( int nDifEqu, double t, double y[], double k[], double params[] );
         
         // double pendulum
     int     double_pendulum     (void);
-    int     solve_doub_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[] ); 
+    int     solve_doub_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[],
+                                    void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
     void    derhs_doub_pend     ( int nDifEqu, double t, double y[], double y_dot[], double params[] );
     int     calc_doub_energy    ( double y[], double params[], double *E_value );
     int     double_poincare     (void);
     int     calc_doub_theta2_0  ( double params[], double E_value );
-    int     solve_doub_poincare ( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[] ); 
+    int     solve_doub_poincare ( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[],
+                                    void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
 
 
         // triple pendulum
     int     triple_chaos        (void);    
     int     triple_pendulum     (void);
-    int     solve_trip_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[], double theta3_sol[], double theta3_dot_sol[] ); 
+    int     solve_trip_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[], double theta3_sol[], double theta3_dot_sol[],
+                                    void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) );
     void    derhs_trip_pend     ( int nDifEqu, double t, double y[], double y_dot[], double params[] );
     int     calc_trip_energy    ( double y[], double params[], double *E_value );
-
-        // test numerical solver
-    int     test_RK4             (void);
 
         // helper functions
     double  *create_null        ( int length);
@@ -58,6 +59,10 @@
     int     free_2d_matrix      ( double **matrix );
     double  average_diff        ( double array1[], double array2[] );
     int     modulus             ( double array[], double limit_up );
-
+    double  *add_IP             ( double *array1, double *array2, double *result, int length);
+    double  *scale_IP           ( double *array1, double scalar, double *result, int length);
+    double  *linear_comb_arrays ( double** arrays, double* coeffs, double *result, int array_length, int array_numb );
+    int     zeros               ( double array[], int length );
+    int     copy_array          ( double array[], double copy[], int length);
 
 #endif
