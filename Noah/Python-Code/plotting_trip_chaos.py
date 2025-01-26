@@ -131,6 +131,7 @@ def ultimate_plot_pend():
         
     ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
 ultimate_plot_pend()
+ultimate_plot_pend()
 
 
 def ultimate_plot_pend_phasespace():
