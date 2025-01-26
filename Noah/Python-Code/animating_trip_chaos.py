@@ -2,9 +2,36 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+import sys
+
+    # making sure an argument is passed
+if len(sys.argv) != 2:
+    print("Usage: python3 script.py <1 or 0>")
+    sys.exit(1)
+
+
+usage = int(sys.argv[1])
+if( usage == 0 ):
+        # plotting sensitivity on initial conditions 
+    save_as = "../plots/anim_trip_chaos.mp4"
+    info    = "Triple Pendulum Chaos animated"
+    file_a  = "../data/data_trip_chaos_a.txt"
+    file_b  = "../data/data_trip_chaos_b.txt"
+    file_c  = "../data/data_trip_chaos_c.txt"
+elif( usage == 1 ):
+        # plotting sensitivity on numerical solver
+    save_as = "../plots/anim_trip_nums.mp4"
+    info    = "Triple Pendulum Numerical Solvers animated"
+    file_a  = "../data/data_trip_Euler.txt"
+    file_b  = "../data/data_trip_RuKu4.txt"
+    file_c  = "../data/data_trip_RuKu6.txt"
+else:
+    print("Could not resolve argument in 'animating_triple_chaos.py'.")
+    sys.exit(1)
+
 
     # importing the data generated
-data_a          = np.loadtxt("../data/data_trip_chaos_a.txt", skiprows=1 )
+data_a          = np.loadtxt(file_a, skiprows=1 )
 time            = data_a[ : , 0 ]
 params          = data_a[ : , 7 ]
 
@@ -15,7 +42,7 @@ theta1a_dot     = data_a[ : , 2 ]
 theta2a_dot     = data_a[ : , 4 ]
 theta3a_dot     = data_a[ : , 6 ]
 
-data_b          = np.loadtxt("../data/data_trip_chaos_b.txt", skiprows=1 )
+data_b          = np.loadtxt(file_b, skiprows=1 )
 theta1b         = data_b[ : , 1 ]
 theta2b         = data_b[ : , 3 ]
 theta3b         = data_b[ : , 5 ]   
@@ -23,7 +50,7 @@ theta1b_dot     = data_b[ : , 2 ]
 theta2b_dot     = data_b[ : , 4 ]
 theta3b_dot     = data_b[ : , 6 ]
 
-data_c          = np.loadtxt("../data/data_trip_chaos_c.txt", skiprows=1 )
+data_c          = np.loadtxt(file_c, skiprows=1 )
 theta1c         = data_c[ : , 1 ]
 theta2c         = data_c[ : , 3 ]
 theta3c         = data_c[ : , 5 ]   
@@ -147,6 +174,6 @@ def update(frame):
 
     # Create the animation
 ani = FuncAnimation(fig, update, frames=range(0, frame_count*step, step), interval= h * step * 1000, blit=True)
-ani.save( "../plots/anim_trip_chaos.mp4")
+ani.save( save_as )
 
-print("Triple Pendulum Chaos animated")
+print( info )

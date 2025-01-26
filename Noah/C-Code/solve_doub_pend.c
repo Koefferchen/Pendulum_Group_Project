@@ -4,9 +4,9 @@
 
 
     // implementation of the differential equation
-void derhs_doub_pend( int nDifEqu, double t, double y[], double y_dot[], double params[] )
+void derhs_doub_pend( int n_ODE, double t, double y[], double y_dot[], double params[] )
 {
-        // nDifEqu = 4   
+        // n_ODE = 4   
         // "y[0]"                   is  theta1
         // "y_dot[0]" and "y[1]"    are theta1_dot
         // "y_dot[1]"               is  theta1_dot_dot
@@ -42,19 +42,16 @@ void derhs_doub_pend( int nDifEqu, double t, double y[], double y_dot[], double 
 
 }
 
-int solve_doub_pend( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[] ) 
+int solve_doub_pend( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[],
+                        void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
 {
-    int     nDifEqu = 4;                    // here: 4 DEs
+    int     n_ODE = 4;                    // here: 4 DEs
     double  t_end = params[0];
     double  h     = params[1];
     int     steps = (int)(t_end/h);
     double  t = 0;
-    double  y[nDifEqu];                     // Initialisation 
-    double  yh[nDifEqu];
-    double  k1[nDifEqu];
-    double  k2[nDifEqu];
-    double  k3[nDifEqu];
-    double  k4[nDifEqu];
+    double  y[n_ODE];                     // Initialisation 
+
     t_values[0]         = steps;            // first entry = length of array
     E_values[0]         = steps;
     theta1_sol[0]       = steps;      
@@ -69,7 +66,7 @@ int solve_doub_pend( double params[], double t_values[], double E_values[], doub
 
     for(int j = 0; j < steps; j++)
     {
-        RuKu_4( nDifEqu, h, t, y, yh, k1, k2, k3, k4, &derhs_doub_pend, params);
+        (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
         
         t_values[j+1]       = t;            // save solution for each time step in arrays
         theta1_sol[j+1]      = y[0];
@@ -133,19 +130,15 @@ int calc_doub_theta2_0( double params[], double E_value )
 }
 
 
-int solve_doub_poincare( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[] ) 
+int solve_doub_poincare( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[],
+                        void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
 {
-    int     nDifEqu = 4;                    // here: 4 DEs
+    int     n_ODE = 4;                    // here: 4 DEs
     double  t_end = params[0];
     double  h     = params[1];
     int     steps = (int)(t_end/h);
     double  t = 0;
-    double  y[nDifEqu];                     // Initialisation 
-    double  yh[nDifEqu];
-    double  k1[nDifEqu];
-    double  k2[nDifEqu];
-    double  k3[nDifEqu];
-    double  k4[nDifEqu];
+    double  y[n_ODE];                     // Initialisation 
 
     double theta1_sol[steps+1];
     double theta1_dot_sol[steps+1];
@@ -158,7 +151,7 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     int i = 0;
     for(int j = 0; j < steps; j++)
     {
-        RuKu_4( nDifEqu, h, t, y, yh, k1, k2, k3, k4, &derhs_doub_pend, params);
+        (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
         
         theta1_sol[j+1]     = y[0];
         theta1_dot_sol[j+1] = y[1];

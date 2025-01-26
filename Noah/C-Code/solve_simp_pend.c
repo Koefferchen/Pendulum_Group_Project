@@ -4,9 +4,9 @@
 
 
     // implementation of the differential equation for simple pendulum
-void derhs_simp_pend( int nDifEqu, double t, double y[], double y_dot[], double params[] )
+void derhs_simp_pend( int n_ODE, double t, double y[], double y_dot[], double params[] )
 {        
-        // nDifEqu = 2
+        // n_ODE = 2
         // "y[0]" is theta
         // "y_dot[0]" and "y[1]" are theta_dot
         // "y_dot[2]" is theta_dot_dot             
@@ -19,9 +19,9 @@ void derhs_simp_pend( int nDifEqu, double t, double y[], double y_dot[], double 
 }
 
     // implementation of the approximated equation for simple pendulum: sin(x) = x
-void derhs_analyt_pend( int nDifEqu, double t, double y[], double y_dot[], double params[] )
+void derhs_analyt_pend( int n_ODE, double t, double y[], double y_dot[], double params[] )
 {        
-        // nDifEqu = 2
+        // n_ODE = 2
         // "y[0]" is theta
         // "y_dot[0]" and "y[1]" are theta_dot
         // "y_dot[2]" is theta_dot_dot             
@@ -39,24 +39,21 @@ double stand_up_theta_dot( double length, double g_grav, double theta_0 )
     return sqrt(g_grav / length) * pow( 2 * (1+cos(theta_0)), 0.5 );
 }
 
+
+
+
     // fully solve the DE of a simple pendulum numerically
-int solve_simp_pend( double params[], 
-                    double t_values[], 
-                    double theta_sol[], 
-                    double theta_dot_sol[], 
-                    void (*derhs)( int, double, double[], double[], double[] )
-                  ) {
-    int     nDifEqu = 2;                   // here: 2 DEs
+int solve_simp_pend( double params[], double t_values[], double theta_sol[], double theta_dot_sol[], 
+                        void (*derhs)( int, double, double[], double[], double[] ), 
+                        void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
+{
+    int     n_ODE = 2;                   // here: 2 DEs
     double  t_end   = params[0];
     double  h       = params[1];
     int     steps = (int)(t_end/h);
     double  t = 0;
-    double  y[nDifEqu];                     // Initialisation 
-    double  yh[nDifEqu];
-    double  k1[nDifEqu];
-    double  k2[nDifEqu];
-    double  k3[nDifEqu];
-    double  k4[nDifEqu];
+    double  y[n_ODE];                     // Initialisation 
+
     t_values[0]         = steps;            // first entry = length of array
     theta_sol[0]        = steps;      
     theta_dot_sol[0]    = steps;
@@ -66,7 +63,7 @@ int solve_simp_pend( double params[],
     
     for(int j = 0; j < steps; j++)
     {
-        RuKu_4( nDifEqu, h, t, y, yh, k1, k2, k3, k4, derhs, params);
+        (num_solver)( n_ODE, h, t, y, derhs, params);
         
         t_values[j+1]       = t;            // save solution for each time step in arrays
         theta_sol[j+1]      = y[0];
