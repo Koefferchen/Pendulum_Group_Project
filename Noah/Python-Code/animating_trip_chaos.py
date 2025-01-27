@@ -106,7 +106,7 @@ time_label      = ax.text(0.97, 0.97, " ", transform=ax.transAxes, fontsize=12, 
 
 
     # static parameters for the simulation
-if( False ):
+if( True ):
     g_grav_label    = ax.text(1.03, 0.97, f"$g = {g_grav:.2f}m/s^2 $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
     mass_1_label    = ax.text(1.03, 0.91, f"$m_1 = {mass_1:.2f}kg $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
     mass_2_label    = ax.text(1.03, 0.85, f"$m_2 = {mass_2:.2f}kg $", transform=ax.transAxes, fontsize=12, ha='left', va="top")

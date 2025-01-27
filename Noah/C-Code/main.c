@@ -281,8 +281,8 @@ int triple_compare(void)
     double h             = 0.001;            
     double g_grav        = 9.81;
     double theta_1_0     = 0.2 *M_PI;
-    double theta_1_dot_0 = 0.0 *M_PI;
-    double theta_2_0     = 0.0 *M_PI;
+    double theta_1_dot_0 = 0.1 *M_PI;
+    double theta_2_0     = 0.3 *M_PI;
     double theta_2_dot_0 = 0.0 *M_PI;
     double theta_3_0     = 0.0 *M_PI;
     double theta_3_dot_0 = 0.0 *M_PI;
@@ -310,15 +310,17 @@ int triple_compare(void)
     double doub_theta2_dot  [steps+1];
     double theta            [steps+1];              
     double theta_dot        [steps+1]; 
+    double trip_params_ex   [steps+1];
 
 
-    double params_trip[] = { t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
+    double params_trip[] = {t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
     double params_simp[] = {t_end, h, g_grav, length_1, theta_1_0, theta_1_dot_0};
+    merge_arrays( 14, params_trip, steps, trip_params_ex);
 
         // solving triple and simple pendulum
     solve_trip_pend( params_trip, t_values, E_values, trip_theta1, trip_theta1_dot, trip_theta2, trip_theta2_dot, trip_theta3, trip_theta3_dot, &RuKu_6 );
     solve_simp_pend( params_simp, t_values, theta, theta_dot, &derhs_simp_pend, &RuKu_6 );       
-    save_numb_list7(t_values, theta, trip_theta1, null, null, null, null, "../data/data_trip_compare_3-1.txt" );  
+    save_numb_list7(t_values, theta, trip_theta1, trip_params_ex, null, null, null, "../data/data_trip_compare_3-1.txt" );  
 
     mass_1 = 100;
     mass_2 = 100;
@@ -329,10 +331,11 @@ int triple_compare(void)
     
     double params_doub[] = {t_end, h, g_grav, mass_1, mass_2, length_1, length_2, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0};
     double params_trip_2[] = { t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
+    merge_arrays( 14, params_trip_2, steps, trip_params_ex);
 
         // solving triple and double pendulum
     solve_trip_pend( params_trip_2, t_values, E_values, trip_theta1, trip_theta1_dot, trip_theta2, trip_theta2_dot, trip_theta3, trip_theta3_dot, &RuKu_6 );
     solve_doub_pend( params_doub, t_values, E_values, doub_theta1, doub_theta1_dot, doub_theta2, doub_theta2_dot, &RuKu_6 );
-    save_numb_list7(t_values, doub_theta1, doub_theta2, trip_theta1, trip_theta2, null, null, "../data/data_trip_compare_3-2.txt" );  
+    save_numb_list7(t_values, doub_theta1, doub_theta2, trip_theta1, trip_theta2, trip_params_ex, null, "../data/data_trip_compare_3-2.txt" );  
 
 }

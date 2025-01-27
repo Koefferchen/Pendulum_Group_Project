@@ -1,5 +1,5 @@
 
-from ultimate_plotting_v5 import *
+from ultimate_plotting_v7 import *
 import sys
 
     # making sure an argument is passed
@@ -50,6 +50,7 @@ theta3a         = data_a[ : , 5 ]
 theta1a_dot     = data_a[ : , 2 ]
 theta2a_dot     = data_a[ : , 4 ]
 theta3a_dot     = data_a[ : , 6 ]
+params          = data_a[ : , 7 ]
 
 data_b          = np.loadtxt(file_b, skiprows=1 )
 theta1b         = data_b[ : , 1 ]
@@ -67,6 +68,29 @@ theta1c_dot     = data_c[ : , 2 ]
 theta2c_dot     = data_c[ : , 4 ]
 theta3c_dot     = data_c[ : , 6 ]
 
+    # unpack the parameters of the simulation
+t_end       = params[0]
+h           = params[1]
+g_grav      = params[2]
+mass_1      = params[3]
+mass_2      = params[4]
+mass_3      = params[5]
+length_1    = params[6]
+length_2    = params[7]
+length_3    = params[8]
+theta1_0    = params[9]
+theta1_dot_0= params[10]
+theta2_0    = params[11]
+theta2_dot_0= params[12]
+theta3_0    = params[13]
+theta3_dot_0= params[14]
+
+    # create extra_label
+m_label = f"$m_1 = {mass_1:.2f}$kg \n$m_2 = {mass_2:.2f}$kg \n$m_3 = {mass_3:.2f}$kg \n"
+l_label = f"$l_1 = {length_1:.2f}$m \n$l_2 = {length_2:.2f}$m \n$l_3 = {length_3:.2f}$m  \n\n" 
+i_label1 = f"$\\theta_1(0) = {theta1_0/np.pi:.2f}\\pi$ \n$\\dot{{\\theta}}_1(0) = {theta1_dot_0/np.pi:.2f}\\pi$ \n"
+i_label2 = f"$\\theta_2(0) = {theta2_0/np.pi:.2f}\\pi$ \n$\\dot{{\\theta}}_2(0) = {theta2_dot_0/np.pi:.2f}\\pi$ \n"
+i_label3 = f"$\\theta_3(0) = {theta3_0/np.pi:.2f}\\pi$ \n$\\dot{{\\theta}}_3(0) = {theta3_dot_0/np.pi:.2f}\\pi$ \n"
 
 
     # theta should always be within [-pi, +pi]
@@ -114,13 +138,20 @@ def ultimate_plot_pend():
     all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2, sample_format_dict_3 ]
     
     writtings = {
-        "titel"           : title1,
-        "x_beschriftung"  : r"Time $t$ [$s$]",
-        "y_beschriftung"  : r"Angle $\theta_{3j}$ [$rad$]"
+        "title"       : title1,
+        "x_ax_label"  : r"Time $t$ [$s$]",
+        "y_ax_label"  : r"Angle $\theta_{3j}$ [$rad$]"
     }
     
     general_format_dict = standard_format_dict
-    zoom_parameters = no_zooming
+    zoom_params         = no_zooming
+    colorbar_params     = no_colorbar
+    extra_label         = {
+        "do_label"  :   True,
+        "position"  :   [1.03, 0.97],
+        "font_size" :   12,
+        "content"   :   (m_label+l_label+i_label1+i_label2+i_label3)
+    }
     
     data_set_1  = time, None, theta3a, None 
     data_set_2  = time, None, theta3b, None 
@@ -129,7 +160,7 @@ def ultimate_plot_pend():
     all_data    = data_set_1 + data_set_2 + data_set_3                           
     save_plot = True, save_as1                                     
         
-    ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
+    ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend()
 ultimate_plot_pend()
 
@@ -168,13 +199,20 @@ def ultimate_plot_pend_phasespace():
     all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2, sample_format_dict_3 ]
     
     writtings = {
-        "titel"           : title2,
-        "x_beschriftung"  : r"Angle $\theta_{3j}$ [$rad$]",
-        "y_beschriftung"  : r"Frequency $\dot{\theta_{3j}}$ [$s^{-1}$]"
+        "title"       : title2,
+        "x_ax_label"  : r"Angle $\theta_{3j}$ [$rad$]",
+        "y_ax_label"  : r"Frequency $\dot{\theta_{3j}}$ [$s^{-1}$]"
     }
     
     general_format_dict = standard_format_dict
-    zoom_parameters = no_zooming
+    zoom_params         = no_zooming
+    colorbar_params     = no_colorbar
+    extra_label         = {
+        "do_label"  :   True,
+        "position"  :   [1.03, 0.97],
+        "font_size" :   12,
+        "content"   :   (m_label+l_label+i_label1+i_label2+i_label3)
+    }
     
     data_set_1  = theta3a, None, theta3a_dot, None 
     data_set_2  = theta3b, None, theta3b_dot, None 
@@ -182,7 +220,7 @@ def ultimate_plot_pend_phasespace():
     all_data    = data_set_1 + data_set_2 + data_set_3                             
     save_plot = True, save_as2                                      
         
-    ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
+    ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend_phasespace()
 
 print(info)
