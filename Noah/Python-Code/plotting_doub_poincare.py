@@ -43,7 +43,7 @@ def ultimate_plot_pend():
         "position"      : [0.92, 0.15],
         "size"          : [0.03, 0.70],
         "scale_range"   : [-np.pi, +np.pi],
-        "title"         : r"$\theta_1 (t=0)$",
+        "title"         : r"$\theta_2 (t=0)$",
         "colormap"      : cmap
     }
 

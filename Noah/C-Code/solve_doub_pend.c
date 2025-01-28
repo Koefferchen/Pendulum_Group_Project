@@ -138,29 +138,35 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     double  h     = params[1];
     int     steps = (int)(t_end/h);
     double  t = 0;
-    double  y[n_ODE];                     // Initialisation 
+    double  y[n_ODE];                     // Initialisation  
 
-    double theta1_sol[steps+1];
-    double theta1_dot_sol[steps+1];
+    double last_theta1;
+    double last_theta1_dot;
+    double last_theta2;      
+    double last_theta2_dot;
 
     y[0] = params[7];                         // Initial conditions at t_0
     y[1] = params[8];                     
     y[2] = params[9];
     y[3] = params[10];
 
+
+
     int i = 0;
     for(int j = 0; j < steps; j++)
     {
-        (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
-        
-        theta1_sol[j+1]     = y[0];
-        theta1_dot_sol[j+1] = y[1];
+        last_theta1     = y[0];
+        last_theta1_dot = y[1];
+        last_theta2     = y[2];
+        last_theta2_dot = y[3];
 
-        if( (theta1_sol[j] < 0.0) && (theta1_sol[j+1] > 0.0) && (theta1_dot_sol[j] > 0.0))
+        (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
+
+        if( (last_theta1 < 0.0) && (y[0] > 0.0) && ( (last_theta1_dot+y[1])/2.0 > 0.0))
         {
-            t_values[i+1]       = t;           
-            theta2_sol[i+1]     = fmod( (y[2] + M_PI), 2*M_PI ) - M_PI;
-            theta2_dot_sol[i+1] = y[3];
+            t_values[i+1]       = t + h/2.0;           
+            theta2_sol[i+1]     = fmod( ( (y[2]+last_theta2)/2.0 + M_PI), 2*M_PI ) - M_PI;
+            theta2_dot_sol[i+1] = (y[3]+last_theta2_dot)/2.0 ;
             i++;
         }
     
