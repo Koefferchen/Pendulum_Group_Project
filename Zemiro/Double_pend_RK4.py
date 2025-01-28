@@ -26,7 +26,24 @@ def RK4_double_pendulum(t1, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, L1, 
         theta2: Array of angle values for the second pendulum
         theta1_dot: Array of angular velocity values for the first pendulum
         theta2_dot: Array of angular velocity values for the second pendulum
+
     """
+    def compute_energy(theta1, theta2, omega1, omega2, m1, m2, l1, l2, g):
+        """Computes total energy."""
+        # Kinetic energy
+        T = 0.5 * m1 * l1**2 * omega1**2 + 0.5 * m2 * (
+            l1**2 * omega1**2
+            + l2**2 * omega2**2
+            + 2 * l1 * l2 * omega1 * omega2 * np.cos(theta1 - theta2)
+        )
+        # Potential energy
+        V = -(m1 + m2) * g * l1 * np.cos(theta1) - m2 * g * l2 * np.cos(theta2)
+
+        return T + V
+
+    def normalize_theta(theta):
+        return np.mod(theta + np.pi, 2 * np.pi) - np.pi
+
     def derivatives(y):
         """
         Compute the derivatives for the double pendulum.
@@ -55,6 +72,8 @@ def RK4_double_pendulum(t1, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, L1, 
             ) / denom2
 
         return np.array([theta1_dot, theta2_dot, theta1_ddot, theta2_ddot])
+    
+
 
     # Initialize arrays
     t = np.arange(0,t1+h,h)
@@ -63,6 +82,7 @@ def RK4_double_pendulum(t1, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, L1, 
     theta2 = np.zeros(n)
     theta1_dot = np.zeros(n)
     theta2_dot = np.zeros(n)
+    energy = np.zeros(n)
 
     # Set initial conditions
     theta1[0] = theta1_0
@@ -83,22 +103,37 @@ def RK4_double_pendulum(t1, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, L1, 
 
         theta1[i], theta2[i], theta1_dot[i], theta2_dot[i] = y_next
 
+        energy[i] = compute_energy(
+            normalize_theta(theta1[i-1]),
+            normalize_theta(theta2[i-1]),
+            theta1_dot[i-1],
+            theta2_dot[i-1],
+            m1,
+            m2,
+            L1,
+            L2,
+            g
+        )
+
+
     theta1 = np.mod(theta1+np.pi, 2*np.pi)-np.pi
     theta2 = np.mod(theta2+np.pi, 2*np.pi)-np.pi
+
     
-    return t, theta1, theta2, theta1_dot, theta2_dot
+    
+    return t, theta1, theta2, theta1_dot, theta2_dot,energy
 
 # Parameters
-L1, L2 = 1.0, 1.0  # Lengths of the pendulums
-m1, m2 = 1.0, 1.0  # Masses of the pendulum bobs
+L1, L2 = 1.0, 0.7  # Lengths of the pendulums
+m1, m2 = 1.0, 2.0  # Masses of the pendulum bobs
 g =sp.constants.g         # Gravitational acceleration
-theta1_0, theta2_0 = 1*np.pi, 0.01*np.pi  # Initial angles
+theta1_0, theta2_0 = 0.1*np.pi, 0.001*np.pi  # Initial angles
 theta1_dot_0, theta2_dot_0 = 0.0, 0.0         # Initial angular velocities
-t1 = 10.0          # Simulation time
+t1 = 200.0          # Simulation time
 h = 0.001           # Time step
 
 # Simulate
-t, theta1, theta2, theta1_dot, theta2_dot = RK4_double_pendulum(
+t, theta1, theta2, theta1_dot, theta2_dot,E = RK4_double_pendulum(
     t1, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, L1, L2, m1, m2, g, h
 )
 
