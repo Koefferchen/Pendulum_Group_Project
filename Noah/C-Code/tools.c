@@ -126,3 +126,86 @@ int save_matrix( double **matrix, int x_dim, int y_dim, char* save_as )
     fclose(file_pointer);
     return 0;
 }
+
+    // calculate the average of the absolute difference between array1 and array2 (elementwise)
+double average_diff( double array1[], double array2[] )
+{
+        // assume: array1[0] = array2[0] = length(array1) = length(array2)
+    double diff = 0.0;  
+
+    for(int i = 0; i < array1[0]; i++ )     //
+    {
+        diff = diff + fmin( fabs( array1[i+1] - array2[i+1] ), fabs( array1[i+1] + array2[i+1] )  );
+    }
+
+    return diff/array1[0];
+}
+
+    // translates all values of an array into the range [0, limit_up] the way modulo should
+int modulus( double array[], double limit_up )
+{
+    for(int i = 0; i < array[0]; i++)
+    {
+        if( array[i+1] > 0)
+        {
+            array[i+1] = fmod(array[i+1], limit_up ) ;
+        } else {
+            array[i+1] = fmod(array[i+1] , limit_up ) + limit_up;
+        }
+    }
+
+    return 0;
+}
+
+
+   // adds two arrays of size "length" elementwise and returns a pointer to the result
+double *add_IP( double *array1, double *array2, double *result, int length)
+{
+   for(int i = 0; i < length; i++)
+   {
+      result[i] = array1[i] + array2[i];
+   }
+   return result;
+}
+
+   // multiplies an array of size "length" elementwise by a scalar and return pointer to the result
+double *scale_IP( double *array1, double scalar, double *result, int length)
+{
+   for(int i = 0; i < length; i++)
+   {
+      result[i] = array1[i] * scalar;
+   }
+   return result;
+}
+
+    // calculates the result array of the linearcombination of (# = "array_numb") given arrays of size "array_length" and their scalar coefficients. Returns result array
+double *linear_comb_arrays( double** arrays, double* coeffs, double *result, int array_length, int array_numb )
+{
+    for( int i = 0; i < array_numb; i++ )
+    {
+        for( int j = 0; j < array_length; j++ )
+        {
+            if( i == 0 ){ result[j] = 0.0; }
+            result[j] = result[j] + coeffs[i] * arrays[i][j];
+        }
+    }
+    return result;
+}
+
+int zeros( double array[], int length )
+{
+    for( int i = 0; i < length; i++ )
+    {
+        array[i] = 0.0;
+    }
+    return 0;
+}
+
+int copy_array( double array[], double copy[], int length)
+{
+    for( int i = 0; i < length; i++ )
+    {
+        copy[i] = array[i];
+    }
+    return 0;
+}
