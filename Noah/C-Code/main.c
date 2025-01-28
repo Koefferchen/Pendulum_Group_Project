@@ -226,15 +226,15 @@ int double_poincare(void)
 
 int test_num_solvers(void)
 {
-    double t_end        = 10.0;         
+    double t_end        = 100.0;         
     double g_grav       = 9.81;
     double length       = 1.0;       
     double theta_0      = 0.5 * M_PI; 
-    double theta_dot_0  = 0.0 * M_PI; 
+    double theta_dot_0  = 0.2 * M_PI; 
     int    steps;
     double h;
-    int    h_steps      = 100;
-    double h_end        = 0.1;
+    int    h_steps      = 200;
+    double h_end        = 1.0;
     double h_delta      = h_end / (double)h_steps;
     double h_array      [h_steps+1];
     double dev_array_Eul[h_steps+1];    
@@ -257,27 +257,31 @@ int test_num_solvers(void)
         double *t_values      = (double *)malloc( (steps+1) * sizeof(double) );
         double *theta         = (double *)malloc( (steps+1) * sizeof(double) );         
         double *theta_dot     = (double *)malloc( (steps+1) * sizeof(double) );    
-        double *theta_analyt  = (double *)malloc( (steps+1) * sizeof(double) );
+        double *theta_analyt  = (double *)malloc( (steps+1) * sizeof(double) );            
         
-        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &RuKu_4 );       
         solve_analyt_pend( params, theta_analyt );
-
-        modulus(theta, +2*M_PI);
         modulus(theta_analyt, +2*M_PI);
+        h_array[i+1]    = h;
 
+        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &Euler );       
+        modulus(theta, +2*M_PI);
         dev_array_Eul[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          // average_diff( theta, theta_analyt);
 
+        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &RuKu_4 );       
+        modulus(theta, +2*M_PI);
+        dev_array_RK4[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          // average_diff( theta, theta_analyt);
 
-        h_array[i+1]    = h;
-        
+        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &RuKu_6 );       
+        modulus(theta, +2*M_PI);
+        dev_array_RK6[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          // average_diff( theta, theta_analyt);
+
         free(theta_analyt); free(t_values); free(theta); free(theta_dot); 
     }
     
 
     merge_arrays(6, params, h_steps, params_ext);                           
-    save_numb_list7(h_array, params_ext, dev_array_Eul, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_RK4.txt" );   // save data in .txt
+    save_numb_list7(h_array, params_ext, dev_array_Eul, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt
     
-    free(null);
     return 0;
 }
 
