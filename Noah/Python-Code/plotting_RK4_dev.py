@@ -31,7 +31,7 @@ def ultimate_plot_pend():
     
     general_format_dict = standard_format_dict
     zoom_parameters = no_zooming
-    general_format_dict["log_scaling_xy"] = [False, True, 10]
+    general_format_dict["log_scaling_xy"] = [True, True, 10]
 
     
     data_set_1  = h, None, deviation, None 

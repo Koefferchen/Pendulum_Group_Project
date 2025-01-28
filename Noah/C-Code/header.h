@@ -16,7 +16,7 @@
                                     void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
     void    RuKu_6              ( int n_ODE, double h, double t, double y[], 
                                     void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
-    int     test_RK4            ( void );
+    int     test_num_solvers    ( void );
 
         // simple pendulum
     int     simple_pendulum     (void);
