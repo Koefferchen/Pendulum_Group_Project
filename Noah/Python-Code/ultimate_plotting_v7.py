@@ -1,38 +1,45 @@
 
-# ------------------ ultimate_plotting.py ---- Version 05 ---- Last Update: 21.01.25 --------------------
+# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 27.01.25 -----------------------
 
 
-import numpy as np                      # if not installed, run:   !pip install numpy
-import matplotlib.pyplot as plt         # if not installed, run:   !pip install matplotlib
+
+    # if some <library> not installed: "!pip install <library>"
+import numpy as np                      
+import matplotlib.pyplot as plt         
 from matplotlib.colors import Normalize
 from matplotlib.cm import ScalarMappable
-import seaborn as sns                   # if not installed, run:   !pip install seaborn
-from scipy.optimize import curve_fit    # if not installed, run:   !pip install scipy
+import seaborn as sns                   
+from scipy.optimize import curve_fit    
 
 
 
-# ----------------------- This is the main program to create plots from data points ---------------------------
-#-------------------------------- It is meant to be casted by "ultimate_plot" ---------------------------------
-
-def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict):
+    # generalised main program for plotting -- needs to by called by ultimate_plot
+def ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict):
     
-    gfd = general_format_dict      # eine Abkürzung 
+        # abbreviation
+    gfd = general_format_dict      
     
-    ultimate_data_check(all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict)
+        # check if data is given in correct form
+    ultimate_data_check(all_data, writtings, zoom_params, save_plot, all_sample_format_dicts, general_format_dict)
     
-    fig, ax = plt.subplots(figsize = gfd["fig_side_lengh"], dpi = gfd["dpi_resoltion"])   # erstelle Hauptplot
+        # initialize plot of given size & resolution
+    fig, ax     = plt.subplots(figsize = gfd["fig_side_lengh"], dpi = gfd["dpi_resoltion"])   
+    init_legend = False
 
-    if (gfd["custom_x_range"][0] == True):                                                # falls gewünscht: beschränke den Sicht-auschnitt
-        plt.xlim(gfd["custom_x_range"][1], gfd["custom_x_range"][2])
-    if (gfd["custom_y_range"][0] == True):
-        plt.ylim(gfd["custom_y_range"][1], gfd["custom_y_range"][2])    
-    
-    plt.grid(visible=True, which='major', color='black', linestyle='-', alpha=0.5)        # erstelle ein Hintergrund-Raster      
+        # add grid lines to the background
+    plt.grid(visible=True, which='major', color='black', linestyle='-', alpha=0.5)           
     plt.grid(visible=True, which='minor', color='black', linestyle='-', alpha=0.1)
     plt.minorticks_on()
+
+        # limit plot window in x & y direction
+    if (gfd["custom_x_range"][0] ):                                               
+        plt.xlim(gfd["custom_x_range"][1], gfd["custom_x_range"][2])
+    if (gfd["custom_y_range"][0] ):
+        plt.ylim(gfd["custom_y_range"][1], gfd["custom_y_range"][2])    
     
+        # realise font & label settings
     plt.rc ('text',   usetex    = True)
-    plt.rc ('font',   family    = gfd["font_family"])                                     # stelle Schriftgrößen & -stile ein
+    plt.rc ('font',   family    = gfd["font_family"])                                     
     plt.rc ('font',   size      = gfd["standard_font_size"])        
     plt.rc ('axes',   titlesize = gfd["title_size"])       
     plt.rc ('axes',   labelsize = gfd["ax_label_font_size"])           
@@ -40,65 +47,78 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
     plt.rc ('ytick',  labelsize = gfd["y_tick_font_size"]) 
     plt.rc ('legend', fontsize  = gfd["legend_font_size"])     
 
-    if( gfd["log_scaling_xy"][0] == True ):                                               # Stellt logarithmische Skalierung der Achsen ein (Basis 10)
+        # scale axes logarithmic 
+    if( gfd["log_scaling_xy"][0] ):                                              
         ax.set_xscale("log", base=gfd["log_scaling_xy"][2])
-    if( gfd["log_scaling_xy"][1] == True ):
+    if( gfd["log_scaling_xy"][1] ):
         ax.set_yscale("log", base=gfd["log_scaling_xy"][2])
 
-    ax.set_title(writtings["titel"])                                                      # Beschrifte die Achsen mit Text
-    ax.set_xlabel(writtings["x_beschriftung"])
-    ax.set_ylabel(writtings["y_beschriftung"])
+        # set title and ax-labels
+    ax.set_title(writtings["title"])                                                      
+    ax.set_xlabel(writtings["x_ax_label"])
+    ax.set_ylabel(writtings["y_ax_label"])
     
-    if not(gfd["colorbar"][0] == None ):
-        add_colorbar( fig, gfd )
+        # add the given extra label for additional information to the plot
+    if(extra_label["do_label"]):
+        ax.text(extra_label["position"][0], extra_label["position"][1], extra_label["content"], transform=ax.transAxes, fontsize=extra_label["font_size"], ha='left', va="top")
+        init_legend = True
+
+        # add the given colorbar to the side of the plot
+    if (colorbar_params["do_cbar"]):
+        add_colorbar( fig, colorbar_params )
     
-    if (zoom_parameters["do_zooming"] == True):                                           # erstelle ein Subwindow im Plot mit Zoom
-        sub_axes = plt.axes(zoom_parameters["window_position"] + zoom_parameters["window_size"])
-        plt.xlim(zoom_parameters["x_range"][0], zoom_parameters["x_range"][1])                                                         
-        plt.ylim(zoom_parameters["y_range"][0], zoom_parameters["y_range"][1])
+        # create a window within the plot which shows a magnified section of the plot
+    if (zoom_params["do_zooming"] == True):                                          
+        sub_axes = plt.axes(zoom_params["window_position"] + zoom_params["window_size"])
+        plt.xlim(zoom_params["x_range"][0], zoom_params["x_range"][1])                                                         
+        plt.ylim(zoom_params["y_range"][0], zoom_params["y_range"][1])
         plt.grid(visible=True, which='major', color='black', linestyle='-', alpha=0.5)         
         plt.grid(visible=True, which='minor', color='black', linestyle='-', alpha=0.1)
         plt.minorticks_on()
 
-    do_labels = False
+        # for each tuple of (data_set, style_instructions)
     for i in range( len(all_sample_format_dicts) ):
         
-        sample_format_dict = all_sample_format_dicts[i]             # trage nacheinander alle Messdaten mit ihren Farben & Größen ein
-               
+            # unpack style_instructions
+        sample_format_dict = all_sample_format_dicts[i]             
+
+            # unpack data_set
         x_data     = all_data[0 + 4*i]
         x_data_err = all_data[1 + 4*i]
         y_data     = all_data[2 + 4*i]
         y_data_err = all_data[3 + 4*i]
         
-        if (isinstance(x_data_err, float) == True):                 # implementiere shortcut zur Eingabe von überall gleichen Fehlern
+            # if a float "err" is given instead of an error_array: expand the error to be (err, err, err, ...)
+        if (isinstance(x_data_err, float) == True):                 
               x_data_err = np.full( len(x_data), x_data_err )
         if (isinstance(y_data_err, float) == True):
               y_data_err = np.full( len(y_data), y_data_err )
         
-        if ( x_data_err == False):                                  # damit errorbar versteht, dass keine Fehlerbalken gezeichnet werden (shortcut)       
-            x_data_err = None
-        if ( y_data_err == False):
-            y_data_err = None
-        
+            # check if any labels were given
         if not( sample_format_dict["label"] == None ):
-            do_labels = True
+            init_legend = True
 
+            # plot the data_set
         ax.errorbar(x_data, y_data , xerr = x_data_err, yerr = y_data_err, **sample_format_dict)
          
-        if (zoom_parameters["do_zooming"] == True):                 # trage in das Subwindow mit Zoom alle Messdaten ein
+            # plot the zoom_window
+        if (zoom_params["do_zooming"] == True):                 
             sub_axes.errorbar(x_data, y_data , xerr = x_data_err, yerr = y_data_err, **sample_format_dict)
-            
-    if(do_labels):
-        plt.legend()                                                # erstelle dort, wo noch Platz ist, ein Label für jedes Datenset
+
+        # plots the labels    
+    if(init_legend):
+        plt.legend()                                                
     
-    
-    if (save_plot[0] == True):                                      # speicher den Plot
+        # save the plot at given place in given format
+    if (save_plot[0] == True):                                      
          plt.savefig( save_plot[1], bbox_inches='tight')
     
     
-# ---------- Hilfsprogramm für Eingabeshortcuts und Überprüfung richtiger Eingabe -----------    
+# ----------------------------------- Support Programs -----------------------------------
     
-def ultimate_data_check(all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict):
+
+    # check if data is entered correctly
+def ultimate_data_check(all_data, writtings, zoom_params, save_plot, all_sample_format_dicts, general_format_dict):
     
     if (len(all_data) != 4 * len(all_sample_format_dicts)):
         print("Die Anzahl der Argumente ist kein Vielfaches von 4!")
@@ -117,62 +137,85 @@ def ultimate_data_check(all_data, writtings, zoom_parameters, save_plot, all_sam
         if not (isinstance(x, np.ndarray) == True and isinstance(y, np.ndarray) == True ):
             print("Alle X- und Y-Werte müssen in Numpy-arrays gegeben werden.")
             print("Probiere es mit ' X = np.array(X) '. ")
-        
-        
-    
-              
-# ---------- Hilfsprgramm zur Formatierung von Plots ----------------------------------------
-    
+
+
+    # format plot according to the DIN-norm    
 def din_norm(scale):
     return [ 29.7/scale, 21.0/scale ]
 
 
-# ------------ hilfreiche Standard-dictonaries : --------------------------------------------
+    # adds colorbar at the side of the plot
+def add_colorbar(fig, colorbar_params):
+    cbar_ax = fig.add_axes(colorbar_params["position"] + colorbar_params["size"]) 
+    sm = ScalarMappable(Normalize(vmin=colorbar_params["scale_range"][0], vmax=colorbar_params["scale_range"][1]), cmap=colorbar_params["colormap"])  # Create ScalarMappable
+    sm.set_array([]) 
+    fig.colorbar(sm, cax=cbar_ax).set_label(colorbar_params["title"]) 
 
+
+
+# --------------------- Standard dictionaries to be used in "ultimate_plot" ---------------------
+
+
+    # option for "general_format_dict"
 standard_format_dict = {
     "fig_side_lengh"       : din_norm(4),           # Format des Bildes: [x_länge, y_länge]
     "dpi_resoltion"        : 300,                   # Auflösungsfaktor des Bildes
     "font_family"          : 'computer modern',     # Schriftart
     "standard_font_size"   : 11,                    # steuert die Standardtextgröße
-    "title_size"           : 15,                    # Schriftgröße des Titels
+    "title_size"           : 15,                    # Schriftgröße des titles
     "legend_font_size"     : 10,                    # Schriftgröße der Legende
     "ax_label_font_size"   : 12,                    # Schriftgröße der x- und y-Beschriftungen
     "x_tick_font_size"     : 8,                     # Schriftgröße der x-Tick-Labels
     "y_tick_font_size"     : 8,                     # Schriftgröße der y-Tick-Labels
     "custom_x_range"       : [ False, 0, 100 ],     # Wahl des Bildausschnitts vom Koordinatensystem (Hauptplot)
     "custom_y_range"       : [ False, 0, 100 ],     # Format: [ ja/nein, unteres Limit, oberes Limit ]
-    "log_scaling_xy"       : [ False, False, 10 ],  # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
-    "colorbar"             : [ None, "colorbar", -1, 1 ]   # add a colorbar to the right side of your plot ranging [-1, 1]
+    "log_scaling_xy"       : [ False, False, 10 ]   # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
 }  
-# ---> als 'general_format_dict'
 
+    # option for "zoom_params"
 no_zooming = {
-    "do_zooming"      : False,                   # True ---> Zoomausschnitt aktiviert
-    "x_range"         : [ 0, 0 ],                # Wahl des Bildausschnitts vom Koordinatensystem (Zoom-plot)
+    "do_zooming"      : False,                      # True ---> Zoomausschnitt aktiviert
+    "x_range"         : [ 0, 0 ],                   # Wahl des Bildausschnitts vom Koordinatensystem (Zoom-plot)
     "y_range"         : [ 0, 0 ],
-    "window_position" : [ 0, 0 ],                # relative Position des sub_windows: minimal [0, 0] maximal [1, 1]
-    "window_size"     : [ 0, 0 ]                 # relative Größe des sub_windwows:   minimal [0, 0] maximal [1, 1]
+    "window_position" : [ 0, 0 ],                   # relative Position des sub_windows: minimal [0, 0] maximal [1, 1]
+    "window_size"     : [ 0, 0 ]                    # relative Größe des sub_windwows:   minimal [0, 0] maximal [1, 1]
 }
-# ---> als 'zoom_parameters'
 
+    # option for "colorbar_params"
+no_colorbar = {
+    "do_cbar"       : False,
+    "position"      : [0.92, 0.15],
+    "size"          : [0.03, 0.70],
+    "scale_range"   : [-np.pi, +np.pi],
+    "title"         : "Colorbar",
+    "colormap"      : "magma"
+}
+
+    # option for "extra_label"
+no_extra_label = {
+    "do_label"  :   False,
+    "position"  :   [1.03, 0.97],
+    "font_size" :   12,
+    "content"   :   "I used these parameters: \n m = 1kg"
+}
+
+    # general form of each "sample_format_dict"
 standard_sample_dict = {
-    "label"      : r"Messwerte",          # r" $ Hier ist Mathmode $ - hier nicht" ---> mit $$ einzäunen
+    "label"      : r"Measurement 1",          
     "fmt"        : 'o', 
-    "color"      : "red",                               # sämtliche farben werdem auf englisch unterstützt
+    "color"      : "red",                               
     "markersize" : 4, 
     "linewidth"  : 1,
     "capsize"    : 0,
     "alpha"      : 1  
 }
-# ---> Als Vorlage für ein Element der Liste 'all_sample_format_dicts'
 
+    # option for "writtings"
 standard_writtings = {
-    "titel"           : r"Titel",
-    "x_beschriftung"  : r"X-Werte [Einheit]",
-    "y_beschriftung"  : r"Y-Werte [Einheit]"
+    "title"           : r"title",
+    "x_ax_label"  : r"X-Werte [Einheit]",
+    "y_ax_label"  : r"Y-Werte [Einheit]"
 }
-# ---> Als Vorlage für Achsenbeschriftungen in 'writtings'
-
 
 
 #--------------------- Wahl der Datenpunkt-Form ------------------------------------
@@ -189,7 +232,7 @@ standard_writtings = {
 #    *  Einzelne Punkte, Darstellung als farbige *-Zeichen
 #    +	Einzelne Punkte, Darstellung als farbige +-Zeichen"
 #
-# ---> als Eingabeparameter für 'fmt'
+# ---> option for "fmt"
 
 
 
@@ -238,14 +281,4 @@ def linear_fit(x_data, y_data, fit_range , y_err = None):
     return x_fit, y_fit, parameters[0], parameters[1]
 
 
-def add_colorbar(fig, format_dict):
 
-    cbar_width = 0.03
-    cbar_heigh = 0.70
-    cbar_x_pos = 0.92
-    cbar_y_pos = 0.15
-
-    cbar_ax = fig.add_axes([cbar_x_pos, cbar_y_pos, cbar_width, cbar_heigh]) 
-    sm = ScalarMappable(Normalize(vmin=format_dict["colorbar"][2], vmax=format_dict["colorbar"][3]), cmap=format_dict["colorbar"][0])  # Create ScalarMappable
-    sm.set_array([]) 
-    fig.colorbar(sm, cax=cbar_ax).set_label(format_dict["colorbar"][1]) 

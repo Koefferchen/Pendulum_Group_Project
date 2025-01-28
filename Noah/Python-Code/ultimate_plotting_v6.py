@@ -1,5 +1,5 @@
 
-# ------------------ ultimate_plotting.py ---- Version 05 ---- Last Update: 21.01.25 --------------------
+# ------------------ ultimate_plotting.py ---- Version 06 ---- Last Update: 24.01.25 --------------------
 
 
 import numpy as np                      # if not installed, run:   !pip install numpy
@@ -14,11 +14,11 @@ from scipy.optimize import curve_fit    # if not installed, run:   !pip install 
 # ----------------------- This is the main program to create plots from data points ---------------------------
 #-------------------------------- It is meant to be casted by "ultimate_plot" ---------------------------------
 
-def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict):
+def ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, save_plot, all_sample_format_dicts, general_format_dict):
     
     gfd = general_format_dict      # eine Abkürzung 
     
-    ultimate_data_check(all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict)
+    ultimate_data_check(all_data, writtings, zoom_params, save_plot, all_sample_format_dicts, general_format_dict)
     
     fig, ax = plt.subplots(figsize = gfd["fig_side_lengh"], dpi = gfd["dpi_resoltion"])   # erstelle Hauptplot
 
@@ -49,13 +49,13 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
     ax.set_xlabel(writtings["x_beschriftung"])
     ax.set_ylabel(writtings["y_beschriftung"])
     
-    if not(gfd["colorbar"][0] == None ):
-        add_colorbar( fig, gfd )
+    if (colorbar_params["do_cbar"]):
+        add_colorbar( fig, colorbar_params )
     
-    if (zoom_parameters["do_zooming"] == True):                                           # erstelle ein Subwindow im Plot mit Zoom
-        sub_axes = plt.axes(zoom_parameters["window_position"] + zoom_parameters["window_size"])
-        plt.xlim(zoom_parameters["x_range"][0], zoom_parameters["x_range"][1])                                                         
-        plt.ylim(zoom_parameters["y_range"][0], zoom_parameters["y_range"][1])
+    if (zoom_params["do_zooming"] == True):                                           # erstelle ein Subwindow im Plot mit Zoom
+        sub_axes = plt.axes(zoom_params["window_position"] + zoom_params["window_size"])
+        plt.xlim(zoom_params["x_range"][0], zoom_params["x_range"][1])                                                         
+        plt.ylim(zoom_params["y_range"][0], zoom_params["y_range"][1])
         plt.grid(visible=True, which='major', color='black', linestyle='-', alpha=0.5)         
         plt.grid(visible=True, which='minor', color='black', linestyle='-', alpha=0.1)
         plt.minorticks_on()
@@ -85,7 +85,7 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
 
         ax.errorbar(x_data, y_data , xerr = x_data_err, yerr = y_data_err, **sample_format_dict)
          
-        if (zoom_parameters["do_zooming"] == True):                 # trage in das Subwindow mit Zoom alle Messdaten ein
+        if (zoom_params["do_zooming"] == True):                 # trage in das Subwindow mit Zoom alle Messdaten ein
             sub_axes.errorbar(x_data, y_data , xerr = x_data_err, yerr = y_data_err, **sample_format_dict)
             
     if(do_labels):
@@ -98,7 +98,7 @@ def ultimate_plot_advanced (all_data, writtings, zoom_parameters, save_plot, all
     
 # ---------- Hilfsprogramm für Eingabeshortcuts und Überprüfung richtiger Eingabe -----------    
     
-def ultimate_data_check(all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict):
+def ultimate_data_check(all_data, writtings, zoom_params, save_plot, all_sample_format_dicts, general_format_dict):
     
     if (len(all_data) != 4 * len(all_sample_format_dicts)):
         print("Die Anzahl der Argumente ist kein Vielfaches von 4!")
@@ -141,8 +141,7 @@ standard_format_dict = {
     "y_tick_font_size"     : 8,                     # Schriftgröße der y-Tick-Labels
     "custom_x_range"       : [ False, 0, 100 ],     # Wahl des Bildausschnitts vom Koordinatensystem (Hauptplot)
     "custom_y_range"       : [ False, 0, 100 ],     # Format: [ ja/nein, unteres Limit, oberes Limit ]
-    "log_scaling_xy"       : [ False, False, 10 ],  # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
-    "colorbar"             : [ None, "colorbar", -1, 1 ]   # add a colorbar to the right side of your plot ranging [-1, 1]
+    "log_scaling_xy"       : [ False, False, 10 ]   # Loarithmische Skalierung der [X-Achse, Y-Achse, Basis]
 }  
 # ---> als 'general_format_dict'
 
@@ -153,7 +152,17 @@ no_zooming = {
     "window_position" : [ 0, 0 ],                # relative Position des sub_windows: minimal [0, 0] maximal [1, 1]
     "window_size"     : [ 0, 0 ]                 # relative Größe des sub_windwows:   minimal [0, 0] maximal [1, 1]
 }
-# ---> als 'zoom_parameters'
+# ---> als 'zoom_params'
+
+no_colorbar = {
+    "do_cbar"       : False,
+    "position"      : [0.92, 0.15],
+    "size"          : [0.03, 0.70],
+    "scale_range"   : [-np.pi, +np.pi],
+    "title"         : "Colorbar",
+    "colormap"      : "magma"
+}
+# ---> als 'colorbar_params'
 
 standard_sample_dict = {
     "label"      : r"Messwerte",          # r" $ Hier ist Mathmode $ - hier nicht" ---> mit $$ einzäunen
@@ -238,14 +247,10 @@ def linear_fit(x_data, y_data, fit_range , y_err = None):
     return x_fit, y_fit, parameters[0], parameters[1]
 
 
-def add_colorbar(fig, format_dict):
+def add_colorbar(fig, colorbar_params):
 
-    cbar_width = 0.03
-    cbar_heigh = 0.70
-    cbar_x_pos = 0.92
-    cbar_y_pos = 0.15
-
-    cbar_ax = fig.add_axes([cbar_x_pos, cbar_y_pos, cbar_width, cbar_heigh]) 
-    sm = ScalarMappable(Normalize(vmin=format_dict["colorbar"][2], vmax=format_dict["colorbar"][3]), cmap=format_dict["colorbar"][0])  # Create ScalarMappable
+    cbar_ax = fig.add_axes(colorbar_params["position"] + colorbar_params["size"]) 
+    sm = ScalarMappable(Normalize(vmin=colorbar_params["scale_range"][0], vmax=colorbar_params["scale_range"][1]), cmap=colorbar_params["colormap"])  # Create ScalarMappable
     sm.set_array([]) 
-    fig.colorbar(sm, cax=cbar_ax).set_label(format_dict["colorbar"][1]) 
+    fig.colorbar(sm, cax=cbar_ax).set_label(colorbar_params["title"]) 
+

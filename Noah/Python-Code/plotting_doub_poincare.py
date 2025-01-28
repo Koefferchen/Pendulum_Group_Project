@@ -3,17 +3,18 @@
 
 
 
-from ultimate_plotting_v5 import *
+from ultimate_plotting_v6 import *
 
 
     # importing the data generated
 data        = np.loadtxt("../data/data_doub_poincare.txt", skiprows=0 )
 
-
 params      = data[ : , 3 ]
 repitions   = int(params[13])                # how many sets of data pairs there are
+E_value     = params[12]
 theta2_0    = data[ 9 , 3::4]
-cycl_colormap    = sns.color_palette("magma", n_colors=repitions ) # + sns.color_palette("hls", repitions//2)[::-1]
+cmap = "magma"
+cycl_colormap    = sns.color_palette( cmap, n_colors=repitions ) # + sns.color_palette("hls", repitions//2)[::-1]
 
     # plotting poincare section at ( theta1_0 = 0 ; theta1_dot_0 > 0 ) for the double pendulum
 def ultimate_plot_pend():
@@ -29,13 +30,22 @@ def ultimate_plot_pend():
     }
 
     writtings = {
-        "titel"           : r"The Poincare Section of the double pendulum for $\theta_1 = 0$",
+        "titel"           : r"The Poincare Section of the double pendulum for ($E = {:.2f}$)".format(E_value),
         "x_beschriftung"  : r"Angle $\theta_2$ [$rad$]",
         "y_beschriftung"  : r"Frequency $\dot {\theta}_2$ [$s^{-1}$]"
     }
     
     general_format_dict = standard_format_dict
-    zoom_parameters = no_zooming
+    zoom_params = no_zooming
+    
+    colorbar_params = {
+        "do_cbar"       : True,
+        "position"      : [0.92, 0.15],
+        "size"          : [0.03, 0.70],
+        "scale_range"   : [-np.pi, +np.pi],
+        "title"         : r"$\theta_1 (t=0)$",
+        "colormap"      : cmap
+    }
 
     all_sample_format_dicts = []
     all_data = ()
@@ -54,7 +64,7 @@ def ultimate_plot_pend():
                            
     save_plot = True, "../plots/plot_doub_poincare.jpg"                                      
         
-    ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
+    ultimate_plot_advanced( all_data, writtings, zoom_params, colorbar_params, save_plot, all_sample_format_dicts, general_format_dict )
 ultimate_plot_pend()
 ultimate_plot_pend()
 
