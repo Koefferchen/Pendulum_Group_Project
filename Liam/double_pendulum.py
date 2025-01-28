@@ -46,7 +46,7 @@ def compute_energy(theta1, theta2, omega1, omega2, m1, m2, l1, l2, g):
     # Potential energy
     V = -(m1 + m2) * g * l1 * np.cos(theta1) - m2 * g * l2 * np.cos(theta2)
 
-    return T + V
+    return T + 2 * V
 
 def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, h, method="Euler"):
     """Numerically solves double pendulum."""
