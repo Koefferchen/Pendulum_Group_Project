@@ -157,6 +157,19 @@ int modulus( double array[], double limit_up )
     return 0;
 }
 
+    // translates a value into the range [0, limit_up] the way modulo should
+double modulus_s( double value, double limit_up )
+{
+    double result;
+    if( value > 0)
+    {
+        result = fmod(value, limit_up ) ;
+    } else {
+        result = fmod(value , limit_up ) + limit_up;
+    }
+
+    return result;
+}
 
    // adds two arrays of size "length" elementwise and returns a pointer to the result
 double *add_IP( double *array1, double *array2, double *result, int length)
@@ -192,6 +205,7 @@ double *linear_comb_arrays( double** arrays, double* coeffs, double *result, int
     return result;
 }
 
+    // fill the given array of length "length" with "0"
 int zeros( double array[], int length )
 {
     for( int i = 0; i < length; i++ )
@@ -201,11 +215,21 @@ int zeros( double array[], int length )
     return 0;
 }
 
+    // copy the array "array" into the array "copy" of same length "length"
 int copy_array( double array[], double copy[], int length)
 {
     for( int i = 0; i < length; i++ )
     {
         copy[i] = array[i];
     }
+    return 0;
+}
+
+    // erase last line printed in shell)
+int erase_last_line(void)
+{        
+    printf("\r");
+    printf("\x1b[1F"); // Move to beginning of previous line
+    printf("\x1b[2K"); // Clear entire line
     return 0;
 }

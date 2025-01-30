@@ -38,6 +38,7 @@
     int     calc_doub_theta2_0  ( double params[], double E_value );
     int     solve_doub_poincare ( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[],
                                     void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
+    double  find_doub_theta2_max( double theta2_min, double theta2_max, const double tol, double params[] );  
 
 
         // triple pendulum
@@ -61,10 +62,12 @@
     int     free_2d_matrix      ( double **matrix );
     double  average_diff        ( double array1[], double array2[] );
     int     modulus             ( double array[], double limit_up );
+    double  modulus_s           ( double value, double limit_up );
     double  *add_IP             ( double *array1, double *array2, double *result, int length);
     double  *scale_IP           ( double *array1, double scalar, double *result, int length);
     double  *linear_comb_arrays ( double** arrays, double* coeffs, double *result, int array_length, int array_numb );
     int     zeros               ( double array[], int length );
     int     copy_array          ( double array[], double copy[], int length);
+    int     erase_last_line     (void);
 
 #endif
