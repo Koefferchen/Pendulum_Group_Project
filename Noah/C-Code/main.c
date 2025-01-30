@@ -14,17 +14,25 @@ int main(void)
 
     test_num_solvers();
 
+<<<<<<< HEAD
+=======
     erase_last_line();
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     printf("Simulation Data generated\n");
     return 0;
 }
 
+<<<<<<< HEAD
+int simple_pendulum(void)
+{
+=======
 // -----------------------------------------------------------------------------
 
 int simple_pendulum(void)
 {
     erase_last_line();
     printf("--- Simple Pendulum \n");
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     double t_end        = 10.0;             // simulation time [seconds]            
     double h            = 0.0001;            // step size [steps per second]
@@ -51,6 +59,10 @@ int simple_pendulum(void)
     return 0;
 }
 
+<<<<<<< HEAD
+int double_pendulum(void)
+{
+=======
 
 // -----------------------------------------------------------------------------
 
@@ -60,6 +72,7 @@ int double_pendulum(void)
     erase_last_line();
     printf("--- Double Pendulum \n");
     
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     double t_end        = 10.0;             // simulation time [seconds]            
     double h            = 0.001;            // step size [steps per second]
     double g_grav       = 9.80665;
@@ -90,6 +103,15 @@ int double_pendulum(void)
     return 0;
 }
 
+<<<<<<< HEAD
+int triple_pendulum(void)
+{
+    double t_end         = 20.0;             // simulation time [seconds]            
+    double h             = 0.001;            // step size [steps per second]
+    double g_grav        = 9.81;
+    double mass_1        = 100.0;
+    double mass_2        = 10.0;
+=======
 
 int double_poincare(void)
 {    
@@ -155,16 +177,26 @@ int triple_pendulum(void)
     double g_grav        = 9.81;
     double mass_1        = 1.0;
     double mass_2        = 1.0;
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     double mass_3        = 1.0;
     double length_1      = 1.0;
     double length_2      = 1.0;
     double length_3      = 1.0;
+<<<<<<< HEAD
+    double theta_1_0     = 0.5 *M_PI;
+    double theta_1_dot_0 = 0.0 *M_PI;
+    double theta_2_0     = 0.5 *M_PI;
+    double theta_2_dot_0 = 0.0 *M_PI;
+    double theta_3_0     = 0.0 *M_PI;
+    double theta_3_dot_0 = 0.0 *M_PI;
+=======
     double theta_1_0     = 1.0 *M_PI;
     double theta_1_dot_0 = 0.0 *M_PI;
     double theta_2_0     = 0.0 *M_PI;
     double theta_2_dot_0 = 0.0 *M_PI;
     double theta_3_0     = 0.0 *M_PI;
     double theta_3_dot_0 = 0.5 *M_PI;
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     int    steps = (int)(t_end/h); 
     double params[] = { t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
@@ -187,11 +219,17 @@ int triple_pendulum(void)
     return 0;
 }
 
+<<<<<<< HEAD
+
+int triple_chaos(void)
+{
+=======
 int triple_chaos(void)
 {
     erase_last_line();
     printf("--- Triple Pendulum Chaos \n");
     
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     double t_end         = 20.0;             // simulation time [seconds]            
     double h             = 0.001;            // step size [steps per second]
     double g_grav        = 9.81;
@@ -249,12 +287,120 @@ int triple_chaos(void)
     return 0;
 }
 
+<<<<<<< HEAD
+int double_poincare(void)
+{    
+    
+    double t_end        = 50000.0;            // simulation time [seconds]            
+    double h            = 0.1;              // step size [steps per second]
+    double g_grav2      = 9.81;
+    double mass_1       = 1.0;
+    double mass_2       = 1.0;
+    double length_1     = 1.0;
+    double length_2     = 1.0;
+    
+    double theta1_0     = 0.0 *M_PI;       // fixed for given Poincare-Section
+    double theta1_dot_0 = 0.0 *M_PI;              // fixed for given Poincare-Section
+    double theta2_0;                        // iterates through [0, Pi]
+    double theta2_dot_0;                    // calculated to make the energy stay the same
+    double E_value      = 0.01;
+    int    repitions    = 1;
+    
+    int    steps = (int)(t_end/h);      // Initialisation
+    double params[] = {t_end, h, g_grav2, mass_1, mass_2, length_1, length_2, theta1_0, theta2_0, theta1_dot_0, theta2_dot_0, E_value, repitions};
+    double **data = create_2d_matrix( 4*repitions, steps+1, 0.0);
+
+    double condition_eq_1[] = {0.0, 0.0, M_PI, 0.0};
+    double condition_eq_2[] = {M_PI, 0.0, 0.0, 0.0};
+    double condition_eq_3[] = {M_PI, 0.0, M_PI, 0.0};
+    //calc_doub_energy(condition_eq_1, params, &params[11]);
+
+
+    for(int j = 0; j < repitions; j++)
+    {
+        double *t_values    = data[4*j +0];
+        double *theta2      = data[4*j +1];
+        double *theta2_dot  = data[4*j +2];
+        double *params_ext  = data[4*j +3];
+        params[8] = M_PI/20.0 + j * 2*M_PI / (double)(repitions); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        calc_doub_theta2_0(params, E_value);
+        merge_arrays(13, params, steps, params_ext);
+        solve_doub_poincare( params, t_values, theta2, theta2_dot, &RuKu_6 );
+    }
+
+    save_matrix( data, 4*repitions, steps+1, "../data/data_doub_poincare.txt");
+    return 0;
+}
+
+
+int test_num_solvers(void)
+{
+    double t_end        = 10.0;         
+    double g_grav       = 9.81;
+    double length       = 1.0;       
+    double theta_0      = 0.5 * M_PI; 
+    double theta_dot_0  = 0.0 * M_PI; 
+    int    steps;
+    double h;
+    int    h_steps      = 100;
+    double h_end        = 0.1;
+    double h_delta      = h_end / (double)h_steps;
+    double h_array      [h_steps+1];
+    double dev_array_Eul[h_steps+1];    
+    double dev_array_RK4[h_steps+1];
+    double dev_array_RK6[h_steps+1];
+    double null         [h_steps+1];    zeros(null, h_steps);
+    double params_ext   [h_steps+1];
+    double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0};
+
+    h_array[0]       = h_steps;
+    dev_array_Eul[0] = h_steps;
+    dev_array_RK4[0] = h_steps;
+    dev_array_RK6[0] = h_steps;
+
+    for( int i = 0; i < h_steps; i++ )
+    {
+        h = h_end - i * h_delta;
+        params[1]   = h;
+        steps       = (int)(t_end/h);      
+        double *t_values      = (double *)malloc( (steps+1) * sizeof(double) );
+        double *theta         = (double *)malloc( (steps+1) * sizeof(double) );         
+        double *theta_dot     = (double *)malloc( (steps+1) * sizeof(double) );    
+        double *theta_analyt  = (double *)malloc( (steps+1) * sizeof(double) );
+        
+        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &RuKu_4 );       
+        solve_analyt_pend( params, theta_analyt );
+
+        modulus(theta, +2*M_PI);
+        modulus(theta_analyt, +2*M_PI);
+
+        dev_array_Eul[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          // average_diff( theta, theta_analyt);
+
+
+        h_array[i+1]    = h;
+        
+        free(theta_analyt); free(t_values); free(theta); free(theta_dot); 
+    }
+    
+
+    merge_arrays(6, params, h_steps, params_ext);                           
+    save_numb_list7(h_array, params_ext, dev_array_Eul, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_RK4.txt" );   // save data in .txt
+    
+    free(null);
+    return 0;
+}
+
+
+int triple_compare(void)
+{
+=======
 
 int triple_compare(void)
 {
     erase_last_line();
     printf("--- Triple Pendulum Compared \n");
 
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
         // shared parameters of simple and triple pendulum
     double t_end         = 10.0;                       
     double h             = 0.001;            
@@ -317,6 +463,8 @@ int triple_compare(void)
     solve_doub_pend( params_doub, t_values, E_values, doub_theta1, doub_theta1_dot, doub_theta2, doub_theta2_dot, &RuKu_6 );
     save_numb_list7(t_values, doub_theta1, doub_theta2, trip_theta1, trip_theta2, trip_params_ex, null, "../data/data_trip_compare_3-2.txt" );  
 
+<<<<<<< HEAD
+=======
 }
 
 
@@ -391,4 +539,5 @@ int test_num_solvers(void)
     save_numb_list7(h_array, params_ext, dev_array_Eul, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt
     
     return 0;
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 }
