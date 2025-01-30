@@ -104,6 +104,39 @@ int calc_doub_energy( double y[], double params[], double *E_value )
     return 0;
 }
 
+<<<<<<< HEAD
+=======
+    // find the root of a the energy function (E - E_0) with respect to theta_2 
+double find_doub_theta2_max ( double theta2_min, double theta2_max, const double tol, double params[] )  
+{
+    double intersection = (theta2_max + theta2_min)/2 ;         
+    double theta1       = params[7];
+    double theta1_dot   = params[8];
+    double theta2_dot   = 0.0;
+    double E_0          = params[11];
+    double state_min[]  = {theta1, theta1_dot, theta2_min, theta2_dot};
+    double state_int[]  = {theta1, theta1_dot, intersection, theta2_dot};
+    double E_min;
+    double E_int;
+    calc_doub_energy(state_min, params, &E_min);
+    calc_doub_energy(state_int, params, &E_int);
+    //printf("%.2e --- %.4lf --- %.4lf \n", theta2_max, (E_min-E_0), (E_int-E_0));
+
+    if ( (theta2_max - theta2_min)/2 < tol )                   
+    {
+        return intersection;
+    }
+    if ( (E_min - E_0) * (E_int - E_0) <= 0 )   
+    {
+        return find_doub_theta2_max( theta2_min, intersection, tol, params );
+    }
+    else                                       
+    {
+        return find_doub_theta2_max( intersection, theta2_max, tol, params );
+    }
+
+}
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     // calculates the theta2_dot_0 from given (theta1_0, theta1_dot_0, theta2_0, E) from energy conservation
 int calc_doub_theta2_0( double params[], double E_value )
 {
@@ -115,7 +148,11 @@ int calc_doub_theta2_0( double params[], double E_value )
     double theta1_0     = params[7];
     double theta1_dot_0 = params[8];
     double theta2_0     = params[9];
+<<<<<<< HEAD
     double* theta2_dot_0 = &params[10];
+=======
+    double* theta2_dot_0= &params[10];
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     double alpha    = 0.5 * mass_2 * length_2*length_2;
     double p        = mass_2 * theta1_dot_0 * length_1*length_2 * cos(theta1_0-theta2_0);
@@ -123,8 +160,17 @@ int calc_doub_theta2_0( double params[], double E_value )
                         (mass_1+mass_2) * g_grav * length_1 * cos(theta1_0) -
                         mass_2 * g_grav * length_2 * cos(theta2_0) -
                         E_value;
+<<<<<<< HEAD
 
     *theta2_dot_0   = p/(2.0*alpha) * ( sqrt(1.0 - 4*alpha*q /p /p) - 1.0 );
+=======
+    if( p == 0.0)
+    {
+        *theta2_dot_0 = - sqrt(1/alpha);
+    } else {
+        *theta2_dot_0   = p/(2.0*alpha) * ( sqrt(1.0 - 4*alpha*q /p /p) - 1.0 );
+    }
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     return 0;
 }
@@ -137,6 +183,10 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     double  t_end = params[0];
     double  h     = params[1];
     int     steps = (int)(t_end/h);
+<<<<<<< HEAD
+=======
+    int     max_points = (int)params[13];
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     double  t = 0;
     double  y[n_ODE];                     // Initialisation  
 
@@ -144,6 +194,14 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     double last_theta1_dot;
     double last_theta2;      
     double last_theta2_dot;
+<<<<<<< HEAD
+=======
+    double new_theta1;
+    double new_theta1_dot;
+    double new_theta2;      
+    double new_theta2_dot;
+
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     y[0] = params[7];                         // Initial conditions at t_0
     y[1] = params[8];                     
@@ -155,28 +213,54 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     int i = 0;
     for(int j = 0; j < steps; j++)
     {
+<<<<<<< HEAD
         last_theta1     = y[0];
         last_theta1_dot = y[1];
         last_theta2     = y[2];
+=======
+        last_theta1     = modulus_s(y[0]+M_PI, 2*M_PI) - M_PI;
+        last_theta1_dot = y[1];
+        last_theta2     = modulus_s(y[2]+M_PI, 2*M_PI) - M_PI;
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
         last_theta2_dot = y[3];
 
         (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
 
+<<<<<<< HEAD
         if( (last_theta1 < 0.0) && (y[0] > 0.0) && ( (last_theta1_dot+y[1])/2.0 > 0.0))
         {
             t_values[i+1]       = t + h/2.0;           
             theta2_sol[i+1]     = fmod( ( (y[2]+last_theta2)/2.0 + M_PI), 2*M_PI ) - M_PI;
             theta2_dot_sol[i+1] = (y[3]+last_theta2_dot)/2.0 ;
+=======
+        new_theta1     = modulus_s(y[0]+M_PI, 2*M_PI) - M_PI;
+        new_theta1_dot = y[1];
+        new_theta2     = modulus_s(y[2]+M_PI, 2*M_PI) - M_PI;
+        new_theta2_dot = y[3];
+
+        if( (last_theta1 < 0.0) && (new_theta1 > 0.0) && ( (last_theta1_dot+new_theta1_dot)/2.0 > 0.0) && ( i < max_points) )
+        {
+            t_values[i+1]       = t + h/2.0;           
+            theta2_sol[i+1]     = (last_theta2+new_theta2)/2.0;
+            theta2_dot_sol[i+1] = (last_theta2_dot+new_theta2_dot)/2.0;
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
             i++;
         }
     
         t = t + h; 
     } 
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     t_values[0]         = i;            // first entry = length of array
     theta2_sol[0]       = i;
     theta2_dot_sol[0]   = i;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     return 0;
 }

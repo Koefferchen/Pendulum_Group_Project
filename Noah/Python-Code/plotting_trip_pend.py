@@ -47,7 +47,11 @@ theta3   = (theta3 + np.pi) % (2*np.pi) - np.pi
 def ultimate_plot_pend():
     
     sample_format_dict_1 = {
+<<<<<<< HEAD
         "label"      : r"upper$(\theta_{1})$",         
+=======
+        "label"      : r"upper mass $(\theta_{1})$",         
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
         "fmt"        : '-', 
         "color"      : sns.color_palette("dark")[0],                            
         "markersize" : 1, 
@@ -85,12 +89,16 @@ def ultimate_plot_pend():
     general_format_dict = standard_format_dict
     zoom_params         = no_zooming
     colorbar_params     = no_colorbar
+<<<<<<< HEAD
     extra_label         = {
         "do_label"  :   True,
         "position"  :   [1.03, 0.97],
         "font_size" :   12,
         "content"   :   (m_label+l_label+i_label1+i_label2+i_label3)
     }
+=======
+    extra_label         = no_extra_label
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     data_set_1  = time, None, theta1, None 
     data_set_2  = time, None, theta2, None 

@@ -30,7 +30,11 @@ void derhs_analyt_pend( int n_ODE, double t, double y[], double y_dot[], double 
     double omega  = pow( g_grav/length, 0.5);
 
     y_dot[0] = y[1] ;                           // 1. DE: theta(t)_dot      = theta_dot(t)
+<<<<<<< HEAD
     y_dot[1] = - pow(omega, 2)  * y[0] ;   // 2. DE: theta_dot(t)_dot  = -omega**2 * theta(t)    
+=======
+    y_dot[1] = - pow(omega, 2)  * y[0] ;        // 2. DE: theta_dot(t)_dot  = -omega**2 * theta(t)    
+>>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 }
    
     // compute initial angular velocity to make pendulum stand upright
