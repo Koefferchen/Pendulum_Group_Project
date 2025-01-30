@@ -25,7 +25,8 @@ void Euler ( int n_ODE,          // number of Ordinary Differential Equations
       (derhs)( n_ODE, t + h *coeffs_h[0], linear_comb_arrays( k_array, coeffs_1, result, n_ODE, 3), k1, params );
       (derhs)( n_ODE, t + h *coeffs_h[1], linear_comb_arrays( k_array, coeffs_2, result, n_ODE, 3), k2, params );
 
-      copy_array( linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 3), y, n_ODE);
+      linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 3);
+      copy_array( result, y, n_ODE);
 } 
 
 
@@ -60,7 +61,8 @@ void RuKu_4 ( int n_ODE,         // number of Ordinary Differential Equations
       (derhs)( n_ODE, t + h *coeffs_h[2], linear_comb_arrays( k_array, coeffs_3, result, n_ODE, 5), k3, params );
       (derhs)( n_ODE, t + h *coeffs_h[3], linear_comb_arrays( k_array, coeffs_4, result, n_ODE, 5), k4, params );
       
-      copy_array( linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 5), y, n_ODE);
+      linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 5);
+      copy_array( result, y, n_ODE);
 } 
 
 
@@ -104,6 +106,7 @@ void RuKu_6 ( int n_ODE,         // number of Ordinary Differential Equations
       (derhs)( n_ODE, t + h *coeffs_h[5], linear_comb_arrays( k_array, coeffs_6, result, n_ODE, 8), k6, params );
       (derhs)( n_ODE, t + h *coeffs_h[6], linear_comb_arrays( k_array, coeffs_7, result, n_ODE, 8), k7, params );
       
-      copy_array( linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 8), y, n_ODE);      
+      linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 8);
+      copy_array( result, y, n_ODE);      
 }
 

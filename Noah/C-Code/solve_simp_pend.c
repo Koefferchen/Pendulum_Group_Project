@@ -86,10 +86,30 @@ int solve_analyt_pend( double params[], double theta_analyt_sol[] )
     double theta_dot_0  = params[5];
     int    steps        = (int)(t_end/h);
     theta_analyt_sol[0] = (double)steps;
+
     for(int j=0; j < steps; j++ )
     {
         theta_analyt_sol[j+1] = theta_0 * cos( omega * (j*h) ) + theta_dot_0/omega * sin(omega *(j*h) );
     }
 
     return 0;
+}
+
+    // calculates the maximum deviation between elements of 2 arrays
+double num_max_deviation( double theta2_num[], double theta2_ana[] )
+{
+    int length      = (int)theta2_ana[0];
+    double max_dev  = 0.0;
+    double temp_dev;
+
+    for(int i = 1; i<length+1; i++) 
+    {
+        temp_dev = fmin( fabs(theta2_ana[i] - theta2_num[i]), fabs(2*M_PI - fabs(theta2_ana[i] - theta2_num[i])) );
+        if( temp_dev > max_dev )
+        {
+            max_dev = temp_dev;
+        }
+    }
+
+    return max_dev;
 }

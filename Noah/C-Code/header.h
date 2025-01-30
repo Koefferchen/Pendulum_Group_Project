@@ -17,6 +17,8 @@
     void    RuKu_6              ( int n_ODE, double h, double t, double y[], 
                                     void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
     int     test_num_solvers    ( void );
+    double  num_max_deviation   ( double theta2_num[], double theta2_ana[] );
+
 
         // simple pendulum
     int     simple_pendulum     (void);
@@ -61,6 +63,7 @@
     int     save_matrix         ( double **matrix, int x_dim, int y_dim, char* save_as );
     int     free_2d_matrix      ( double **matrix );
     double  average_diff        ( double array1[], double array2[] );
+    int     modulus_array       ( double array[], double limit_low, double limit_up );
     int     modulus             ( double array[], double limit_up );
     double  modulus_s           ( double value, double limit_up );
     double  *add_IP             ( double *array1, double *array2, double *result, int length);

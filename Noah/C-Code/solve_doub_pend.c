@@ -1,8 +1,6 @@
 # include "header.h"
 
 
-
-
     // implementation of the differential equation
 void derhs_doub_pend( int n_ODE, double t, double y[], double y_dot[], double params[] )
 {
@@ -42,6 +40,7 @@ void derhs_doub_pend( int n_ODE, double t, double y[], double y_dot[], double pa
 
 }
 
+    // solves double pendulum for given (initial cond., numeric solver, given ODE) and returns solution arrays
 int solve_doub_pend( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[],
                         void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
 {
@@ -50,25 +49,29 @@ int solve_doub_pend( double params[], double t_values[], double E_values[], doub
     double  h     = params[1];
     int     steps = (int)(t_end/h);
     double  t = 0;
-    double  y[n_ODE];                     // Initialisation 
-
-    t_values[0]         = steps;            // first entry = length of array
+    double  y[n_ODE];                     
+        
+        // first entry = length of array
+    t_values[0]         = steps;            
     E_values[0]         = steps;
     theta1_sol[0]       = steps;      
     theta1_dot_sol[0]   = steps;
     theta2_sol[0]       = steps;
     theta2_dot_sol[0]   = steps;
 
-    y[0] = params[7];                         // Initial conditions at t_0
-    y[1] = params[8];                     
-    y[2] = params[9];
-    y[3] = params[10];
+        // Initial conditions at t_0
+    y[0] = params[7];       // theta1                    
+    y[1] = params[8];       // theta1_dot      
+    y[2] = params[9];       // theta2
+    y[3] = params[10];      // theta2_dot
 
     for(int j = 0; j < steps; j++)
     {
+            // solve for one time step
         (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
         
-        t_values[j+1]       = t;            // save solution for each time step in arrays
+            // save solution for each time step in arrays
+        t_values[j+1]       = t;            
         theta1_sol[j+1]      = y[0];
         theta1_dot_sol[j+1]  = y[1];
         theta2_sol[j+1]      = y[2];
@@ -107,6 +110,7 @@ int calc_doub_energy( double y[], double params[], double *E_value )
     // find the root of a the energy function (E - E_0) with respect to theta_2 
 double find_doub_theta2_max ( double theta2_min, double theta2_max, const double tol, double params[] )  
 {
+        // use altered bisection method 
     double intersection = (theta2_max + theta2_min)/2 ;         
     double theta1       = params[7];
     double theta1_dot   = params[8];
@@ -118,7 +122,6 @@ double find_doub_theta2_max ( double theta2_min, double theta2_max, const double
     double E_int;
     calc_doub_energy(state_min, params, &E_min);
     calc_doub_energy(state_int, params, &E_int);
-    //printf("%.2e --- %.4lf --- %.4lf \n", theta2_max, (E_min-E_0), (E_int-E_0));
 
     if ( (theta2_max - theta2_min)/2 < tol )                   
     {
@@ -137,6 +140,7 @@ double find_doub_theta2_max ( double theta2_min, double theta2_max, const double
     // calculates the theta2_dot_0 from given (theta1_0, theta1_dot_0, theta2_0, E) from energy conservation
 int calc_doub_theta2_0( double params[], double E_value )
 {
+        // unpack parameters
     double g_grav       = params[2];
     double mass_1       = params[3];
     double mass_2       = params[4];
@@ -163,18 +167,18 @@ int calc_doub_theta2_0( double params[], double E_value )
     return 0;
 }
 
-
+    // simulates a poincare section of the double pendulum for given initial conditions
 int solve_doub_poincare( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[],
                         void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
 {
-    int     n_ODE = 4;                    // here: 4 DEs
-    double  t_end = params[0];
-    double  h     = params[1];
-    int     steps = (int)(t_end/h);
-    int     max_points = (int)params[13];
-    double  t = 0;
-    double  y[n_ODE];                     // Initialisation  
-
+    int     n_ODE       = 4;                    // here: 4 DEs
+    double  t_end       = params[0];
+    double  h           = params[1];
+    int     steps       = (int)(t_end/h);
+    int     max_points  = (int)params[13];
+    double  t           = 0;
+    
+    double  y[n_ODE];                    
     double last_theta1;
     double last_theta1_dot;
     double last_theta2;      
@@ -184,13 +188,10 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     double new_theta2;      
     double new_theta2_dot;
 
-
-    y[0] = params[7];                         // Initial conditions at t_0
+    y[0] = params[7];                       
     y[1] = params[8];                     
     y[2] = params[9];
     y[3] = params[10];
-
-
 
     int i = 0;
     for(int j = 0; j < steps; j++)
@@ -216,11 +217,13 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
         }
     
         t = t + h; 
+        if( i > max_points){ break; printf("--- Double Poincare: data full (%d/%d) \n", max_points, max_points); }
     } 
-
-    t_values[0]         = i;            // first entry = length of array
+        // first entry = length of array
+    t_values[0]         = i;            
     theta2_sol[0]       = i;
     theta2_dot_sol[0]   = i;
 
     return 0;
 }
+

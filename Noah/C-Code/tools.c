@@ -49,17 +49,6 @@ int save_numb_list9 ( double* numb_list1, double* numb_list2, double* numb_list3
     return 0;
 }
 
-    // creates an array full of "0" of given length
-double *create_null( int length )
-{
-    double *array = (double *)malloc( (length+1) * sizeof(double) );
-    array[0] = (double)length;
-    for(int i ; i < length ; i++)
-    {
-        array[i+1] = 0.0;
-    }
-    return array;
-}
 
     // copies the entries of the shorter array "old_array" into the empty longer array "new_array" (from left to right)
 int merge_arrays( int old_length, double old_array[], int new_length, double new_array[] )
@@ -79,28 +68,29 @@ int merge_arrays( int old_length, double old_array[], int new_length, double new
 }
 
 
-    // gibt pointer zu 2D-Matrix mit Dimensionen [x_dim, y_dim] zurück, aufgefüllt mit initial_value
+    // returns pointer-pointer to matrix of  dimension [x_dim, y_dim], initialised with "initial_value"
 double **create_2d_matrix (int x_dim, int y_dim, double initial_value)
 {
-    double *linear_matrix      = (double *)malloc(x_dim * y_dim * sizeof(double));        // Initialisierung
+    double *linear_matrix      = (double *)malloc(x_dim * y_dim * sizeof(double));       
     double **quadratic_matrix  = (double **)malloc(x_dim * sizeof(double *));  
 
-    if( linear_matrix == NULL || quadratic_matrix == NULL ){ printf("Matrix konnte nicht angelegt werden!\n"); }    // Fehlercode bei Speicherversagen
+    if( linear_matrix == NULL || quadratic_matrix == NULL ){ printf("Matrix konnte nicht angelegt werden!\n"); }    
 
+        // set initial value
     for( int j = 0 ; j < x_dim * y_dim ; j++ )
     {
-        linear_matrix[j] = initial_value;       // setze alle Elemente auf initial_value
+        linear_matrix[j] = initial_value;       
     }
-
+        // introduce [x][y]-referencing
     for( int i = 0 ; i < x_dim ; i++ )
     {
-        quadratic_matrix[i] = linear_matrix + i * y_dim;        // weise Zeiger zu
+        quadratic_matrix[i] = linear_matrix + i * y_dim;        
     }
 
     return quadratic_matrix;
 }
 
-    // gibt dynamisch Speicher einer 2D-Matrix frei
+    // frees the allocated memory of a 2D matrix
 int free_2d_matrix( double **matrix )
 {
     free(matrix[0]);        // free "linear_matrix"
@@ -153,7 +143,22 @@ int modulus( double array[], double limit_up )
             array[i+1] = fmod(array[i+1] , limit_up ) + limit_up;
         }
     }
+    return 0;
+}
 
+
+    // translates all values of an array into the range [0, limit_up] the way modulo should
+int modulus_array( double array[], double limit_low, double limit_up )
+{
+    for(int i = 0; i < array[0]; i++)
+    {
+        if( array[i+1] >= 0)
+        {
+            array[i+1] = fmod(array[i+1] - limit_low, limit_up-limit_low ) + limit_low ;
+        } else {
+            array[i+1] = fmod(array[i+1] + limit_low , limit_up-limit_low ) - limit_low;
+        }
+    }
     return 0;
 }
 
@@ -171,25 +176,6 @@ double modulus_s( double value, double limit_up )
     return result;
 }
 
-   // adds two arrays of size "length" elementwise and returns a pointer to the result
-double *add_IP( double *array1, double *array2, double *result, int length)
-{
-   for(int i = 0; i < length; i++)
-   {
-      result[i] = array1[i] + array2[i];
-   }
-   return result;
-}
-
-   // multiplies an array of size "length" elementwise by a scalar and return pointer to the result
-double *scale_IP( double *array1, double scalar, double *result, int length)
-{
-   for(int i = 0; i < length; i++)
-   {
-      result[i] = array1[i] * scalar;
-   }
-   return result;
-}
 
     // calculates the result array of the linearcombination of (# = "array_numb") given arrays of size "array_length" and their scalar coefficients. Returns result array
 double *linear_comb_arrays( double** arrays, double* coeffs, double *result, int array_length, int array_numb )

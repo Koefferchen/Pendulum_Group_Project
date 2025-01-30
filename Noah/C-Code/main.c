@@ -40,14 +40,14 @@ int simple_pendulum(void)
     double theta            [steps+1];              
     double theta_dot        [steps+1];          
     double theta_analy      [steps+1];
-    double* null = create_null(steps);  
-    merge_arrays(6, params, steps, params_extended);
+    double null             [steps+1]; zeros(null, steps+1);
 
     solve_simp_pend( params, t_values, theta, theta_dot, &derhs_simp_pend, &RuKu_6 );       
     solve_analyt_pend( params, theta_analy );                                  
+    
+    merge_arrays(6, params, steps, params_extended);
     save_numb_list7(t_values, theta, theta_dot, theta_analy, params_extended, null, null, "../data/data_simp_pend.txt" );   // save data in .txt
 
-    free(null);
     return 0;
 }
 
@@ -81,57 +81,63 @@ int double_pendulum(void)
     double theta1_dot       [steps+1];
     double theta2           [steps+1];
     double theta2_dot       [steps+1];
-    double* null = create_null(steps);
+    double null             [steps+1]; zeros(null, steps+1);
     merge_arrays(11, params, steps, params_extended);
   
     solve_doub_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, &RuKu_4 );
     save_numb_list7( t_values, theta1, theta1_dot, theta2, theta2_dot, params_extended, E_values, "../data/data_doub_pend.txt" );
 
-    free(null);
     return 0;
 }
 
 
 int double_poincare(void)
 {    
-    double t_end        = 1000.0;           // simulation time [seconds]            
+    double t_end        = 1000.0;            // simulation time [seconds]            
     double h            = 0.01;              // step size [steps per second]
     double g_grav       = 9.81;
     double mass_1       = 1.0;
     double mass_2       = 1.0;
     double length_1     = 1.0;
     double length_2     = 1.0;
-    
     double theta1_0     = 0.0 *M_PI;        // fixed for given Poincare-Section
     double theta1_dot_0 = 0.0 *M_PI;        // fixed for given Poincare-Section
-    double theta2_0;                        // iterates through [0, Pi]
+    double theta2_0;                        // iterates through [0, theta2_max]
     double theta2_dot_0;                    // calculated to make the energy stay the same
-    double E_value      = 1.0;
-    int    repitions    = 5;
-    int    max_points   = 10000;        
+    
+    double E_value      = 1.0;                          // energy for whole simulation
+    int    repitions    = 5;                            // number of iterations for diff. (theta2_0, theta2_dot_0) & same energy
+    int    max_points   = 10000;                        // max. number of data_points per iteration
     int    steps        = (int)(t_end/h);      
     int    n_points     = (int)fmin(steps,max_points);
 
     double params[] = {t_end, h, g_grav, mass_1, mass_2, length_1, length_2, theta1_0, theta1_dot_0, theta2_0, theta2_dot_0, E_value, repitions, max_points};
     double theta2_max   = find_doub_theta2_max( 0.0, M_PI, 0.0001, params );
-    double **data = create_2d_matrix( 4*repitions, n_points+1, 0.0);;
+    double **data = create_2d_matrix( 4*repitions, n_points+1, 0.0);
 
     for(int j = 0; j < repitions; j++)
     {
         erase_last_line();
         printf("--- Double Poincare (%d/%d) \n", j+1, repitions);
-        
+            
+            // choose location for saving solution
         double *t_values    = data[4*j +0];
         double *theta2      = data[4*j +1];
         double *theta2_dot  = data[4*j +2];
         double *params_ext  = data[4*j +3];
+
+            // set (theta2_0, theta2_dot_0) to new values
         params[9] = theta2_max * j/(double)(repitions); 
         calc_doub_theta2_0(params, E_value);
+        
+            // hunt for points in the poincare section and safe them
         merge_arrays(14, params, n_points, params_ext);
         solve_doub_poincare( params, t_values, theta2, theta2_dot, &RuKu_6 );
     }
-
+        
     save_matrix( data, 4*repitions, n_points+1, "../data/data_doub_poincare.txt");
+    free_2d_matrix(data);
+
     return 0;
 }
 
@@ -171,13 +177,13 @@ int triple_pendulum(void)
     double theta2_dot       [steps+1];
     double theta3           [steps+1];
     double theta3_dot       [steps+1];
-    double* null = create_null(steps);
-    merge_arrays(15, params, steps, params_extended);
+    double null             [steps+1]; zeros(null, steps+1);
 
     solve_trip_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, &RuKu_6 );
+    
+    merge_arrays(15, params, steps, params_extended);
     save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_pend.txt" );
 
-    free(null);
     return 0;
 }
 
@@ -215,7 +221,7 @@ int triple_chaos(void)
     double theta2_dot       [steps+1];
     double theta3           [steps+1];
     double theta3_dot       [steps+1];
-    double* null = create_null(steps);
+    double null             [steps+1]; zeros(null, steps);
     merge_arrays(15, params, steps, params_extended);
 
         // testing sensitivity on initial condition
@@ -240,7 +246,6 @@ int triple_chaos(void)
     solve_trip_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, &RuKu_6 );
     save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_RuKu6.txt" );
 
-    free(null);
     return 0;
 }
 
@@ -248,7 +253,7 @@ int triple_chaos(void)
 int triple_compare(void)
 {
     erase_last_line();
-    printf("--- Triple Pendulum Compared");
+    printf("--- Triple Pendulum Compared \n");
 
         // shared parameters of simple and triple pendulum
     double t_end         = 10.0;                       
@@ -267,7 +272,6 @@ int triple_compare(void)
     double length_2     = 0.1;
     double length_3     = 0.1;
     int    steps        = (int)(t_end/h); 
-    double null[steps+1];   zeros(null, steps+1);
     
         // initialisation of arrays
     double t_values         [steps+1];
@@ -285,6 +289,7 @@ int triple_compare(void)
     double theta            [steps+1];              
     double theta_dot        [steps+1]; 
     double trip_params_ex   [steps+1];
+    double null             [steps+1];  zeros(null, steps+1);
 
 
     double params_trip[] = {t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
@@ -323,15 +328,16 @@ int test_num_solvers(void)
     erase_last_line();
     printf("--- Test Numerical Solvers \n");
     
-    double t_end        = 50.0;         
+    double t_end        = 20.0;         
     double g_grav       = 9.81;
     double length       = 1.0;       
-    double theta_0      = 0.5 * M_PI; 
-    double theta_dot_0  = 0.2 * M_PI; 
+    double theta_0      = 0.1 * M_PI; 
+    double theta_dot_0  = 0.0 * M_PI; 
     int    steps;
     double h;
-    int    h_steps      = 100;
-    double h_max        = 0.01;
+    int    h_steps      = 200;
+    double h_low        = 0.005;
+    double h_max        = 0.1;
     double h_delta      = h_max / (double)h_steps;
     double h_array      [h_steps+1];
     double dev_array_Eul[h_steps+1];    
@@ -339,7 +345,7 @@ int test_num_solvers(void)
     double dev_array_RK6[h_steps+1];
     double null         [h_steps+1];    zeros(null, h_steps);
     double params_ext   [h_steps+1];
-    double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0};
+    double params[]     = {t_end, h, g_grav, length, theta_0, theta_dot_0};
 
     h_array[0]       = h_steps;
     dev_array_Eul[0] = h_steps;
@@ -348,33 +354,38 @@ int test_num_solvers(void)
 
     for( int i = 0; i < h_steps; i++ )
     {
-        h = h_max * exp( -i/(double)h_steps);               //*( 1.0 - i/(double)h_steps);
+            // choose diff stepsizes h (logarithmic equally distributed)
+        h = h_max * exp( - log(h_max/h_low) * i/(double)h_steps );              
         params[1]   = h;
         steps       = (int)(t_end/h);      
         double *t_values      = (double *)malloc( (steps+1) * sizeof(double) );
-        double *theta         = (double *)malloc( (steps+1) * sizeof(double) );         
+        double *theta_Eul     = (double *)malloc( (steps+1) * sizeof(double) ); 
+        double *theta_RK4     = (double *)malloc( (steps+1) * sizeof(double) ); 
+        double *theta_RK6     = (double *)malloc( (steps+1) * sizeof(double) );         
         double *theta_dot     = (double *)malloc( (steps+1) * sizeof(double) );    
         double *theta_analyt  = (double *)malloc( (steps+1) * sizeof(double) );            
         
+            // solve analyt pendel for diff. h
         solve_analyt_pend( params, theta_analyt );
-        modulus(theta_analyt, +2*M_PI);
+        modulus_array(theta_analyt, -M_PI, +M_PI);
         h_array[i+1]    = h;
 
-        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &Euler );       
-        modulus(theta, +2*M_PI);
-        dev_array_Eul[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          
+            // for each numerical solver: solve the approx. (analyt) pendulum for different h
+        solve_simp_pend( params, t_values, theta_Eul, theta_dot, derhs_analyt_pend, &Euler );       
+        modulus_array(theta_Eul, -M_PI, +M_PI);
+        dev_array_Eul[i+1]  = num_max_deviation(theta_Eul, theta_analyt);        
 
-        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &RuKu_4 );       
-        modulus(theta, +2*M_PI);
-        dev_array_RK4[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );          
+        solve_simp_pend( params, t_values, theta_RK4, theta_dot, derhs_analyt_pend, &RuKu_4 );       
+        modulus_array(theta_RK4, -M_PI, +M_PI);
+        dev_array_RK4[i+1]  = num_max_deviation(theta_RK4, theta_analyt);        
 
-        solve_simp_pend( params, t_values, theta, theta_dot, derhs_analyt_pend, &RuKu_6 );       
-        modulus(theta, +2*M_PI);
-        dev_array_RK6[i+1]  = fmin( fabs(theta[steps] - theta_analyt[steps]), fabs( 2*M_PI - fabs(theta[steps] - theta_analyt[steps]) ) );        
+        solve_simp_pend( params, t_values, theta_RK6, theta_dot, derhs_analyt_pend, &RuKu_6 );       
+        modulus_array(theta_RK6, -M_PI, +M_PI);
+        dev_array_RK6[i+1]  = num_max_deviation(theta_RK6, theta_analyt);        
 
-        free(theta_analyt); free(t_values); free(theta); free(theta_dot); 
+
+        free(theta_analyt); free(t_values); free(theta_Eul); free(theta_RK4); free(theta_RK6); free(theta_dot); 
     }
-    
 
     merge_arrays(6, params, h_steps, params_ext);                           
     save_numb_list7(h_array, params_ext, dev_array_Eul, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt

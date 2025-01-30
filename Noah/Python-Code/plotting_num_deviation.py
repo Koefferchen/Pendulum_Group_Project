@@ -36,7 +36,7 @@ def ultimate_plot_pend():
         "alpha"      : 1                                   
     }
     sample_format_dict_3 = {
-        "label"      : f"Runge-Kutta_6 method ~{a_RK6:.2f}",         
+        "label"      : f"Runge-Kutta-6 method ~{a_RK6:.2f}",         
         "fmt"        : 'o', 
         "color"      : sns.color_palette("dark")[9],                            
         "markersize" : 1, 
@@ -72,7 +72,7 @@ def ultimate_plot_pend():
         "alpha"      : 1                                   
     }
 
-    all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2, sample_format_dict_3, sample_format_dict_1b, sample_format_dict_2b, sample_format_dict_3b ]
+    all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2, sample_format_dict_3]#, sample_format_dict_1b, sample_format_dict_2b, sample_format_dict_3b ]
 
     writtings = {
         "title"       : r"Deviation of the numerical from the analytical solution",
@@ -86,14 +86,15 @@ def ultimate_plot_pend():
     colorbar_params     = no_colorbar
     extra_label         = no_extra_label
     
-    data_set_1  = np.log(h), None, np.log(deviation_Eul), None 
-    data_set_2  = np.log(h), None, np.log(deviation_RK4), None 
-    data_set_3  = np.log(h), None, np.log(deviation_RK6), None 
+    data_set_1  = h, None, deviation_Eul, None 
+    data_set_2  = h, None, deviation_RK4, None 
+    data_set_3  = h, None, deviation_RK6, None 
     data_set_1b = x_fit_Eul, None, y_fit_Eul, None 
     data_set_2b = x_fit_RK4, None, y_fit_RK4, None 
     data_set_3b = x_fit_RK6, None, y_fit_RK6, None 
+
     
-    all_data    = data_set_1 + data_set_2 + data_set_3 + data_set_1b + data_set_2b + data_set_3b                         
+    all_data    = data_set_1 + data_set_2 + data_set_3 #+ data_set_1b + data_set_2b + data_set_3b                         
     save_plot = True, "../plots/plot_num_deviation.jpg"                                      
         
     ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
@@ -101,3 +102,10 @@ ultimate_plot_pend()
 ultimate_plot_pend()
 
 print("Numerical Solvers Deviation plotted")
+
+#    data_set_1  = np.log(h), None, np.log(deviation_Eul), None 
+#    data_set_2  = np.log(h), None, np.log(deviation_RK4), None 
+#    data_set_3  = np.log(h), None, np.log(deviation_RK6), None 
+#    data_set_1b = x_fit_Eul, None, y_fit_Eul, None 
+#    data_set_2b = x_fit_RK4, None, y_fit_RK4, None 
+#    data_set_3b = x_fit_RK6, None, y_fit_RK6, None 
