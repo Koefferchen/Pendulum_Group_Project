@@ -68,8 +68,8 @@ def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, 
     energy[:, 0] = compute_energy(theta1[:, 0], theta2[:, 0], omega1[:, 0], omega2[:, 0], m1, m2, l1, l2, g)
 
     # Poincaré section
-    poincare_theta2 = []
-    poincare_omega2 = []
+    poincare_theta2 = [[] for _ in range(batch_size)]
+    poincare_omega2 = [[] for _ in range(batch_size)]
 
     for i in range(1, n):
         delta_theta = theta1[:, i - 1] - theta2[:, i - 1]
@@ -108,21 +108,24 @@ def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, 
 
         # Poincaré section: theta1 crosses zero from negative to positive and omega1 positive
         mask = (theta1[:, i - 1] < 0) & (theta1[:, i] > 0) & (omega1[:, i] > 0)
-        poincare_theta2.extend(theta2[mask, i])
-        poincare_omega2.extend(omega2[mask, i])
+        for j in range(batch_size):
+            if mask[j]:
+                poincare_theta2[j].append(theta2[j, i])
+                poincare_omega2[j].append(omega2[j, i])
+
 
     return theta1, theta2, omega1, omega2, energy, poincare_theta2, poincare_omega2
 
 # Parameters
-t_max = 5
+t_max = 1000
 theta1_0 = 0
 omega1_0 = 0
 l1 = 1
 l2 = 1
 m1 = 1
 m2 = 1
-h = 0.0001
-constant_energy = 10
+h = 0.001
+constant_energy = 2000
 
 # Prompt user for Poincare section generation
 generate_poincare = input("Do you want to generate a Poincare map? (yes/no): ").strip().lower() == "yes"
@@ -193,9 +196,14 @@ plt.show()
 # Plot Poincare section if requested
 if generate_poincare:
     plt.figure(figsize=(8, 6))
-    plt.scatter(poincare_theta2, poincare_omega2, s=1, color='black', alpha=0.2)
+    colors = plt.cm.viridis(np.linspace(0, 1, num_points))  # Generate colors
+    for j in range(num_points):
+        plt.scatter(poincare_theta2[j], poincare_omega2[j], s=5, alpha=0.6, color=colors[j])
     plt.xlabel('Theta2 (rad)')
     plt.ylabel('Omega2 (rad/s)')
+    plt.xlim(-np.pi, np.pi)
     plt.title('Poincaré Section')
+    plt.legend()
     plt.grid()
     plt.show()
+
