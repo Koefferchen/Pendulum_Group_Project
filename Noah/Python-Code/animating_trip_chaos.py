@@ -13,14 +13,14 @@ if len(sys.argv) != 2:
 usage = int(sys.argv[1])
 if( usage == 0 ):
         # plotting sensitivity on initial conditions 
-    save_as = "../plots/anim_trip_chaos.mp4"
+    save_as = "../plots/anim_trip_chaos.gif"
     info    = "Triple Pendulum Chaos animated"
     file_a  = "../data/data_trip_chaos_a.txt"
     file_b  = "../data/data_trip_chaos_b.txt"
     file_c  = "../data/data_trip_chaos_c.txt"
 elif( usage == 1 ):
         # plotting sensitivity on numerical solver
-    save_as = "../plots/anim_trip_nums.mp4"
+    save_as = "../plots/anim_trip_nums.gif"
     info    = "Triple Pendulum Numerical Solvers animated"
     file_a  = "../data/data_trip_Euler.txt"
     file_b  = "../data/data_trip_RuKu4.txt"

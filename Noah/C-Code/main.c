@@ -154,17 +154,17 @@ int triple_pendulum(void)
     double h             = 0.001;            // step size [steps per second]
     double g_grav        = 9.81;
     double mass_1        = 1.0;
-    double mass_2        = 1.0;
+    double mass_2        = 100.0;
     double mass_3        = 1.0;
     double length_1      = 1.0;
     double length_2      = 1.0;
     double length_3      = 1.0;
-    double theta_1_0     = 1.0 *M_PI;
+    double theta_1_0     = 0.0 *M_PI;
     double theta_1_dot_0 = 0.0 *M_PI;
-    double theta_2_0     = 0.0 *M_PI;
+    double theta_2_0     = 0.5 *M_PI;
     double theta_2_dot_0 = 0.0 *M_PI;
     double theta_3_0     = 0.0 *M_PI;
-    double theta_3_dot_0 = 0.5 *M_PI;
+    double theta_3_dot_0 = 0.0 *M_PI;
 
     int    steps = (int)(t_end/h); 
     double params[] = { t_end, h, g_grav, mass_1, mass_2, mass_3, length_1, length_2, length_3, theta_1_0, theta_1_dot_0, theta_2_0, theta_2_dot_0, theta_3_0, theta_3_dot_0 };
@@ -192,7 +192,7 @@ int triple_chaos(void)
     erase_last_line();
     printf("--- Triple Pendulum Chaos \n");
     
-    double t_end         = 20.0;             // simulation time [seconds]            
+    double t_end         = 10.0;             // simulation time [seconds]            
     double h             = 0.001;            // step size [steps per second]
     double g_grav        = 9.81;
     double mass_1        = 1.0;
@@ -201,12 +201,12 @@ int triple_chaos(void)
     double length_1      = 1.0;
     double length_2      = 1.0;
     double length_3      = 1.0;
-    double theta_1_0     = 0.5 *M_PI;
+    double theta_1_0     = 1.0 *M_PI;
     double theta_1_dot_0 = 0.0 *M_PI;
-    double theta_2_0     = 0.3 *M_PI;
-    double theta_2_dot_0 = 0.2 *M_PI;
-    double theta_3_0     = 0.0 *M_PI;
-    double theta_3_dot_0 = 0.0 *M_PI;
+    double theta_2_0     = 0.0 *M_PI;
+    double theta_2_dot_0 = 0.0 *M_PI;
+    double theta_3_0     = 0.1 *M_PI;
+    double theta_3_dot_0 = 0.3 *M_PI;
 
     double theta_1_eps   = 0.0001 *M_PI;
 

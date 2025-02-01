@@ -68,14 +68,15 @@ void derhs_trip_pend( int n_ODE, double t, double y[], double y_dot[], double pa
 int solve_trip_pend( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[], double theta3_sol[], double theta3_dot_sol[],
                         void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
 {
-    int     n_ODE = 6;                    // here: 6 DEs
+    int     n_ODE   = 6;                    
     double  t_end   = params[0];
     double  h       = params[1];
-    int     steps = (int)(t_end/h);
-    double  t = 0;
-    double  y[n_ODE];                     // Initialisation 
+    int     steps   = (int)(t_end/h);
+    double  t       = 0;
+    double  y[n_ODE];                     
 
-    t_values[0]         = steps;            // first entry = length of array
+         // first entry = length of array
+    t_values[0]         = steps;           
     E_values[0]         = steps;
     theta1_sol[0]       = steps;      
     theta1_dot_sol[0]   = steps;
@@ -84,7 +85,8 @@ int solve_trip_pend( double params[], double t_values[], double E_values[], doub
     theta3_sol[0]       = steps;
     theta3_dot_sol[0]   = steps;
 
-    y[0] = params[9];                         // Initial conditions at t_0
+        // Initial conditions at t_0
+    y[0] = params[9];                         
     y[1] = params[10];                     
     y[2] = params[11];
     y[3] = params[12];
@@ -93,9 +95,10 @@ int solve_trip_pend( double params[], double t_values[], double E_values[], doub
 
     for(int j = 0; j < steps; j++)
     {
+            // solve set of ODE's for one time step 
         (num_solver)( n_ODE, h, t, y, &derhs_trip_pend, params);
-        
-        t_values[j+1]       = t;            // save solution for each time step in arrays
+            // save solution for each time step in arrays
+        t_values[j+1]       = t;           
         theta1_sol[j+1]      = y[0];
         theta1_dot_sol[j+1]  = y[1];
         theta2_sol[j+1]      = y[2];

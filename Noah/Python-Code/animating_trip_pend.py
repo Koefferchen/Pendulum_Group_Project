@@ -27,7 +27,6 @@ length_1    = params[6]
 length_2    = params[7]
 length_3    = params[8]
 
-
     # theta should always be within [-pi, +pi]
 theta1   = (theta1 + np.pi) % (2*np.pi) - np.pi
 theta2   = (theta2 + np.pi) % (2*np.pi) - np.pi
@@ -71,15 +70,10 @@ line3.set_zorder(0)
 
     # static parameters for the simulation
 if( True ):
-    g_grav_label    = ax.text(1.03, 0.97, f"$g = {g_grav:.2f}m/s^2 $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-    mass_1_label    = ax.text(1.03, 0.91, f"$m_1 = {mass_1:.2f}kg $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-    mass_2_label    = ax.text(1.03, 0.85, f"$m_2 = {mass_2:.2f}kg $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-    mass_3_label    = ax.text(1.03, 0.79, f"$m_3 = {mass_3:.2f}kg $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-    length_1_label  = ax.text(1.03, 0.73, f"$l_1 = {length_1:.2f}m $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-    length_2_label  = ax.text(1.03, 0.67, f"$l_2 = {length_2:.2f}m $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-    length_3_label  = ax.text(1.03, 0.61, f"$l_3 = {length_3:.2f}m $", transform=ax.transAxes, fontsize=12, ha='left', va="top")
-
-
+    g_txt    = f"$g = {g_grav:.2f}m/s^2 $ \n"
+    m_txt    = f"$m_1 = {mass_1:.1f}kg $ \n" + f"$m_2 = {mass_2:.1f}kg $ \n" + f"$m_3 = {mass_3:.1f}kg $ \n"
+    l_txt    = f"$l_1 = {length_1:.1f}m $ \n" + f"$l_2 = {length_2:.1f}m $ \n" + f"$l_3 = {length_3:.1f}m $ \n"
+    ax.text( 1.03, 0.97, g_txt+m_txt+l_txt, transform=ax.transAxes, fontsize=12, ha='left', va="top")
 
     # Controls the length and framerate of the animation
 def framerate_control( t_end, h, t_max, framerate_max):
@@ -128,6 +122,6 @@ def update(frame):
 
     # Create the animation
 ani = FuncAnimation(fig, update, frames=range(0, frame_count*step, step), interval= h * step * 1000, blit=True)
-ani.save( "../plots/anim_trip_pend.mp4")
+ani.save( "../plots/anim_trip_pend.gif")
 
 print("Triple Pendulum animated")

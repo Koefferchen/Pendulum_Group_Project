@@ -8,37 +8,11 @@ TP := Triple Pendulum
 # Tasks
 
 Numericals:
-<<<<<<< HEAD
-+ Latex:    Write Introduction to report
-+ Latex:    Introduce Euler Procedure
-+ Latex:    Introduce RK4 Procedure
-+ Latex:    Discuss runtime analysis of procedures (with reference to literature)
-+ Latex:    Discuss error rate of procedures (with reference to literature)
-+ Coding:   Plot runtime analysis of procedures
-+ Coding:   Plot error rate analysis of procedures
 
-+ Latex:    (Introduce RK6 Procedure)
-
-Simple Pendulum:
-+ Latex:    Write chapter of SP
-
-Double Pendulum:
-+ Latex:    Write derivation of equations for DP
-+ Latex:    Discuss results (diff. initial cond., chaos, stable states)
-+ Latex:    Discuss Poincare section (with reference to literature)
-+ Coding:   Plot different Poincare sections
-
----> I (Noah) started some doing stuff here:
-Triple Pendulum:
-+ Latex:    Write derivation of equatains for TP
-+ Latex:    Discuss results (diff. initial cond., chaos, stable states)
-+ Latex:    (Discuss Poincare section)
-+ Coding:   (Plot different Poincare sections)
-=======
 + Latex:    Write Introduction to report    ---
 + Latex:    Introduce Euler Procedure     ---L   
 + Latex:    Introduce RK4 Procedure     --- Z
-+ Latex:    Introduce RK4 Procedure     --- N
++ Latex:    Introduce RK6 Procedure     --- N
 + Latex:    Discuss runtime analysis of procedures (with reference to literature)   ---Z
 + Latex:    Discuss error rate of procedures (with reference to literature)     ---Z
 + Coding:   Plot runtime analysis of procedures     ---N
@@ -63,4 +37,3 @@ Triple Pendulum:
 + Latex:    Discuss results (diff. initial cond., chaos, stable states) ---N
 + Latex:    (Discuss Poincare section) ---N
 + Coding:   (Plot different Poincare sections) ---N
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e

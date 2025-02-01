@@ -75,7 +75,7 @@ void RuKu_6 ( int n_ODE,         // number of Ordinary Differential Equations
               void (*derhs) ( int, double, double[], double[], double[] ),    // implementation of the ODE
               double params[] )  // all constants & initial conditions
 {
-
+            // initialisation of arrays, filled with "0"
       double result[n_ODE];    zeros(result, n_ODE);
       double k1[n_ODE];        zeros(k1, n_ODE);
       double k2[n_ODE];        zeros(k2, n_ODE);        
@@ -86,6 +86,7 @@ void RuKu_6 ( int n_ODE,         // number of Ordinary Differential Equations
       double k7[n_ODE];        zeros(k7, n_ODE);
       double *k_array[] = {y, k1, k2, k3, k4, k5, k6, k7};
 
+            // butcher tableau of coefficients for RK6
       double coeffs_1[] = {1.0,  0.0,           0.0,        0.0,        0.0,        0.0,     0.0,     0.0};
       double coeffs_2[] = {1.0,  h/3.0,         0.0,        0.0,        0.0,        0.0,     0.0,     0.0};
       double coeffs_3[] = {1.0,  0.0,           h*2/3.0,    0.0,        0.0,        0.0,     0.0,     0.0};
@@ -98,6 +99,7 @@ void RuKu_6 ( int n_ODE,         // number of Ordinary Differential Equations
       
       double coeffs_h[] = {0.0,  1/3.0,   2/3.0,   1/3.0,   1/2.0,   1/2.0,   1.0};
 
+            // calculate slope at some time (t) and some posiion (y + coeff * k_j). Save slope in k_{j+1}
       (derhs)( n_ODE, t + h *coeffs_h[0], linear_comb_arrays( k_array, coeffs_1, result, n_ODE, 8), k1, params );
       (derhs)( n_ODE, t + h *coeffs_h[1], linear_comb_arrays( k_array, coeffs_2, result, n_ODE, 8), k2, params );
       (derhs)( n_ODE, t + h *coeffs_h[2], linear_comb_arrays( k_array, coeffs_3, result, n_ODE, 8), k3, params );
@@ -105,7 +107,8 @@ void RuKu_6 ( int n_ODE,         // number of Ordinary Differential Equations
       (derhs)( n_ODE, t + h *coeffs_h[4], linear_comb_arrays( k_array, coeffs_5, result, n_ODE, 8), k5, params );
       (derhs)( n_ODE, t + h *coeffs_h[5], linear_comb_arrays( k_array, coeffs_6, result, n_ODE, 8), k6, params );
       (derhs)( n_ODE, t + h *coeffs_h[6], linear_comb_arrays( k_array, coeffs_7, result, n_ODE, 8), k7, params );
-      
+
+            // calculate y_{n+1} from y_n and the slopes (k_1, k_2, ..., k_n)
       linear_comb_arrays(k_array, coeffs_y, result, n_ODE, 8);
       copy_array( result, y, n_ODE);      
 }
