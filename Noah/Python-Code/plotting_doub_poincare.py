@@ -42,11 +42,7 @@ def ultimate_plot_pend():
         "do_cbar"       : True,
         "position"      : [0.92, 0.15],
         "size"          : [0.03, 0.70],
-<<<<<<< HEAD
-        "scale_range"   : [-np.pi, +np.pi],
-=======
         "scale_range"   : [0.0, theta2_0[::-1][0]],
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
         "title"         : r"$\theta_2 (t=0)$",
         "colormap"      : cmap
     }

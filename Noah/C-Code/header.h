@@ -40,10 +40,7 @@
     int     calc_doub_theta2_0  ( double params[], double E_value );
     int     solve_doub_poincare ( double params[], double t_values[], double theta2_sol[], double theta2_dot_sol[],
                                     void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
-<<<<<<< HEAD
-=======
     double  find_doub_theta2_max( double theta2_min, double theta2_max, const double tol, double params[] );  
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
 
         // triple pendulum
@@ -68,18 +65,12 @@
     double  average_diff        ( double array1[], double array2[] );
     int     modulus_array       ( double array[], double limit_low, double limit_up );
     int     modulus             ( double array[], double limit_up );
-<<<<<<< HEAD
-=======
     double  modulus_s           ( double value, double limit_up );
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     double  *add_IP             ( double *array1, double *array2, double *result, int length);
     double  *scale_IP           ( double *array1, double scalar, double *result, int length);
     double  *linear_comb_arrays ( double** arrays, double* coeffs, double *result, int array_length, int array_numb );
     int     zeros               ( double array[], int length );
     int     copy_array          ( double array[], double copy[], int length);
-<<<<<<< HEAD
-=======
     int     erase_last_line     (void);
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
 #endif

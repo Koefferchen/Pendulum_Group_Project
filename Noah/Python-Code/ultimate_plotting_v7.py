@@ -262,26 +262,11 @@ def least_sqare_fit():
     return x_fit, y_fit
 
 
-<<<<<<< HEAD
-def linear_fit(x_data, y_data, fit_range , y_err = None):
-=======
 def linear_fit(x_data, y_data, fit_range=False , y_err = None, info=False):
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     
     def function(x, a, b):
         return a * x + b
     
-<<<<<<< HEAD
-    parameters, kovarianz_matrix = curve_fit(function, x_data, y_data, absolute_sigma = True, sigma = y_err)
-    unsicherheiten = np.sqrt( np.diag(kovarianz_matrix) )
-    
-    print("---------------------------------------------------")
-    print("  Best linear fit, where f(x) = a * x + b  :")
-    print("  a = ", parameters[0], " +- ", unsicherheiten[0] )
-    print("  b = ", parameters[1], " +- ", unsicherheiten[1] )
-    print("---------------------------------------------------")
-    x_fit = np.linspace(fit_range[0], fit_range[1], 300)
-=======
     if not(fit_range):
         fit_range = [ x_data[0], x_data[::-1][0] ]
 
@@ -294,7 +279,6 @@ def linear_fit(x_data, y_data, fit_range=False , y_err = None, info=False):
         print("  b = ", parameters[1], " +- ", unsicherheiten[1] )
         print("---------------------------------------------------")
     x_fit = np.linspace(fit_range[0], fit_range[1], 2)
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
     y_fit = function(x_fit, parameters[0], parameters[1])
     
     return x_fit, y_fit, parameters[0], parameters[1]
