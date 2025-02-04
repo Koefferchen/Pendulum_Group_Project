@@ -15,7 +15,7 @@ void derhs_simp_pend( int n_ODE, double t, double y[], double y_dot[], double pa
     double omega  = pow( g_grav/length, 0.5);
 
     y_dot[0] = y[1] ;                           // 1. DE: theta(t)_dot      = theta_dot(t)
-    y_dot[1] = - pow(omega, 2)  * sin(y[0]) ;   // 2. DE: theta_dot(t)_dot  = -omega**2 * theta(t)    
+    y_dot[1] = - pow(omega, 2)  * sin(y[0]) ;   // 2. DE: theta_dot(t)_dot  = -omega**2 * sin(theta(t))    
 }
 
     // implementation of the approximated equation for simple pendulum: sin(x) = x
@@ -52,7 +52,7 @@ int solve_simp_pend( double params[], double t_values[], double theta_sol[], dou
     double  h       = params[1];
     int     steps = (int)(t_end/h);
     double  t = 0;
-    double  y[n_ODE];                     // Initialisation 
+    double  y[n_ODE];                       // Initialisation 
 
     t_values[0]         = steps;            // first entry = length of array
     theta_sol[0]        = steps;      
@@ -101,15 +101,19 @@ double num_max_deviation( double theta2_num[], double theta2_ana[] )
     int length      = (int)theta2_ana[0];
     double max_dev  = 0.0;
     double temp_dev;
+    double average  = 0.0;
 
-    for(int i = 1; i<length+1; i++) 
+    for(int i = 1; i<length+1; i++) // !!!!!!!!!!!!!!!!!!!!!!!!
     {
-        temp_dev = fmin( fabs(theta2_ana[i] - theta2_num[i]), fabs(2*M_PI - fabs(theta2_ana[i] - theta2_num[i])) );
+        temp_dev = fmin( fabs(theta2_ana[i] - theta2_num[i]), fabs(/*2*M_PI -*/ fabs(theta2_ana[i] - theta2_num[i])) ); // !!!!!!!!!!!!!!!!!!!
         if( temp_dev > max_dev )
         {
             max_dev = temp_dev;
         }
+        average = average + temp_dev;
     }
-
+    average = average/length;
+    
+    // return average;
     return max_dev;
 }

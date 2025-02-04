@@ -237,8 +237,8 @@ int triple_chaos(void)
     save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_chaos_c.txt" );
 
         // testing sensitivity on numerical solver
-    solve_trip_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, &Euler );
-    save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_Euler.txt" );
+    solve_trip_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, &RuKu_2 );
+    save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_RuKu2.txt" );
 
     solve_trip_pend( params, t_values, E_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, &RuKu_4 );
     save_numb_list9( t_values, theta1, theta1_dot, theta2, theta2_dot, theta3, theta3_dot, params_extended, E_values, "../data/data_trip_RuKu4.txt" );
@@ -328,7 +328,7 @@ int test_num_solvers(void)
     erase_last_line();
     printf("--- Test Numerical Solvers \n");
     
-    double t_end        = 20.0;         
+    double t_end        = 100.0;     
     double g_grav       = 9.81;
     double length       = 1.0;       
     double theta_0      = 0.1 * M_PI; 
@@ -336,11 +336,11 @@ int test_num_solvers(void)
     int    steps;
     double h;
     int    h_steps      = 200;
-    double h_low        = 0.005;
-    double h_max        = 0.1;
+    double h_min        = 0.0001;
+    double h_max        = 0.01;
     double h_delta      = h_max / (double)h_steps;
     double h_array      [h_steps+1];
-    double dev_array_Eul[h_steps+1];    
+    double dev_array_RK2[h_steps+1];    
     double dev_array_RK4[h_steps+1];
     double dev_array_RK6[h_steps+1];
     double null         [h_steps+1];    zeros(null, h_steps);
@@ -348,18 +348,18 @@ int test_num_solvers(void)
     double params[]     = {t_end, h, g_grav, length, theta_0, theta_dot_0};
 
     h_array[0]       = h_steps;
-    dev_array_Eul[0] = h_steps;
+    dev_array_RK2[0] = h_steps;
     dev_array_RK4[0] = h_steps;
     dev_array_RK6[0] = h_steps;
 
     for( int i = 0; i < h_steps; i++ )
     {
             // choose diff stepsizes h (logarithmic equally distributed)
-        h = h_max * exp( - log(h_max/h_low) * i/(double)h_steps );              
+        h = h_max * exp( - log(h_max/h_min) * i/(double)h_steps );           
         params[1]   = h;
         steps       = (int)(t_end/h);      
         double *t_values      = (double *)malloc( (steps+1) * sizeof(double) );
-        double *theta_Eul     = (double *)malloc( (steps+1) * sizeof(double) ); 
+        double *theta_RK2     = (double *)malloc( (steps+1) * sizeof(double) ); 
         double *theta_RK4     = (double *)malloc( (steps+1) * sizeof(double) ); 
         double *theta_RK6     = (double *)malloc( (steps+1) * sizeof(double) );         
         double *theta_dot     = (double *)malloc( (steps+1) * sizeof(double) );    
@@ -371,24 +371,24 @@ int test_num_solvers(void)
         h_array[i+1]    = h;
 
             // for each numerical solver: solve the approx. (analyt) pendulum for different h
-        solve_simp_pend( params, t_values, theta_Eul, theta_dot, derhs_analyt_pend, &Euler );       
-        modulus_array(theta_Eul, -M_PI, +M_PI);
-        dev_array_Eul[i+1]  = num_max_deviation(theta_Eul, theta_analyt);        
+        solve_simp_pend( params, t_values, theta_RK2, theta_dot, derhs_analyt_pend, &RuKu_2 );       
+        //modulus_array(theta_RK2, -M_PI, +M_PI);
+        dev_array_RK2[i+1]  = num_max_deviation(theta_RK2, theta_analyt);        
 
         solve_simp_pend( params, t_values, theta_RK4, theta_dot, derhs_analyt_pend, &RuKu_4 );       
-        modulus_array(theta_RK4, -M_PI, +M_PI);
+        //modulus_array(theta_RK4, -M_PI, +M_PI);
         dev_array_RK4[i+1]  = num_max_deviation(theta_RK4, theta_analyt);        
 
         solve_simp_pend( params, t_values, theta_RK6, theta_dot, derhs_analyt_pend, &RuKu_6 );       
-        modulus_array(theta_RK6, -M_PI, +M_PI);
+        //modulus_array(theta_RK6, -M_PI, +M_PI);
         dev_array_RK6[i+1]  = num_max_deviation(theta_RK6, theta_analyt);        
 
 
-        free(theta_analyt); free(t_values); free(theta_Eul); free(theta_RK4); free(theta_RK6); free(theta_dot); 
+        free(theta_analyt); free(t_values); free(theta_RK2); free(theta_RK4); free(theta_RK6); free(theta_dot); 
     }
 
     merge_arrays(6, params, h_steps, params_ext);                           
-    save_numb_list7(h_array, params_ext, dev_array_Eul, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt
+    save_numb_list7(h_array, params_ext, dev_array_RK2, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt
     
     return 0;
 }

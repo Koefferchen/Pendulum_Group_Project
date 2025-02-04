@@ -6,11 +6,11 @@ from ultimate_plotting_v7 import *
 data_bsp        = np.loadtxt("../data/data_test_num_solver.txt", skiprows=1 )
 h               = data_bsp[ : , 0 ]
 params          = data_bsp[ : , 1 ]
-deviation_Eul   = data_bsp[ : , 2 ]
+deviation_RK2   = data_bsp[ : , 2 ]
 deviation_RK4   = data_bsp[ : , 3 ]
 deviation_RK6   = data_bsp[ : , 4 ]
 
-x_fit_Eul, y_fit_Eul, a_Eul, b_Eul = linear_fit( np.log(h), np.log(deviation_Eul) )
+x_fit_RK2, y_fit_RK2, a_RK2, b_RK2 = linear_fit( np.log(h), np.log(deviation_RK2) )
 x_fit_RK4, y_fit_RK4, a_RK4, b_RK4 = linear_fit( np.log(h), np.log(deviation_RK4) )
 x_fit_RK6, y_fit_RK6, a_RK6, b_RK6 = linear_fit( np.log(h), np.log(deviation_RK6) )
 
@@ -18,7 +18,7 @@ x_fit_RK6, y_fit_RK6, a_RK6, b_RK6 = linear_fit( np.log(h), np.log(deviation_RK6
 def ultimate_plot_pend():
     
     sample_format_dict_1 = {
-        "label"      : f"Euler's method ~{a_Eul:.2f}",         
+        "label"      : f"Runge-Kutta-2 method ~{a_RK2:.2f}",         
         "fmt"        : 'o', 
         "color"      : sns.color_palette("dark")[0],                            
         "markersize" : 1, 
@@ -86,10 +86,17 @@ def ultimate_plot_pend():
     colorbar_params     = no_colorbar
     extra_label         = no_extra_label
     
-    data_set_1  = h, None, deviation_Eul, None 
+#    data_set_1  = np.log(h), None, np.log(deviation_RK2), None 
+#    data_set_2  = np.log(h), None, np.log(deviation_RK4), None 
+#    data_set_3  = np.log(h), None, np.log(deviation_RK6), None 
+#    data_set_1b = x_fit_RK2, None, y_fit_RK2, None 
+#    data_set_2b = x_fit_RK4, None, y_fit_RK4, None 
+#    data_set_3b = x_fit_RK6, None, y_fit_RK6, None 
+
+    data_set_1  = h, None, deviation_RK2, None 
     data_set_2  = h, None, deviation_RK4, None 
     data_set_3  = h, None, deviation_RK6, None 
-    data_set_1b = x_fit_Eul, None, y_fit_Eul, None 
+    data_set_1b = x_fit_RK2, None, y_fit_RK2, None 
     data_set_2b = x_fit_RK4, None, y_fit_RK4, None 
     data_set_3b = x_fit_RK6, None, y_fit_RK6, None 
 
@@ -103,9 +110,3 @@ ultimate_plot_pend()
 
 print("Numerical Solvers Deviation plotted")
 
-#    data_set_1  = np.log(h), None, np.log(deviation_Eul), None 
-#    data_set_2  = np.log(h), None, np.log(deviation_RK4), None 
-#    data_set_3  = np.log(h), None, np.log(deviation_RK6), None 
-#    data_set_1b = x_fit_Eul, None, y_fit_Eul, None 
-#    data_set_2b = x_fit_RK4, None, y_fit_RK4, None 
-#    data_set_3b = x_fit_RK6, None, y_fit_RK6, None 

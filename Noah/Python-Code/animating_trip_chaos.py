@@ -22,7 +22,7 @@ elif( usage == 1 ):
         # plotting sensitivity on numerical solver
     save_as = "../plots/anim_trip_nums.gif"
     info    = "Triple Pendulum Numerical Solvers animated"
-    file_a  = "../data/data_trip_Euler.txt"
+    file_a  = "../data/data_trip_RuKU2.txt"
     file_b  = "../data/data_trip_RuKu4.txt"
     file_c  = "../data/data_trip_RuKu6.txt"
 else:

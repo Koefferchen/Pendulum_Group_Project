@@ -10,7 +10,7 @@
     #include <string.h>         // for using "memcopy"
 
         // numerical solver
-    void    Euler               ( int n_ODE, double h, double t, double y[], 
+    void    RuKu_2              ( int n_ODE, double h, double t, double y[], 
                                     void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
     void    RuKu_4              ( int n_ODE, double h, double t, double y[], 
                                     void (*derhs) ( int, double, double[], double[], double[] ), double params[] );

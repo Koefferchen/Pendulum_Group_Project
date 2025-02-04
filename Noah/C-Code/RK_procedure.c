@@ -1,8 +1,8 @@
 
 #include "header.h"
 
-      // Calculates 1 timestep of Euler methode (2. Order) to solve system of ODE's:      Y' = f(Y, t)  --> derhs
-void Euler ( int n_ODE,          // number of Ordinary Differential Equations
+      // Calculates 1 timestep of Runge-Kutta method (2. Order) to solve system of ODE's:      Y' = f(Y, t)  --> derhs
+void RuKu_2 ( int n_ODE,          // number of Ordinary Differential Equations
               double h,          // step size 
               double t,          // curve parameter (time) 
               double y[],        // trajectory [n_ODE] with input: y(t) and output; y(t+h) 

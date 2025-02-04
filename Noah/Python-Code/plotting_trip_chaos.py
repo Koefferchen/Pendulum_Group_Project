@@ -28,11 +28,11 @@ elif( usage == 1 ):
     title2  = r"Triple Pendulum: Sensitivity to Numerical Solvers (Phase Space)"
     save_as1= "../plots/plot_trip_nums.jpg" 
     save_as2= "../plots/plot_trip_nums_phasesspace.jpg"
-    label1  = r"Euler Procedure $\mathcal{O}(h^2)$"
+    label1  = r"Runge-Kutta-2 Procedure $\mathcal{O}(h^2)$"
     label2  = r"Runge-Kutta-4 Procedure $\mathcal{O}(h^4)$"
     label3  = r"Runge-Kutta-6 Procedure $\mathcal{O}(h^6)$"
     info    = "Triple Pendulum Numerical Solvers plotted"
-    file_a  = "../data/data_trip_Euler.txt"
+    file_a  = "../data/data_trip_RuKu2.txt"
     file_b  = "../data/data_trip_RuKu4.txt"
     file_c  = "../data/data_trip_RuKu6.txt"
 else:
