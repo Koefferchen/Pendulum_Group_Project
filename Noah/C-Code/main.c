@@ -334,9 +334,8 @@ int test_num_solvers(void)
     double theta_0      = 0.1 * M_PI; 
     double theta_dot_0  = 0.0 * M_PI; 
     int    steps;
-    double h;
     int    h_steps      = 200;
-    double h_min        = 0.0001;
+    double h_min        = 0.001;
     double h_max        = 0.01;
     double h_delta      = h_max / (double)h_steps;
     double h_array      [h_steps+1];
@@ -345,47 +344,19 @@ int test_num_solvers(void)
     double dev_array_RK6[h_steps+1];
     double null         [h_steps+1];    zeros(null, h_steps);
     double params_ext   [h_steps+1];
-    double params[]     = {t_end, h, g_grav, length, theta_0, theta_dot_0};
+    double params[]     = {t_end, 0.0, g_grav, length, theta_0, theta_dot_0};
 
-    h_array[0]       = h_steps;
-    dev_array_RK2[0] = h_steps;
-    dev_array_RK4[0] = h_steps;
-    dev_array_RK6[0] = h_steps;
-
+        // choose diff stepsizes h (logarithmic equally distributed)
+    h_array[0]          = h_steps;
     for( int i = 0; i < h_steps; i++ )
     {
-            // choose diff stepsizes h (logarithmic equally distributed)
-        h = h_max * exp( - log(h_max/h_min) * i/(double)h_steps );           
-        params[1]   = h;
-        steps       = (int)(t_end/h);      
-        double *t_values      = (double *)malloc( (steps+1) * sizeof(double) );
-        double *theta_RK2     = (double *)malloc( (steps+1) * sizeof(double) ); 
-        double *theta_RK4     = (double *)malloc( (steps+1) * sizeof(double) ); 
-        double *theta_RK6     = (double *)malloc( (steps+1) * sizeof(double) );         
-        double *theta_dot     = (double *)malloc( (steps+1) * sizeof(double) );    
-        double *theta_analyt  = (double *)malloc( (steps+1) * sizeof(double) );            
-        
-            // solve analyt pendel for diff. h
-        solve_analyt_pend( params, theta_analyt );
-        modulus_array(theta_analyt, -M_PI, +M_PI);
-        h_array[i+1]    = h;
-
-            // for each numerical solver: solve the approx. (analyt) pendulum for different h
-        solve_simp_pend( params, t_values, theta_RK2, theta_dot, derhs_analyt_pend, &RuKu_2 );       
-        //modulus_array(theta_RK2, -M_PI, +M_PI);
-        dev_array_RK2[i+1]  = num_max_deviation(theta_RK2, theta_analyt);        
-
-        solve_simp_pend( params, t_values, theta_RK4, theta_dot, derhs_analyt_pend, &RuKu_4 );       
-        //modulus_array(theta_RK4, -M_PI, +M_PI);
-        dev_array_RK4[i+1]  = num_max_deviation(theta_RK4, theta_analyt);        
-
-        solve_simp_pend( params, t_values, theta_RK6, theta_dot, derhs_analyt_pend, &RuKu_6 );       
-        //modulus_array(theta_RK6, -M_PI, +M_PI);
-        dev_array_RK6[i+1]  = num_max_deviation(theta_RK6, theta_analyt);        
-
-
-        free(theta_analyt); free(t_values); free(theta_RK2); free(theta_RK4); free(theta_RK6); free(theta_dot); 
+        h_array[i+1] = h_max * exp( - log(h_max/h_min) * i/(double)h_steps );           
     }
+    
+    test_numeric_solver(params, h_array, dev_array_RK2, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_2 );
+    test_numeric_solver(params, h_array, dev_array_RK4, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_4 );
+    test_numeric_solver(params, h_array, dev_array_RK6, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_6 );
+
 
     merge_arrays(6, params, h_steps, params_ext);                           
     save_numb_list7(h_array, params_ext, dev_array_RK2, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt
