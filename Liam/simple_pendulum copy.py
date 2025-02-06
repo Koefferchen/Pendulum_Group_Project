@@ -18,6 +18,14 @@ def Euler(theta, omega, h, l):
     omega_next = omega + a * h
     return theta_next, omega_next
 
+def RK4(x, k, h):
+    k1 = h * (k * x)
+    k2 = h * (k * (x + k1 / 2))
+    k3 = h * (k * (x + k2 / 2))
+    k4 = h * (k * (x + k3))
+
+    return x + (1/6) * (k1 + 2*k2 + 2*k3 + k4)
+
 # Parameters
 l = 1               # Length of the pendulum (m)
 t_max = 10          # Total simulation time (s)
