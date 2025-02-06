@@ -75,7 +75,7 @@ int solve_simp_pend( double params[], double t_values[], double theta_sol[], dou
     return 0;
 }
 
-int solve_analyt_pend( double params[], double theta_analyt_sol[] )
+void solve_analyt_pend( double params[], double theta_analyt_sol[] )
 {
     double t_end        = params[0];
     double h            = params[1];
@@ -91,8 +91,6 @@ int solve_analyt_pend( double params[], double theta_analyt_sol[] )
     {
         theta_analyt_sol[j+1] = theta_0 * cos( omega * (j*h) ) + theta_dot_0/omega * sin(omega *(j*h) );
     }
-
-    return 0;
 }
 
     // calculates the maximum deviation between elements of 2 arrays
@@ -114,6 +112,69 @@ double num_max_deviation( double theta2_num[], double theta2_ana[] )
     }
     average = average/length;
     
-    // return average;
-    return max_dev;
+    return average;
+    // return max_dev;
+}
+
+
+
+
+int test_numeric_solver( double params[], double h_array[], double deviation[],
+                        void (*analyt_sol)( double[], double[]),
+                        void (*derhs)( int, double, double[], double[], double[] ), 
+                        void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
+{
+    int     n_ODE           = 2;                  
+    double  t_end           = params[0];
+    int     h_steps         = (int)h_array[0];
+    deviation[0]            = h_steps;  
+
+    double  t;
+    double  h;
+    int     t_steps;
+    double  y[n_ODE]; 
+                   
+    
+    for( int i = 0; i < h_steps; i++ )
+    {
+        h           = h_array[i+1];
+        t_steps     = (int)(t_end/h);
+        params[1]   = h;
+
+        double *theta_anly    = (double *)malloc( (t_steps+1) * sizeof(double) ); 
+        double *t_values      = (double *)malloc( (t_steps+1) * sizeof(double) );
+        double *theta_sol     = (double *)malloc( (t_steps+1) * sizeof(double) ); 
+        double *theta_dot_sol = (double *)malloc( (t_steps+1) * sizeof(double) ); 
+
+        t = 0.0;
+        for(int j = 0; j < t_steps; j++)
+        {
+                // Initial conditions at t_0
+            y[0] = params[4];                       
+            y[1] = params[5];  
+
+                // solve ODE for one time step
+            (num_solver)( n_ODE, h, t, y, derhs, params);
+
+                // save solution for each time step in arrays
+            t_values[j+1]       = t;            
+            theta_sol[j+1]      = y[0];
+            theta_dot_sol[j+1]  = y[1];
+
+            t = t + h; 
+        } 
+
+            // first entry = length of array
+        t_values[0]         = t_steps;            
+        theta_sol[0]        = t_steps;      
+        theta_dot_sol[0]    = t_steps;  
+
+        analyt_sol( params, theta_anly );       
+
+        deviation[i+1]      = num_max_deviation(theta_sol, theta_anly);
+
+        free(t_values); free(theta_sol); free(theta_dot_sol);
+    }
+
+    return 0;
 }

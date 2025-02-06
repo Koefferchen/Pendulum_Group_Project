@@ -17,6 +17,10 @@
     void    RuKu_6              ( int n_ODE, double h, double t, double y[], 
                                     void (*derhs) ( int, double, double[], double[], double[] ), double params[] );
     int     test_num_solvers    ( void );
+    int     test_numeric_solver ( double params[], double h_array[], double deviation[],
+                                    void (*analyt_sol)( double[], double[]),
+                                    void (*derhs)( int, double, double[], double[], double[] ), 
+                                    void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
     double  num_max_deviation   ( double theta2_num[], double theta2_ana[] );
 
 
@@ -26,7 +30,7 @@
     int     solve_simp_pend     ( double params[], double t_values[], double theta_sol[], double theta_dot_sol[], 
                                     void (*derhs)( int, double, double[], double[], double[] ), 
                                     void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 
-    int     solve_analyt_pend   ( double params[], double* y_analytic );
+    void    solve_analyt_pend   ( double params[], double* y_analytic );
     void    derhs_simp_pend     ( int nDifEqu, double t, double y[], double k[], double params[] );
     void    derhs_analyt_pend   ( int nDifEqu, double t, double y[], double k[], double params[] );
         

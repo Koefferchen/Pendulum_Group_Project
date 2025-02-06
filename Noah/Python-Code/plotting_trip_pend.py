@@ -157,4 +157,55 @@ def ultimate_plot_pend_phasespace():
     ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend_phasespace()
 
+
+
+def ultimate_plot_pend_positionspace():
+    
+    sample_format_dict_1 = {
+        "label"      : r"($\theta_1(t), \theta_2(t)$)",         
+        "fmt"        : '-', 
+        "color"      : sns.color_palette("dark")[0],                            
+        "markersize" : 1, 
+        "linewidth"  : 1,
+        "capsize"    : 0,
+        "alpha"      : 1                                   
+    }
+    sample_format_dict_2 = {
+        "label"      : r"($\theta_1(t), \theta_3(t)$)",         
+        "fmt"        : '-', 
+        "color"      : sns.color_palette("dark")[6],                            
+        "markersize" : 1, 
+        "linewidth"  : 1,
+        "capsize"    : 0,
+        "alpha"      : 1                                   
+    }
+
+    
+    all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2 ]
+    
+    writtings = {
+        "title"       : r"Positional Trajectory of the Triple Pendulum",
+        "x_ax_label"  : r"Angle $\theta_{1}$ [$rad$]",
+        "y_ax_label"  : r"Angle $\theta_{2/3}$ [$rad$]"
+    }
+    
+    general_format_dict = standard_format_dict
+    zoom_params         = no_zooming
+    colorbar_params     = no_colorbar
+    extra_label         = {
+        "do_label"  :   True,
+        "position"  :   [1.03, 0.97],
+        "font_size" :   12,
+        "content"   :   (m_label+l_label+i_label1+i_label2+i_label3)
+    }
+    
+    data_set_1  = theta1, None, theta2, None 
+    data_set_2  = theta1, None, theta3, None 
+    all_data    = data_set_1 + data_set_2                             
+    save_plot = True, "../plots/plot_trip_pend_positionspace.jpg"                                      
+        
+    ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
+ultimate_plot_pend_positionspace()
+
+
 print("Triple Pendulum plotted")
