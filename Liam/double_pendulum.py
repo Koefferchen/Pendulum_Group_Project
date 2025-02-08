@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import scipy.constants as const
 import time
 
+# Numerical ODE solvers
+
 def normalize_theta(theta):
     return np.mod(theta + np.pi, 2 * np.pi) - np.pi
 
@@ -13,27 +15,31 @@ def Euler(theta, omega, h, a):
     omega_next = omega + a * h
     return theta_next, omega_next
 
-def RK4(theta, omega, h, a):
-    """RK4 method"""
+def RK4(theta, omega, h, l1, l2, m1, m2, g, a_func):
+    """RK4 method for double pendulum"""
     theta = normalize_theta(theta)
 
+    # Compute k1
     k1_theta = omega
-    k1_omega = a
+    k1_omega = a_func(theta, omega)
 
+    # Compute k2 using k1
     k2_theta = omega + 0.5 * h * k1_omega
-    k2_omega = a  
+    k2_omega = a_func(theta + 0.5 * h * k1_theta, omega + 0.5 * h * k1_omega)
 
+    # Compute k3 using k2
     k3_theta = omega + 0.5 * h * k2_omega
-    k3_omega = a  
+    k3_omega = a_func(theta + 0.5 * h * k2_theta, omega + 0.5 * h * k2_omega)
 
+    # Compute k4 using k3
     k4_theta = omega + h * k3_omega
-    k4_omega = a  
+    k4_omega = a_func(theta + h * k3_theta, omega + h * k3_omega)
 
+    # Update values
     theta_next = normalize_theta(theta + (h / 6) * (k1_theta + 2 * k2_theta + 2 * k3_theta + k4_theta))
     omega_next = omega + (h / 6) * (k1_omega + 2 * k2_omega + 2 * k3_omega + k4_omega)
 
     return theta_next, omega_next
-
 
 def compute_energy(theta1, theta2, omega1, omega2, m1, m2, l1, l2, g):
     """Computes total energy."""
@@ -46,14 +52,10 @@ def compute_energy(theta1, theta2, omega1, omega2, m1, m2, l1, l2, g):
     # Potential energy
     V = -(m1 + m2) * g * l1 * np.cos(theta1) - m2 * g * l2 * np.cos(theta2)
 
-<<<<<<< HEAD
     return T + V
-=======
-    return T + 2 * V
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
 def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, h, method="Euler"):
-    """Numerically solves double pendulum."""
+    """Numerically solves double pendulum using Euler or RK4."""
     g = const.g
     n = t.shape[0]
     batch_size = len(theta1_0)
@@ -71,14 +73,9 @@ def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, 
     omega2[:, 0] = omega2_0
     energy[:, 0] = compute_energy(theta1[:, 0], theta2[:, 0], omega1[:, 0], omega2[:, 0], m1, m2, l1, l2, g)
 
-    # Poincaré section
-<<<<<<< HEAD
-    poincare_theta2 = []
-    poincare_omega2 = []
-=======
+    # Poincare section arrays
     poincare_theta2 = [[] for _ in range(batch_size)]
     poincare_omega2 = [[] for _ in range(batch_size)]
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
 
     for i in range(1, n):
         delta_theta = theta1[:, i - 1] - theta2[:, i - 1]
@@ -86,22 +83,24 @@ def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, 
         cos_delta = np.cos(delta_theta)
         denominator = m1 + m2 * sin_delta**2
 
-        a1 = (-g * (2 * m1 + m2) * np.sin(theta1[:, i - 1])
-              - m2 * g * np.sin(theta1[:, i - 1] - 2 * theta2[:, i - 1])
-              - 2 * sin_delta * m2 * (omega2[:, i - 1]**2 * l2 + omega1[:, i - 1]**2 * l1 * cos_delta)) \
-             / (l1 * denominator)
+        def a1_func(theta, omega):
+            return (-g * (2 * m1 + m2) * np.sin(theta)
+                    - m2 * g * np.sin(theta - 2 * theta2[:, i - 1])
+                    - 2 * sin_delta * m2 * (omega2[:, i - 1]**2 * l2 + omega**2 * l1 * cos_delta)) \
+                   / (l1 * denominator)
 
-        a2 = (2 * sin_delta * (omega1[:, i - 1]**2 * l1 * (m1 + m2)
-              + g * (m1 + m2) * np.cos(theta1[:, i - 1])
-              + omega2[:, i - 1]**2 * l2 * m2 * cos_delta)) \
-             / (l2 * denominator)
+        def a2_func(theta, omega):
+            return (2 * sin_delta * (omega1[:, i - 1]**2 * l1 * (m1 + m2)
+                    + g * (m1 + m2) * np.cos(theta1[:, i - 1])
+                    + omega**2 * l2 * m2 * cos_delta)) \
+                   / (l2 * denominator)
 
         if method == "Euler":
-            theta1[:, i], omega1[:, i] = Euler(theta1[:, i - 1], omega1[:, i - 1], h, a1)
-            theta2[:, i], omega2[:, i] = Euler(theta2[:, i - 1], omega2[:, i - 1], h, a2)
+            theta1[:, i], omega1[:, i] = Euler(theta1[:, i - 1], omega1[:, i - 1], h, a1_func(theta1[:, i - 1], omega1[:, i - 1]))
+            theta2[:, i], omega2[:, i] = Euler(theta2[:, i - 1], omega2[:, i - 1], h, a2_func(theta2[:, i - 1], omega2[:, i - 1]))
         elif method == "RK4":
-            theta1[:, i], omega1[:, i] = RK4(theta1[:, i - 1], omega1[:, i - 1], h, a1)
-            theta2[:, i], omega2[:, i] = RK4(theta2[:, i - 1], omega2[:, i - 1], h, a2)
+            theta1[:, i], omega1[:, i] = RK4(theta1[:, i - 1], omega1[:, i - 1], h, l1, l2, m1, m2, g, a1_func)
+            theta2[:, i], omega2[:, i] = RK4(theta2[:, i - 1], omega2[:, i - 1], h, l1, l2, m1, m2, g, a2_func)
 
         energy[:, i] = compute_energy(
             normalize_theta(theta1[:, i]),
@@ -115,49 +114,34 @@ def second_order_ode(t, theta1_0, theta2_0, omega1_0, omega2_0, l1, l2, m1, m2, 
             g
         )
 
-        # Poincaré section: theta1 crosses zero from negative to positive and omega1 positive
+        # Poincaré section
         mask = (theta1[:, i - 1] < 0) & (theta1[:, i] > 0) & (omega1[:, i] > 0)
-<<<<<<< HEAD
-        poincare_theta2.extend(theta2[mask, i])
-        poincare_omega2.extend(omega2[mask, i])
-=======
         for j in range(batch_size):
             if mask[j]:
                 poincare_theta2[j].append(theta2[j, i])
                 poincare_omega2[j].append(omega2[j, i])
 
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
-
     return theta1, theta2, omega1, omega2, energy, poincare_theta2, poincare_omega2
 
 # Parameters
-<<<<<<< HEAD
-t_max = 5
-=======
-t_max = 1000
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
+t_max = 100
 theta1_0 = 0
 omega1_0 = 0
 l1 = 1
 l2 = 1
 m1 = 1
 m2 = 1
-<<<<<<< HEAD
-h = 0.0001
-constant_energy = 10
-=======
 h = 0.001
-constant_energy = 2000
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e
+constant_energy = 2
 
 # Prompt user for Poincare section generation
 generate_poincare = input("Do you want to generate a Poincare map? (yes/no): ").strip().lower() == "yes"
 num_points = int(input("Enter the number of initial points for the Poincare map: ")) if generate_poincare else 1
 
-# Gets initial theta2 and omega2 values for Poincare sections 
+# Generates a range of theta2 and omega2 that give the same constant energy, to generate poincare sections
 t = np.arange(0.0, t_max, h)
 
-theta2_0_vals = np.linspace(0, 2 * np.pi, num_points)
+theta2_0_vals = np.linspace(-np.pi, np.pi, num_points)
 
 def compute_initial_omega2(constant_energy, theta2_0):
     return np.sqrt(
@@ -219,14 +203,6 @@ plt.show()
 # Plot Poincare section if requested
 if generate_poincare:
     plt.figure(figsize=(8, 6))
-<<<<<<< HEAD
-    plt.scatter(poincare_theta2, poincare_omega2, s=1, color='black', alpha=0.2)
-    plt.xlabel('Theta2 (rad)')
-    plt.ylabel('Omega2 (rad/s)')
-    plt.title('Poincaré Section')
-    plt.grid()
-    plt.show()
-=======
     colors = plt.cm.viridis(np.linspace(0, 1, num_points))  # Generate colors
     for j in range(num_points):
         plt.scatter(poincare_theta2[j], poincare_omega2[j], s=5, alpha=0.6, color=colors[j])
@@ -237,5 +213,3 @@ if generate_poincare:
     plt.legend()
     plt.grid()
     plt.show()
-
->>>>>>> 3a169a0a2e11b347a0465350e6c38331db4a045e

@@ -1,10 +1,10 @@
 
+from ultimate_plotting_v7 import *
 
 
-
-
-from ultimate_plotting_v6 import *
-
+    # names for plots:
+identifier  = "01"
+saveas      = "../plots/plot_doub_poinc_"+identifier+".jpg" 
 
     # importing the data generated
 data        = np.loadtxt("../data/data_doub_poincare.txt", skiprows=0 )
@@ -30,13 +30,14 @@ def ultimate_plot_pend():
     }
 
     writtings = {
-        "titel"           : r"The Poincare Section of the double pendulum for ($E = {:.2f}$)".format(E_value),
-        "x_beschriftung"  : r"Angle $\theta_2$ [$rad$]",
-        "y_beschriftung"  : r"Frequency $\dot {\theta}_2$ [$s^{-1}$]"
+        "title"           : r"The Poincare Section of the double pendulum for ($E = {:.2f}$)".format(E_value),
+        "x_ax_label"  : r"Angle $\theta_2$ [$rad$]",
+        "y_ax_label"  : r"Frequency $\dot {\theta}_2$ [$s^{-1}$]"
     }
     
     general_format_dict = standard_format_dict
     zoom_params = no_zooming
+    extra_label = no_extra_label
     
     colorbar_params = {
         "do_cbar"       : True,
@@ -62,9 +63,9 @@ def ultimate_plot_pend():
         all_sample_format_dicts.append(sample_format_dict.copy())
         all_data = all_data + data_set
                            
-    save_plot = True, "../plots/plot_doub_poincare.jpg"                                      
+    save_plot = True, saveas                                     
         
-    ultimate_plot_advanced( all_data, writtings, zoom_params, colorbar_params, save_plot, all_sample_format_dicts, general_format_dict )
+    ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend()
 ultimate_plot_pend()
 

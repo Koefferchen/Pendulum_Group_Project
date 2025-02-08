@@ -7,14 +7,15 @@ if len(sys.argv) != 2:
     print("Usage: python3 script.py <1 or 0>")
     sys.exit(1)
 
+identifier      = "01"
 
 usage = int(sys.argv[1])
 if( usage == 0 ):
         # plotting sensitivity on initial conditions 
     title1  = r"Triple Pendulum: Sensitivity to Initial Conditions"
     title2  = r"Triple Pendulum: Sensitivity to Initial Conditions (Phase Space)"
-    save_as1= "../plots/plot_trip_chaos.jpg" 
-    save_as2= "../plots/plot_trip_chaos_phasesspace.jpg"
+    save_as1= "../plots/plot_trip_chaos_"+identifier+".jpg" 
+    save_as2= "../plots/plot_trip_chaos_"+identifier+"_phase.jpg"
     label1  = r"lower mass $(\theta_{3a})$"
     label2  = r"lower mass $(\theta_{3b})$"
     label3  = r"lower mass $(\theta_{3c})$"
@@ -26,13 +27,13 @@ elif( usage == 1 ):
         # plotting sensitivity on numerical solver
     title1  = r"Triple Pendulum: Sensitivity to Numerical Solvers"
     title2  = r"Triple Pendulum: Sensitivity to Numerical Solvers (Phase Space)"
-    save_as1= "../plots/plot_trip_nums.jpg" 
-    save_as2= "../plots/plot_trip_nums_phasesspace.jpg"
-    label1  = r"Euler Procedure $\mathcal{O}(h^2)$"
+    save_as1= "../plots/plot_trip_nums_"+identifier+".jpg" 
+    save_as2= "../plots/plot_trip_nums_"+identifier+"_phase.jpg"
+    label1  = r"Runge-Kutta-2 Procedure $\mathcal{O}(h^2)$"
     label2  = r"Runge-Kutta-4 Procedure $\mathcal{O}(h^4)$"
     label3  = r"Runge-Kutta-6 Procedure $\mathcal{O}(h^6)$"
     info    = "Triple Pendulum Numerical Solvers plotted"
-    file_a  = "../data/data_trip_Euler.txt"
+    file_a  = "../data/data_trip_RuKu2.txt"
     file_b  = "../data/data_trip_RuKu4.txt"
     file_c  = "../data/data_trip_RuKu6.txt"
 else:

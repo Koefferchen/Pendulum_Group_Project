@@ -1,13 +1,13 @@
 
-# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 27.01.25 -----------------------
+# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 08.02.25 -----------------------
 
 
 
     # if some <library> not installed: "!pip install <library>"
 import numpy as np                      
-import matplotlib.pyplot as plt         
-from matplotlib.colors import Normalize
-from matplotlib.cm import ScalarMappable
+import matplotlib.pyplot as plt       
+import matplotlib.colors as mcolors
+import matplotlib.cm as cm
 import seaborn as sns                   
 from scipy.optimize import curve_fit    
 
@@ -61,7 +61,6 @@ def ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, e
         # add the given extra label for additional information to the plot
     if(extra_label["do_label"]):
         ax.text(extra_label["position"][0], extra_label["position"][1], extra_label["content"], transform=ax.transAxes, fontsize=extra_label["font_size"], ha='left', va="top")
-        init_legend = True
 
         # add the given colorbar to the side of the plot
     if (colorbar_params["do_cbar"]):
@@ -147,7 +146,7 @@ def din_norm(scale):
     # adds colorbar at the side of the plot
 def add_colorbar(fig, colorbar_params):
     cbar_ax = fig.add_axes(colorbar_params["position"] + colorbar_params["size"]) 
-    sm = ScalarMappable(Normalize(vmin=colorbar_params["scale_range"][0], vmax=colorbar_params["scale_range"][1]), cmap=colorbar_params["colormap"])  # Create ScalarMappable
+    sm = cm.ScalarMappable(mcolors.Normalize(vmin=colorbar_params["scale_range"][0], vmax=colorbar_params["scale_range"][1]), cmap=colorbar_params["colormap"])  # Create ScalarMappable
     sm.set_array([]) 
     fig.colorbar(sm, cax=cbar_ax).set_label(colorbar_params["title"]) 
 

@@ -1,4 +1,4 @@
-from ultimate_plotting_v3 import *
+from ultimate_plotting_v7 import *
 
 data = np.loadtxt("../data/sample_data.txt", skiprows=1)
 sample_x = data[ : , 0 ]
@@ -34,7 +34,7 @@ def ultimate_plot():
         "alpha"      : 1
     }
     writtings = {
-        "title"           : r"Titel",
+        "title"       : r"Title",
         "x_ax_label"  : r"Time $t$ [$s$]",
         "y_ax_label"  : r"Angle $\theta$ [$rad$]"
     }
