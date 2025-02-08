@@ -76,5 +76,7 @@
     int     zeros               ( double array[], int length );
     int     copy_array          ( double array[], double copy[], int length);
     int     erase_last_line     (void);
+    int     print_array         ( double array[] );
+
 
 #endif

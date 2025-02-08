@@ -10,9 +10,11 @@ deviation_RK2   = data_bsp[ : , 2 ]
 deviation_RK4   = data_bsp[ : , 3 ]
 deviation_RK6   = data_bsp[ : , 4 ]
 
-x_fit_RK2, y_fit_RK2, a_RK2, b_RK2 = linear_fit( np.log(h), np.log(deviation_RK2) )
-x_fit_RK4, y_fit_RK4, a_RK4, b_RK4 = linear_fit( np.log(h), np.log(deviation_RK4) )
-x_fit_RK6, y_fit_RK6, a_RK6, b_RK6 = linear_fit( np.log(h), np.log(deviation_RK6) )
+z = np.zeros(len(deviation_RK2))
+
+x_fit_RK2, y_fit_RK2, a_RK2, b_RK2 =  linear_fit( np.log(h), np.log(deviation_RK2) )
+x_fit_RK4, y_fit_RK4, a_RK4, b_RK4 =  linear_fit( np.log(h), np.log(deviation_RK4) )
+x_fit_RK6, y_fit_RK6, a_RK6, b_RK6 =  linear_fit( np.log(h), np.log(deviation_RK6) )
 
     # plotting numeric/analytic solution
 def ultimate_plot_pend():

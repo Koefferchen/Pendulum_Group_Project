@@ -60,17 +60,17 @@ int double_pendulum(void)
     erase_last_line();
     printf("--- Double Pendulum \n");
     
-    double t_end        = 10.0;             // simulation time [seconds]            
+    double t_end        = 5.0;             // simulation time [seconds]            
     double h            = 0.001;            // step size [steps per second]
-    double g_grav       = 9.80665;
+    double g_grav       = 9.81;
     double mass_1       = 1.0;
-    double mass_2       = 2.0;
+    double mass_2       = 100.0;
     double length_1     = 1.0;
-    double length_2     = 0.7;
-    double theta1_0     = 1.0*M_PI;
-    double theta1_dot_0 = 0.0;
-    double theta2_0     = 0.5*M_PI;
-    double theta2_dot_0 = 0.0;
+    double length_2     = 1.0;
+    double theta1_0     = 0.01 *M_PI;
+    double theta1_dot_0 = 0.0 *M_PI;
+    double theta2_0     = 0.0 *M_PI;
+    double theta2_dot_0 = 0.0 *M_PI;
     
     int    steps = (int)(t_end/h);      // Initialisation
     double params[] = {t_end, h, g_grav, mass_1, mass_2, length_1, length_2, theta1_0, theta1_dot_0, theta2_0, theta2_dot_0};
@@ -150,20 +150,20 @@ int triple_pendulum(void)
     erase_last_line();
     printf("--- Triple Pendulum \n");
     
-    double t_end         = 10.0;             // simulation time [seconds]            
+    double t_end         = 5.0;             // simulation time [seconds]            
     double h             = 0.001;            // step size [steps per second]
     double g_grav        = 9.81;
     double mass_1        = 1.0;
-    double mass_2        = 100.0;
-    double mass_3        = 1.0;
+    double mass_2        = 1.0;
+    double mass_3        = 100.0;
     double length_1      = 1.0;
     double length_2      = 1.0;
     double length_3      = 1.0;
     double theta_1_0     = 0.0 *M_PI;
     double theta_1_dot_0 = 0.0 *M_PI;
-    double theta_2_0     = 0.5 *M_PI;
+    double theta_2_0     = 0.0 *M_PI;
     double theta_2_dot_0 = 0.0 *M_PI;
-    double theta_3_0     = 0.0 *M_PI;
+    double theta_3_0     = 0.001 *M_PI;
     double theta_3_dot_0 = 0.0 *M_PI;
 
     int    steps = (int)(t_end/h); 
@@ -328,21 +328,22 @@ int test_num_solvers(void)
     erase_last_line();
     printf("--- Test Numerical Solvers \n");
     
-    double t_end        = 100.0;     
+    double t_end        = 0.1;     
     double g_grav       = 9.81;
     double length       = 1.0;       
     double theta_0      = 0.1 * M_PI; 
     double theta_dot_0  = 0.0 * M_PI; 
     int    steps;
     int    h_steps      = 200;
-    double h_min        = 0.001;
-    double h_max        = 0.01;
+    double h_min        = 0.0001;
+    double h_max        = 0.001;
     double h_delta      = h_max / (double)h_steps;
-    double h_array      [h_steps+1];
-    double dev_array_RK2[h_steps+1];    
-    double dev_array_RK4[h_steps+1];
-    double dev_array_RK6[h_steps+1];
-    double null         [h_steps+1];    zeros(null, h_steps);
+
+    double h_array      [h_steps+1];    zeros(h_array, h_steps+1);
+    double dev_array_RK2[h_steps+1];    zeros(dev_array_RK2, h_steps+1);
+    double dev_array_RK4[h_steps+1];    zeros(dev_array_RK4, h_steps+1);
+    double dev_array_RK6[h_steps+1];    zeros(dev_array_RK6, h_steps+1);
+    double null         [h_steps+1];    zeros(null, h_steps+1);
     double params_ext   [h_steps+1];
     double params[]     = {t_end, 0.0, g_grav, length, theta_0, theta_dot_0};
 
@@ -353,10 +354,13 @@ int test_num_solvers(void)
         h_array[i+1] = h_max * exp( - log(h_max/h_min) * i/(double)h_steps );           
     }
     
-    test_numeric_solver(params, h_array, dev_array_RK2, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_2 );
+    test_numeric_solver(params, h_array, dev_array_RK2, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_4 );
     test_numeric_solver(params, h_array, dev_array_RK4, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_4 );
     test_numeric_solver(params, h_array, dev_array_RK6, &solve_analyt_pend, &derhs_analyt_pend, &RuKu_6 );
 
+    dev_array_RK2[0] = h_steps+1;
+    dev_array_RK4[0] = h_steps+1;
+    dev_array_RK6[0] = h_steps+1;
 
     merge_arrays(6, params, h_steps, params_ext);                           
     save_numb_list7(h_array, params_ext, dev_array_RK2, dev_array_RK4, dev_array_RK6, null, null, "../data/data_test_num_solver.txt" );   // save data in .txt

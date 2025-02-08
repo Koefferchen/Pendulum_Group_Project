@@ -100,8 +100,9 @@ double num_max_deviation( double theta2_num[], double theta2_ana[] )
     double max_dev  = 0.0;
     double temp_dev;
     double average  = 0.0;
+    double delta = 0.0;
 
-    for(int i = 1; i<length+1; i++) // !!!!!!!!!!!!!!!!!!!!!!!!
+    for(int i = 1; i<length+1; i++) 
     {
         temp_dev = fmin( fabs(theta2_ana[i] - theta2_num[i]), fabs(/*2*M_PI -*/ fabs(theta2_ana[i] - theta2_num[i])) ); // !!!!!!!!!!!!!!!!!!!
         if( temp_dev > max_dev )
@@ -109,11 +110,14 @@ double num_max_deviation( double theta2_num[], double theta2_ana[] )
             max_dev = temp_dev;
         }
         average = average + temp_dev;
+        delta   = delta + temp_dev*temp_dev;
     }
     average = average/length;
+    delta   = sqrt( delta/length );
     
-    return average;
+    // return average;
     // return max_dev;
+    return delta;
 }
 
 
@@ -133,25 +137,33 @@ int test_numeric_solver( double params[], double h_array[], double deviation[],
     double  h;
     int     t_steps;
     double  y[n_ODE]; 
+
+
                    
     
     for( int i = 0; i < h_steps; i++ )
     {
         h           = h_array[i+1];
+        
+        //t_end = 100 * h;        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //params[0] = t_end;
+
         t_steps     = (int)(t_end/h);
         params[1]   = h;
 
-        double *theta_anly    = (double *)malloc( (t_steps+1) * sizeof(double) ); 
-        double *t_values      = (double *)malloc( (t_steps+1) * sizeof(double) );
-        double *theta_sol     = (double *)malloc( (t_steps+1) * sizeof(double) ); 
-        double *theta_dot_sol = (double *)malloc( (t_steps+1) * sizeof(double) ); 
+        double *theta_anly    = (double *)malloc( (t_steps+1) * sizeof(double) );   zeros(theta_anly, t_steps+1);
+        double *t_values      = (double *)malloc( (t_steps+1) * sizeof(double) );   zeros(t_values, t_steps+1);
+        double *theta_sol     = (double *)malloc( (t_steps+1) * sizeof(double) );   zeros(theta_sol, t_steps+1);
+        double *theta_dot_sol = (double *)malloc( (t_steps+1) * sizeof(double) );   zeros(theta_dot_sol, t_steps+1);
 
-        t = 0.0;
+
+            // Initial conditions at t_0
+        y[0]    = params[4];                       
+        y[1]    = params[5];
+        t       = 0.0;
+
         for(int j = 0; j < t_steps; j++)
-        {
-                // Initial conditions at t_0
-            y[0] = params[4];                       
-            y[1] = params[5];  
+        {  
 
                 // solve ODE for one time step
             (num_solver)( n_ODE, h, t, y, derhs, params);
@@ -160,7 +172,6 @@ int test_numeric_solver( double params[], double h_array[], double deviation[],
             t_values[j+1]       = t;            
             theta_sol[j+1]      = y[0];
             theta_dot_sol[j+1]  = y[1];
-
             t = t + h; 
         } 
 

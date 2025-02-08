@@ -1,5 +1,5 @@
 
-# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 27.01.25 -----------------------
+# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 07.02.25 -----------------------
 
 
 
@@ -61,7 +61,6 @@ def ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, e
         # add the given extra label for additional information to the plot
     if(extra_label["do_label"]):
         ax.text(extra_label["position"][0], extra_label["position"][1], extra_label["content"], transform=ax.transAxes, fontsize=extra_label["font_size"], ha='left', va="top")
-        init_legend = True
 
         # add the given colorbar to the side of the plot
     if (colorbar_params["do_cbar"]):

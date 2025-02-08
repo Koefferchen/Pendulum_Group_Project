@@ -211,6 +211,19 @@ int copy_array( double array[], double copy[], int length)
     return 0;
 }
 
+    // prints out an array 
+int print_array( double array[] )
+{
+    printf("[ ");
+    for( int i = 0; i < array[0]+1; i++)
+    {
+        printf("%+.2lf, ", array[i]);
+    }
+    printf("] \n");
+
+    return 0;
+}
+
     // erase last line printed in shell)
 int erase_last_line(void)
 {        

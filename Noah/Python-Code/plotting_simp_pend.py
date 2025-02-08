@@ -1,5 +1,5 @@
 
-from ultimate_plotting_v5 import *
+from ultimate_plotting_v7 import *
 
 
     # importing the data generated
@@ -38,13 +38,15 @@ def ultimate_plot_pend():
     all_sample_format_dicts = [ sample_format_dict_1, sample_format_dict_2 ]
     
     writtings = {
-        "titel"           : r"Solving $\ddot{\theta} = - \sqrt{ \frac{g}{l} } \cdot \sin{(\theta)}$",
-        "x_beschriftung"  : r"Time $t$ [$s$]",
-        "y_beschriftung"  : r"Angle $\theta$ [$rad$]"
+        "title"           : r"Solving $\ddot{\theta} = - \sqrt{ \frac{g}{l} } \cdot \sin{(\theta)}$",
+        "x_ax_label"  : r"Time $t$ [$s$]",
+        "y_ax_label"  : r"Angle $\theta$ [$rad$]"
     }
     
     general_format_dict = standard_format_dict
-    zoom_parameters = no_zooming
+    zoom_params         = no_zooming
+    colorbar_params     = no_colorbar
+    extra_label         = no_extra_label
     
     data_set_1  = time, None, theta_num, None 
     data_set_2  = time, None, theta_ana, None 
@@ -52,7 +54,7 @@ def ultimate_plot_pend():
     all_data    = data_set_1 + data_set_2                            
     save_plot = True, "../plots/plot_simp_pend.jpg"                                      
         
-    ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
+    ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend()
 ultimate_plot_pend()
 
@@ -73,19 +75,21 @@ def ultimate_plot_pend_phasespace():
     all_sample_format_dicts = [ sample_format_dict_1]
     
     writtings = {
-        "titel"           : r"Numerical Phasespace for $\ddot{\theta} = - \omega^{2} \cdot \theta$",
-        "x_beschriftung"  : r"Angle $\theta$ [$rad$]",
-        "y_beschriftung"  : r"Frequency $\dot{\theta}$ [$s^{-1}$]"
+        "title"           : r"Numerical Phasespace for $\ddot{\theta} = - \omega^{2} \cdot \theta$",
+        "x_ax_label"  : r"Angle $\theta$ [$rad$]",
+        "y_ax_label"  : r"Frequency $\dot{\theta}$ [$s^{-1}$]"
     }
     
     general_format_dict = standard_format_dict
-    zoom_parameters = no_zooming
+    zoom_params         = no_zooming
+    colorbar_params     = no_colorbar
+    extra_label         = no_extra_label
     
     data_set_1  = theta_num, None, theta_dot_num, None 
     all_data    = data_set_1                            
     save_plot = True, "../plots/plot_simp_pend_phasesspace.jpg"                                      
         
-    ultimate_plot_advanced( all_data, writtings, zoom_parameters, save_plot, all_sample_format_dicts, general_format_dict )
+    ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend_phasespace()
 
 print("Simple Pendulum plotted")

@@ -2,6 +2,12 @@
 from ultimate_plotting_v7 import *
 
 
+    # names for plots:
+identifier      = "06"
+saveas_pend     = "../plots/plot_doub_"+identifier+"_pendl.jpg"
+saveas_phase    = "../plots/plot_doub_"+identifier+"_phase.jpg"
+saveas_pos      = "../plots/plot_doub_"+identifier+"_posit.jpg"
+
     # importing the data generated
 data_bsp        = np.loadtxt("../data/data_doub_pend.txt", skiprows=1 )
 time            = data_bsp[ : , 0 ]
@@ -64,7 +70,6 @@ def ultimate_plot_pend():
         "y_ax_label"  : r"Angle $\theta_{j}$ [$rad$]"
     }
     
-    
     general_format_dict = standard_format_dict
     zoom_params         = no_zooming
     colorbar_params     = no_colorbar
@@ -79,7 +84,7 @@ def ultimate_plot_pend():
     data_set_2  = time, None, theta2, None 
     
     all_data    = data_set_1 + data_set_2                            
-    save_plot = True, "../plots/plot_doub_pend.jpg"                                      
+    save_plot = True, saveas_pend                                      
         
     ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend()
@@ -130,7 +135,7 @@ def ultimate_plot_pend_phasespace():
     data_set_1  = theta1, None, theta1_dot, None 
     data_set_2  = theta2, None, theta2_dot, None 
     all_data    = data_set_1 + data_set_2                            
-    save_plot = True, "../plots/plot_doub_pend_phasesspace.jpg"                                      
+    save_plot = True, saveas_phase                                     
         
     ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend_phasespace()
@@ -168,7 +173,7 @@ def ultimate_plot_pend_positionspace():
     
     data_set_1  = theta1, None, theta2, None 
     all_data    = data_set_1                            
-    save_plot = True, "../plots/plot_doub_pend_positionspace.jpg"                                      
+    save_plot = True, saveas_pos                                      
         
     ultimate_plot_advanced (all_data, writtings, zoom_params, colorbar_params, extra_label, save_plot, all_sample_format_dicts, general_format_dict)
 ultimate_plot_pend_positionspace()
