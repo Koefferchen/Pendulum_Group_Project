@@ -1,13 +1,13 @@
 
-# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 07.02.25 -----------------------
+# ------------------ ultimate_plotting_v7.py ---- Version 07 ---- Last Update: 08.02.25 -----------------------
 
 
 
     # if some <library> not installed: "!pip install <library>"
 import numpy as np                      
-import matplotlib.pyplot as plt         
-from matplotlib.colors import Normalize
-from matplotlib.cm import ScalarMappable
+import matplotlib.pyplot as plt       
+import matplotlib.colors as mcolors
+import matplotlib.cm as cm
 import seaborn as sns                   
 from scipy.optimize import curve_fit    
 
@@ -146,7 +146,7 @@ def din_norm(scale):
     # adds colorbar at the side of the plot
 def add_colorbar(fig, colorbar_params):
     cbar_ax = fig.add_axes(colorbar_params["position"] + colorbar_params["size"]) 
-    sm = ScalarMappable(Normalize(vmin=colorbar_params["scale_range"][0], vmax=colorbar_params["scale_range"][1]), cmap=colorbar_params["colormap"])  # Create ScalarMappable
+    sm = cm.ScalarMappable(mcolors.Normalize(vmin=colorbar_params["scale_range"][0], vmax=colorbar_params["scale_range"][1]), cmap=colorbar_params["colormap"])  # Create ScalarMappable
     sm.set_array([]) 
     fig.colorbar(sm, cax=cbar_ax).set_label(colorbar_params["title"]) 
 

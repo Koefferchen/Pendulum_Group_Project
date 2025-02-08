@@ -7,6 +7,7 @@ int main(void)
 
     double_pendulum();
     double_poincare();
+    double_flip_over();
 
     triple_pendulum();
     triple_chaos();
@@ -137,6 +138,47 @@ int double_poincare(void)
         
     save_matrix( data, 4*repitions, n_points+1, "../data/data_doub_poincare.txt");
     free_2d_matrix(data);
+
+    return 0;
+}
+
+
+int double_flip_over()
+{
+    erase_last_line();
+    printf("--- Double Pendulum Flip over \n");
+
+    double t_max        = 10.0;             // simulation time [seconds]            
+    double h            = 0.01;              // step size [steps per second]
+    double g_grav       = 9.81;
+    double mass_1       = 1.0;
+    double mass_2       = 1.0;
+    double length_1     = 1.0;
+    double length_2     = 1.0;
+    int    density      = 100;
+
+    double **t_data_1     = create_2d_matrix( density+1, density, 0.0);
+    double **t_data_2     = create_2d_matrix( density+1, density, 0.0);
+    double theta1_0_list[density+1];
+    double theta2_0_list[density+1];
+
+    double theta1_dot_0     = 0.0 *M_PI; 
+    double theta2_dot_0     = 0.0 *M_PI;  
+    double theta1_0_min     = -M_PI;        double theta1_0_max     = +M_PI;      
+    double theta2_0_min     = -M_PI;        double theta2_0_max     = +M_PI;      
+   
+    fill_linspace( theta1_0_list, -M_PI, +M_PI, density );
+    fill_linspace( theta2_0_list, -M_PI, +M_PI, density );
+
+    double params[14] = {t_max, h, g_grav, mass_1, mass_2, length_1, length_2, theta1_0_min, theta1_0_max, theta1_dot_0,  theta2_0_min, theta2_0_max, theta2_dot_0, (double)density};
+
+    solve_doub_flip(params, theta1_0_list, theta2_0_list, t_data_1, t_data_2, &RuKu_4 );
+
+    save_matrix(t_data_1, density+1, density, "../data/data_doub_flip_1.txt" );
+    save_matrix(t_data_2, density+1, density, "../data/data_doub_flip_2.txt" );
+
+    free_2d_matrix(t_data_1);       
+    free_2d_matrix(t_data_2);
 
     return 0;
 }

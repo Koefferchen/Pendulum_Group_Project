@@ -232,3 +232,14 @@ int erase_last_line(void)
     printf("\x1b[2K"); // Clear entire line
     return 0;
 }
+
+    // fills up array with lineary spaced values between "min_range" and "max_range"
+int fill_linspace( double array[], double min_range, double max_range, int length )
+{
+    array[0] = length;
+    for( int j = 0; j < length; j++)
+    {
+        array[j+1] = min_range + (max_range-min_range) * j / (double)(length-1);
+    }
+    return 0;
+}

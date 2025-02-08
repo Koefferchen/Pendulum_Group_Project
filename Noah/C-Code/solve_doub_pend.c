@@ -228,3 +228,89 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
     return 0;
 }
 
+
+    // finds "t" when theta1/2 flips over for the 1st time for each combination of initial conditions (theta1_0, theta2_0)
+int solve_doub_flip( double params[], double theta1_0_list[], double theta2_0_list[], double **theta1_sol_matrix, double **theta2_sol_matrix,
+                        void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ) 
+{
+
+        // unpacking params
+    int     n_ODE       = 4;                    
+    double  t_max       = params[0];
+    double  h           = params[1];
+    int     t_steps     = (int)(t_max/h);
+    
+        // initialisation
+    double t;
+    double y[n_ODE];                    
+    double last_theta1;
+    double last_theta1_dot;
+    double last_theta2;      
+    double last_theta2_dot;
+
+    double new_theta1;
+    double new_theta1_dot;
+    double new_theta2;      
+    double new_theta2_dot;
+
+    double now_theta1_dot;
+    double now_theta2_dot;
+    int    continue_loop[2];
+
+        // repeat for each set of initial conditions
+    for( int x = 0; x < theta1_0_list[0]; x++)
+    {
+        for( int z = 0; z < theta2_0_list[0]; z++)
+        {
+            y[0] = theta1_0_list[x+1];                       
+            y[1] = params[9];                     
+            y[2] = theta2_0_list[z+1];
+            y[3] = params[12];
+
+                // reset initial values for next simulation
+            continue_loop[0] = 1;   continue_loop[1] = 1;    t = 0.0;
+
+            for(int j = 0; j < t_steps; j++)
+            {
+                    // state at t_{n}
+                last_theta1     = modulus_s(y[0]+M_PI, 2*M_PI) - M_PI;
+                last_theta1_dot = y[1];
+                last_theta2     = modulus_s(y[2]+M_PI, 2*M_PI) - M_PI;
+                last_theta2_dot = y[3];
+
+                    // calculate state at t_{n+1}
+                (num_solver)( n_ODE, h, t, y, &derhs_doub_pend, params);
+
+                    // state at t_{n+1}
+                new_theta1     = modulus_s(y[0]+M_PI, 2*M_PI) - M_PI;
+                new_theta1_dot = y[1];
+                new_theta2     = modulus_s(y[2]+M_PI, 2*M_PI) - M_PI;
+                new_theta2_dot = y[3];
+
+                    // average velocity at flip over
+                now_theta1_dot = (new_theta1_dot+last_theta1_dot)/2.0;
+                now_theta2_dot = (new_theta2_dot+last_theta2_dot)/2.0;
+
+                    // if theta1 flips over for the 1st time, save that time 
+                if( (now_theta1_dot*last_theta1 > 0.0) && (now_theta1_dot*new_theta1 < 0.0) && (continue_loop[0])  )
+                {
+                    theta1_sol_matrix[z+1][x] = t + h/2.0;
+                    continue_loop[0] = 0;  
+                }
+                    // if theta2 flips over for the 1st time, save that time 
+                if( (now_theta2_dot*last_theta2 > 0.0) && (now_theta2_dot*new_theta2 < 0.0) && (continue_loop[1]) )
+                {
+                    theta2_sol_matrix[z+1][x] = t + h/2.0;
+                    continue_loop[1] = 0;
+                }
+            
+                t = t + h;
+                
+            } 
+        }
+    }
+    merge_arrays(14, params, theta1_0_list[0], theta1_sol_matrix[0] );
+    merge_arrays(14, params, theta1_0_list[0], theta2_sol_matrix[0] );
+
+    return 0;
+}
