@@ -52,7 +52,7 @@ void RuKu_4 ( int n_ODE,         // number of Ordinary Differential Equations
       double coeffs_3[] = {1.0,  0.0,     h/2,     0.0,     0.0};
       double coeffs_4[] = {1.0,  0.0,     0.0,     h,       0.0};
       
-      double coeffs_y[] = {1.0,  h/3.0,   h/6.0,   h/6.0,   h/3.0};
+      double coeffs_y[] = {1.0,  h/6.0,   h/3.0,   h/3.0,   h/6.0};
 
       double coeffs_h[] = {0.0,  1/2.0,   1/2.0,   1.0};
 

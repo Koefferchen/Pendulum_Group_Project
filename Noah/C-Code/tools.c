@@ -25,7 +25,7 @@ int save_numb_list7 ( double* numb_list1, double* numb_list2, double* numb_list3
     
     for( int i = 0 ; i < length+1 ; i++ )
     {
-        fprintf( file_pointer, "%+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e    %+.8e\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i] );
+        fprintf( file_pointer, "%+.10e    %+.10e    %+.10e    %+.10e    %+.10e    %+.10e    %+.10e\n" , numb_list1[i], numb_list2[i], numb_list3[i], numb_list4[i], numb_list5[i], numb_list6[i], numb_list7[i] );
     }
 
     fclose(file_pointer);
