@@ -28,7 +28,7 @@ int simple_pendulum(void)
     printf("--- Simple Pendulum \n");
 
     double t_end        = 10.0;             // simulation time [seconds]            
-    double h            = 0.0001;            // step size [steps per second]
+    double h            = 0.001;            // step size [steps per second]
     double g_grav       = 9.81;
     double length       = 0.7;       
     double theta_0      = 0.3 * M_PI; 

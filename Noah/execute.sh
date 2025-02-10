@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd ./C-Code
-#make
+make
 
 cd ../Python-Code
 

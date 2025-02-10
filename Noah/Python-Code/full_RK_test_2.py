@@ -11,7 +11,7 @@ theta_dot0  = 0.0
 
 # Right-hand side of the differential equation for the simple pendulum
 def y_dot_simp_pend(t, y):
-    dy = np.zeros(2)
+    dy = np.zeros(2, dtype=np.float128)
     dy[0] = y[1]
     dy[1] = -g_grav/length * y[0]  # Small-angle approximation (linearized)
     return dy
@@ -19,8 +19,8 @@ def y_dot_simp_pend(t, y):
 # Second-order Runge-Kutta method (Midpoint Method)
 def RK_2(ODE, y0, h):
     steps = int(t_max / h) + 1  
-    t = np.linspace(0, t_max, steps)
-    y = np.zeros((steps, len(y0)))
+    t = np.linspace(0, t_max, steps, dtype=np.float128)
+    y = np.zeros((steps, len(y0)), dtype=np.float128)
     y[0] = y0
 
     for i in range(steps - 1):
@@ -33,8 +33,8 @@ def RK_2(ODE, y0, h):
 # Fourth-order Runge-Kutta method 
 def RK_4(ODE, y0, h):
     steps = int(t_max / h) + 1  
-    t = np.linspace(0, t_max, steps)
-    y = np.zeros((steps, len(y0)))
+    t = np.linspace(0, t_max, steps, dtype=np.float128)
+    y = np.zeros((steps, len(y0)), dtype=np.float128)
     y[0] = y0
 
     for i in range(steps - 1):
@@ -50,14 +50,14 @@ def RK_4(ODE, y0, h):
 # Analytical solution of the simple pendulum (small angle approximation)
 def analyt_pend_sol(y0, h):
     steps = int(t_max / h) + 1  # Ensure consistency
-    t = np.linspace(0, t_max, steps)
+    t = np.linspace(0, t_max, steps, dtype=np.float128)
     omega = np.sqrt(g_grav / length)
     theta_t = y0[0] * np.cos(omega * t) + y0[1] / omega * np.sin(omega * t)
     return theta_t
 
 # Compute deviation between numerical and analytical solutions for various step sizes
 def calc_deviation(h_array, procedure):
-    deviation = np.zeros(len(h_array))
+    deviation = np.zeros(len(h_array), dtype=np.float128)
 
     for i, h in enumerate(h_array):
         steps = int(t_max / h) + 1
@@ -70,7 +70,7 @@ def calc_deviation(h_array, procedure):
     return deviation
 
 # Define step sizes
-h_array = np.logspace(-5, -1, 20)  # Logarithmic spacing for better visualization
+h_array = np.logspace(-5, -1, 20, dtype=np.float128)  # Logarithmic spacing for better visualization
 
 # Compute deviation
 deviation_RK2 = calc_deviation(h_array, RK_2)
@@ -88,4 +88,4 @@ plt.ylabel("Global Error")
 plt.legend()
 plt.grid(True, which="both", linestyle="--", linewidth=0.5)
 plt.title("RK2 Global Error Scaling with h")
-plt.show()
+plt.savefig("../plots/plot_DEV.jpg")
