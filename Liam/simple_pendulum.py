@@ -20,39 +20,28 @@ def Euler(theta, omega, h, l):
 
 # Parameters
 l = 1               # Length of the pendulum (m)
-t_max = 10          # Total simulation time (s)
+t_max = 100          # Total simulation time (s)
 theta_0 = 0.5 * np.pi  # Initial angle (rad)
 omega_0 = 0 * np.pi    # Initial angular velocity (rad/s)
+h = 0.0001
 
-# Array of step sizes to test
-h_arr = np.linspace(0.0001, 0.01, 10000)
-err = np.zeros(len(h_arr))  # Error array to store average errors
+t = np.arange(0, t_max, h)  # Adjust time array according to current step size
 
-# Loop over different step sizes
-for j in range(len(h_arr)):
-    h = h_arr[j]
-    t = np.arange(0, t_max, h)  # Adjust time array according to current step size
-
-    theta_analytical = simple_pendulum_analytical(theta_0, l, t)
+theta_analytical = simple_pendulum_analytical(theta_0, l, t)
     
-    # Initialize numerical solution arrays
-    theta_num = np.zeros(len(t))
-    omega_num = np.zeros(len(t))
-    theta_num[0] = theta_0
-    omega_num[0] = omega_0
+# Initialize numerical solution arrays
+theta_num = np.zeros(len(t))
+omega_num = np.zeros(len(t))
+theta_num[0] = theta_0
+omega_num[0] = omega_0
 
-    # Numerical solution using Euler's method
-    for i in range(1, len(t)):
-        theta_num[i], omega_num[i] = Euler(theta_num[i-1], omega_num[i-1], h, l)
+# Numerical solution using Euler's method
+for i in range(1, len(t)):
+    theta_num[i], omega_num[i] = Euler(theta_num[i-1], omega_num[i-1], h, l)
 
-    # Compute error between analytical and numerical solutions
-    diff = np.abs(theta_analytical - theta_num)
-    err[j] = np.mean(diff)
-
-
-def powerLaw(x,a,b): # as the error increases linearly on a log-log plot we can expect a power function to fit nicely
-    return a*x**b
-
-params, params_covariance = optimize.curve_fit(powerLaw, h_arr, err, p0=[1,2])
+plt.plot(t, theta_num, label='Euler solution')
+plt.plot(t, theta_analytical, label='Analytical solution')
+plt.legend()
+plt.show()
 
 
