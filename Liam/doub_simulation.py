@@ -129,8 +129,8 @@ theta1_0 = 0
 omega1_0 = 0
 l1 = 1
 l2 = 1
-m1 = 1
-m2 = 100
+m1 = 100
+m2 = 1
 h = 0.0001
 
 # Generates a range of theta2 and omega2 that give the same constant energy, to generate poincare sections

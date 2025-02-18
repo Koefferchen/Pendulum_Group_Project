@@ -22,10 +22,12 @@ def RK4():
     return theta_next, omega_next
 
 # Parameters
-l = 1               # Length of the pendulum (m)
-t_max = 100          # Total simulation time (s)
-theta_0 = 0.5 * np.pi  # Initial angle (rad)
-omega_0 = 0 * np.pi    # Initial angular velocity (rad/s)
+g = const.g
+l = 1                     # Length of the pendulum (m)
+t_max = 10                  # Total simulation time (s)
+theta_0 = 0.05 * np.pi       # Initial angle (rad)
+omega_0_stand = np.sqrt(g / l) * np.sqrt(2 * (1+np.cos(theta_0))) # Calculates velocity needed to make pendulum stand up
+omega_0 = 0     # Initial angular velocity (rad/s)
 h = 0.0001
 
 t = np.arange(0, t_max, h)  # Adjust time array according to current step size
@@ -43,15 +45,18 @@ for i in range(1, len(t)):
     theta_num[i], omega_num[i] = Euler(theta_num[i-1], omega_num[i-1], h, l)
 
 # Plotting
-plt.plot(t, theta_num, label='Euler solution')
+plt.plot(t, theta_num, label='Numerical Solution')
 plt.plot(t, theta_analytical, label='Analytical solution')
+plt.xlabel('Time (s)')
+plt.ylabel('Theta (rad)')
+plt.title('Solutions to Simple Pendulum')
 plt.legend()
 plt.show()
 
 plt.title('Phasespace')
 plt.plot(theta_num, omega_num)
-plt.xlabel('theta (rad)')
-plt.ylabel('omega (rad/s)')
+plt.xlabel('Theta (rad)')
+plt.ylabel('Omega (rad/s)')
 plt.show()
 
 
