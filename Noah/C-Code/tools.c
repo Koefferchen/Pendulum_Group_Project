@@ -49,7 +49,6 @@ int save_numb_list9 ( double* numb_list1, double* numb_list2, double* numb_list3
     return 0;
 }
 
-
     // copies the entries of the shorter array "old_array" into the empty longer array "new_array" (from left to right)
 int merge_arrays( int old_length, double old_array[], int new_length, double new_array[] )
 {
@@ -66,7 +65,6 @@ int merge_arrays( int old_length, double old_array[], int new_length, double new
 
     return 0;
 }
-
 
     // returns pointer-pointer to matrix of  dimension [x_dim, y_dim], initialised with "initial_value"
 double **create_2d_matrix (int x_dim, int y_dim, double initial_value)
@@ -146,7 +144,6 @@ int modulus( double array[], double limit_up )
     return 0;
 }
 
-
     // translates all values of an array into the range [0, limit_up] the way modulo should
 int modulus_array( double array[], double limit_low, double limit_up )
 {
@@ -175,7 +172,6 @@ double modulus_s( double value, double limit_up )
 
     return result;
 }
-
 
     // calculates the result array of the linearcombination of (# = "array_numb") given arrays of size "array_length" and their scalar coefficients. Returns result array
 double *linear_comb_arrays( double** arrays, double* coeffs, double *result, int array_length, int array_numb )

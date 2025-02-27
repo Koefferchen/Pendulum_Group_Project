@@ -137,8 +137,9 @@ double find_doub_theta2_max ( double theta2_min, double theta2_max, const double
     }
 
 }
+
     // calculates the theta2_dot_0 from given (theta1_0, theta1_dot_0, theta2_0, E) from energy conservation
-int calc_doub_theta2_0( double params[], double E_value )
+int calc_doub_thetadot2_0( double params[], double parity )
 {
         // unpack parameters
     double g_grav       = params[2];
@@ -150,18 +151,19 @@ int calc_doub_theta2_0( double params[], double E_value )
     double theta1_dot_0 = params[8];
     double theta2_0     = params[9];
     double* theta2_dot_0= &params[10];
+    double E_value      = params[11];
 
     double alpha    = 0.5 * mass_2 * length_2*length_2;
     double p        = mass_2 * theta1_dot_0 * length_1*length_2 * cos(theta1_0-theta2_0);
-    double q        = 0.5 * (mass_1+mass_2) * length_1*length_1 * theta1_dot_0*theta1_dot_0 -
-                        (mass_1+mass_2) * g_grav * length_1 * cos(theta1_0) -
-                        mass_2 * g_grav * length_2 * cos(theta2_0) -
-                        E_value;
+    double q        = 0.5 * (mass_1+mass_2) * length_1*length_1 * theta1_dot_0*theta1_dot_0 
+                        +(mass_1+mass_2) * g_grav * length_1 * (1.0 - cos(theta1_0)) 
+                        +mass_2 * g_grav * length_2 * (1.0 - cos(theta2_0)) 
+                        -E_value;
     if( p == 0.0)
     {
-        *theta2_dot_0 = - sqrt(1/alpha);
+        *theta2_dot_0 = parity* sqrt(-q/alpha);
     } else {
-        *theta2_dot_0   = p/(2.0*alpha) * ( sqrt(1.0 - 4*alpha*q /p /p) - 1.0 );
+        *theta2_dot_0   = p/(2.0*alpha) * ( parity * sqrt(1.0 - 4.0*alpha*q /p /p) - 1.0 );
     }
 
     return 0;
@@ -227,7 +229,6 @@ int solve_doub_poincare( double params[], double t_values[], double theta2_sol[]
 
     return 0;
 }
-
 
     // finds "t" when theta1/2 flips over for the 1st time for each combination of initial conditions (theta1_0, theta2_0)
 int solve_doub_flip( double params[], double theta1_0_list[], double theta2_0_list[], double **theta1_sol_matrix, double **theta2_sol_matrix,

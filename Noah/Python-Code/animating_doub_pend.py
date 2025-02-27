@@ -106,6 +106,6 @@ def update(frame):
 
     # Create the animation
 ani = FuncAnimation(fig, update, frames=range(0, frame_count*step, step), interval= h * step * 1000, blit=True)
-ani.save("../plots/anim_doub_pend.mp4")
+ani.save("../plots/anim_doub_pend.gif")
 
 print("Double Pendulum animated")

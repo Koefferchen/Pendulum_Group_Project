@@ -7,7 +7,7 @@ int main(void)
 
     double_pendulum();
     double_poincare();
-    double_flip_over();
+    //double_flip_over();
 
     triple_pendulum();
     triple_chaos();
@@ -95,7 +95,7 @@ int double_pendulum(void)
 
 int double_poincare(void)
 {    
-    double t_end        = 1000.0;            // simulation time [seconds]            
+    double t_end        = 10000.0;            // simulation time [seconds]            
     double h            = 0.01;              // step size [steps per second]
     double g_grav       = 9.81;
     double mass_1       = 1.0;
@@ -107,21 +107,22 @@ int double_poincare(void)
     double theta2_0;                        // iterates through [0, theta2_max]
     double theta2_dot_0;                    // calculated to make the energy stay the same
     
-    double E_value      = 1.0;                          // energy for whole simulation
-    int    repitions    = 5;                            // number of iterations for diff. (theta2_0, theta2_dot_0) & same energy
-    int    max_points   = 10000;                        // max. number of data_points per iteration
+    double E_value      = 10.0;             // energy for whole simulation
+    int    repitions    = 1;               // number of iterations for diff. (theta2_0, theta2_dot_0) & same energy
+    int    max_points   = 10000;            // max. number of data_points per iteration
+    double parity       = 1.0;              // decide on (+/-) branch for calculation of theta2dot(0)
     int    steps        = (int)(t_end/h);      
     int    n_points     = (int)fmin(steps,max_points);
 
     double params[] = {t_end, h, g_grav, mass_1, mass_2, length_1, length_2, theta1_0, theta1_dot_0, theta2_0, theta2_dot_0, E_value, repitions, max_points};
-    double theta2_max   = find_doub_theta2_max( 0.0, M_PI, 0.0001, params );
+    double theta2_max   = find_doub_theta2_max( 0.0, M_PI, 0.000001, params );
     double **data = create_2d_matrix( 4*repitions, n_points+1, 0.0);
 
     for(int j = 0; j < repitions; j++)
     {
         erase_last_line();
         printf("--- Double Poincare (%d/%d) \n", j+1, repitions);
-            
+ 
             // choose location for saving solution
         double *t_values    = data[4*j +0];
         double *theta2      = data[4*j +1];
@@ -129,9 +130,9 @@ int double_poincare(void)
         double *params_ext  = data[4*j +3];
 
             // set (theta2_0, theta2_dot_0) to new values
-        params[9] = theta2_max * j/(double)(repitions); 
-        calc_doub_theta2_0(params, E_value);
-        
+        params[9] = theta2_max * ( 1.0*j/(double)(repitions-1.0) ); 
+        calc_doub_thetadot2_0(params, parity);
+
             // hunt for points in the poincare section and safe them
         merge_arrays(14, params, n_points, params_ext);
         solve_doub_poincare( params, t_values, theta2, theta2_dot, &RuKu_6 );
@@ -149,14 +150,14 @@ int double_flip_over()
     erase_last_line();
     printf("--- Double Pendulum Flip over \n");
 
-    double t_max        = 10.0;             // simulation time [seconds]            
+    double t_max        = 20.0;             // simulation time [seconds]            
     double h            = 0.01;              // step size [steps per second]
     double g_grav       = 9.81;
     double mass_1       = 1.0;
     double mass_2       = 1.0;
     double length_1     = 1.0;
     double length_2     = 1.0;
-    int    density      = 100;
+    int    density      = 400;
 
     double **t_data_1     = create_2d_matrix( density+1, density, 0.0);
     double **t_data_2     = create_2d_matrix( density+1, density, 0.0);

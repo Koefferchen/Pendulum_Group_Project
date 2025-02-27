@@ -40,7 +40,7 @@
     int     double_poincare     (void);
     void    derhs_doub_pend     ( int nDifEqu, double t, double y[], double y_dot[], double params[] );
     int     calc_doub_energy    ( double y[], double params[], double *E_value );
-    int     calc_doub_theta2_0  ( double params[], double E_value );
+    int     calc_doub_thetadot2_0( double params[], double parity );
     double  find_doub_theta2_max( double theta2_min, double theta2_max, const double tol, double params[] );  
     int     solve_doub_pend     ( double params[], double t_values[], double E_values[], double theta1_sol[], double theta1_dot_sol[], double theta2_sol[], double theta2_dot_sol[],
                                     void (*num_solver)( int, double, double, double[], void (*derhs)(int,double,double[],double[],double[]), double[] ) ); 

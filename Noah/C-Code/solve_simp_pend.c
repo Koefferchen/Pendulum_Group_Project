@@ -42,9 +42,6 @@ double stand_up_theta_dot( double length, double g_grav, double theta_0 )
     return sqrt(g_grav / length) * pow( 2 * (1+cos(theta_0)), 0.5 );
 }
 
-
-
-
     // fully solve the DE of a simple pendulum numerically
 int solve_simp_pend( double params[], double t_values[], double theta_sol[], double theta_dot_sol[], 
                         void (*derhs)( int, double, double[], double[], double[] ), 
@@ -122,8 +119,6 @@ double num_max_deviation( double theta2_num[], double theta2_ana[] )
     // return max_dev;
     return delta;
 }
-
-
 
 
 int test_numeric_solver( double params[], double h_array[], double deviation[],

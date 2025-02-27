@@ -12,16 +12,32 @@ data        = np.loadtxt("../data/data_doub_poincare.txt", skiprows=0 )
 params      = data[ : , 3 ]
 repitions   = int(params[13])                # how many sets of data pairs there are
 E_value     = params[12]
-theta2_0    = data[ 9 , 3::4]
+theta2_0    = data[ 10 , 3::4]
 cmap = "magma"
 cycl_colormap    = sns.color_palette( cmap, n_colors=repitions ) # + sns.color_palette("hls", repitions//2)[::-1]
+
+    # unpack the parameters of the simulation
+t_end       = params[1]
+h           = params[2]
+g_grav      = params[3]
+mass_1      = params[4]
+mass_2      = params[5]
+length_1    = params[6]
+length_2    = params[7]
+theta1_0    = params[8]
+theta1_dot_0= params[9]
+
+m_label = f"$m_1 = {mass_1:.2f}$kg \n$m_2 = {mass_2:.2f}$kg \n"
+l_label = f"$l_1 = {length_1:.2f}$m \n$l_2 = {length_2:.2f}$m \n" 
+i_label1 = f"$\\theta_1(0) = {theta1_0/np.pi:.2f}\\pi$ \n$\\dot{{\\theta}}_1(0) = {theta1_dot_0/np.pi:.2f}\\pi$ \n"
+
 
     # plotting poincare section at ( theta1_0 = 0 ; theta1_dot_0 > 0 ) for the double pendulum
 def ultimate_plot_pend():
     
     sample_format_dict = {
         "label"      : None,         
-        "fmt"        : 'o', 
+        "fmt"        : '.', 
         "color"      : "",                            
         "markersize" : 1, 
         "linewidth"  : 2,
@@ -30,20 +46,25 @@ def ultimate_plot_pend():
     }
 
     writtings = {
-        "title"           : r"The Poincare Section of the double pendulum for ($E = {:.2f}$)".format(E_value),
+        "title"       : f"{len(theta2_0):.0f} Poincare Sections for the Double Pendulum  at E = {E_value:.2f}J",
         "x_ax_label"  : r"Angle $\theta_2$ [$rad$]",
         "y_ax_label"  : r"Frequency $\dot {\theta}_2$ [$s^{-1}$]"
     }
     
     general_format_dict = standard_format_dict
     zoom_params = no_zooming
-    extra_label = no_extra_label
+    extra_label         = {
+        "do_label"  :   False,
+        "position"  :   [1.16, 0.97],
+        "font_size" :   12,
+        "content"   :   (m_label+l_label+i_label1)
+    }
     
     colorbar_params = {
         "do_cbar"       : True,
         "position"      : [0.92, 0.15],
         "size"          : [0.03, 0.70],
-        "scale_range"   : [0.0, theta2_0[::-1][0]],
+        "scale_range"   : [min(theta2_0), max(theta2_0)],
         "title"         : r"$\theta_2 (t=0)$",
         "colormap"      : cmap
     }
