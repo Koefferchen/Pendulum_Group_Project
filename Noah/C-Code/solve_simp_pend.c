@@ -10,12 +10,15 @@ void derhs_simp_pend( int n_ODE, double t, double y[], double y_dot[], double pa
         // "y[0]" is theta
         // "y_dot[0]" and "y[1]" are theta_dot
         // "y_dot[2]" is theta_dot_dot             
-    double g_grav = params[2];
-    double length = params[3];
+    double g_grav   = params[2];
+    double length   = params[3];
+    double friction = params[6];
     double omega  = pow( g_grav/length, 0.5);
 
-    y_dot[0] = y[1] ;                           // 1. DE: theta(t)_dot      = theta_dot(t)
-    y_dot[1] = - pow(omega, 2)  * sin(y[0]) ;   // 2. DE: theta_dot(t)_dot  = -omega**2 * sin(theta(t))    
+        // 1. DE: theta(t)_dot      = theta_dot(t)
+    y_dot[0] = y[1] ;                           
+        // 2. DE: theta_dot(t)_dot  = -omega**2 * sin(theta(t)) - friction-term  
+    y_dot[1] = - pow(omega, 2)  * sin(y[0]) ; //!!!!!!!!!!!!!!!!!!!!!!!!!   
 }
 
     // implementation of the approximated equation for simple pendulum: sin(x) = x

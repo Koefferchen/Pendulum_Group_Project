@@ -32,10 +32,11 @@ int simple_pendulum(void)
     double g_grav       = 9.81;
     double length       = 0.7;       
     double theta_0      = 0.3 * M_PI; 
-    double theta_dot_0  = stand_up_theta_dot(length, g_grav, theta_0); 
+    double theta_dot_0  = 0.0 * M_PI;       // stand_up_theta_dot(length, g_grav, theta_0); 
+    double friction     = -0.1;
 
     int    steps = (int)(t_end/h);      // Initialisation
-    double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0};
+    double params[] = {t_end, h, g_grav, length, theta_0, theta_dot_0, friction};
     double params_extended  [steps+1];
     double t_values         [steps+1];
     double theta            [steps+1];              
@@ -46,7 +47,7 @@ int simple_pendulum(void)
     solve_simp_pend( params, t_values, theta, theta_dot, &derhs_simp_pend, &RuKu_6 );       
     solve_analyt_pend( params, theta_analy );                                  
     
-    merge_arrays(6, params, steps, params_extended);
+    merge_arrays(7, params, steps, params_extended);
     save_numb_list7(t_values, theta, theta_dot, theta_analy, params_extended, null, null, "../data/data_simp_pend.txt" );   // save data in .txt
 
     return 0;

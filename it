@@ -1,0 +1,51 @@
+[33mb768192[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: commit: deviation is still bad but maybe its not my fault
+[33m3a922e2[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{1}: commit: removed big data
+[33m0923c1b[m HEAD@{2}: commit: error analysis is pain
+[33m9771309[m HEAD@{3}: pull: Fast-forward
+[33mab4fc07[m HEAD@{4}: commit: started flip_plots
+[33mf496cc8[m HEAD@{5}: commit: num solver still wrong, created beautiful plots
+[33m54115ad[m HEAD@{6}: pull: Fast-forward
+[33mfec6eee[m HEAD@{7}: commit: new RK testing in progress
+[33m9c4a7e9[m HEAD@{8}: commit: Liam: Euler deviation
+[33m6c2f90e[m HEAD@{9}: pull: Fast-forward
+[33m0202e26[m HEAD@{10}: pull: Merge made by the 'ort' strategy.
+[33m5d1b4c4[m HEAD@{11}: commit: no news
+[33m789a925[m HEAD@{12}: pull: Fast-forward
+[33mc50f5b7[m HEAD@{13}: commit: generated grpahics for presentation
+[33m124b13a[m HEAD@{14}: commit: jesus chrisr, we should not work in the same folders..
+[33mcfcad1d[m HEAD@{15}: commit (merge): merge conflict resolved (1)
+[33m3f71b7f[m HEAD@{16}: commit: num. solver deviation still not working. Fixed modulus_array.
+[33me93c6f9[m HEAD@{17}: commit: Poincare working
+[33me9a8ca6[m HEAD@{18}: commit: Plotted deviation successfull, slope too small
+[33m71f7052[m HEAD@{19}: commit: num_solver_test improved
+[33m66dc233[m HEAD@{20}: filter-branch: rewrite
+[33mb0d959a[m HEAD@{21}: commit: big files delted
+[33me1c6d12[m HEAD@{22}: pull: Fast-forward
+[33ma3d29de[m HEAD@{23}: commit: added extra_label, improved plotting program v6->v7
+[33m784fe0f[m HEAD@{24}: commit: deleted large files
+[33mca8ebf8[m HEAD@{25}: commit: compare triple to simp/doub
+[33m5614732[m HEAD@{26}: commit: RK4, RK6, Euler programmed/improved, comparison of numsolvers
+[33m7a52dd1[m HEAD@{27}: commit: -
+[33mde64611[m HEAD@{28}: commit: RK4 devitation - not quite perfect
+[33m0ce0656[m HEAD@{29}: commit: large files deleted
+[33mf87b147[m HEAD@{30}: commit: colorbar done, want poincare animation
+[33m461cfbd[m HEAD@{31}: pull: Fast-forward
+[33m5422521[m HEAD@{32}: commit: deleted large data
+[33m2a2bcc8[m HEAD@{33}: commit: tasks
+[33m0b2f037[m HEAD@{34}: pull: Fast-forward
+[33m31ba58a[m HEAD@{35}: commit: deleted files
+[33mc4baae9[m HEAD@{36}: commit: colorbar
+[33me8a2444[m HEAD@{37}: pull: Fast-forward
+[33mfcd3096[m HEAD@{38}: pull: Merge made by the 'ort' strategy.
+[33m81fdaf1[m HEAD@{39}: commit: nothing drastic
+[33mf287e02[m HEAD@{40}: commit: started poincare
+[33m5c66d53[m HEAD@{41}: commit: triple chaos, bulk sizes, parameters, colors added
+[33mcf93ac3[m HEAD@{42}: commit: doub and trip animated
+[33m2225943[m HEAD@{43}: commit: doub, trip pendulum work, 1. animation for doub
+[33m2466290[m HEAD@{44}: commit: RK4 working, first plots, first phase space
+[33m3b0f222[m HEAD@{45}: commit: restructure
+[33m04dae27[m HEAD@{46}: commit: RK4
+[33m34dc1a4[m HEAD@{47}: pull: Merge made by the 'ort' strategy.
+[33m117c817[m HEAD@{48}: commit: RK4
+[33ma4c74ba[m HEAD@{49}: commit: directory structure added
+[33maf5c226[m HEAD@{50}: clone: from github.com:Koefferchen/Chaos-Pendulum.git

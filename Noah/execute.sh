@@ -5,7 +5,7 @@ make
 
 cd ../Python-Code
 
-#python3 plotting_simp_pend.py
+python3 plotting_simp_pend.py
 
 #python3 plotting_doub_poincare.py
 #python3 plotting_doub_pend.py
@@ -21,6 +21,6 @@ cd ../Python-Code
 #python3 plotting_trip_compare.py
 
 #python3 plotting_num_deviation.py
-python3 full_RK_test_2.py
+#python3 full_RK_test_2.py
 cd ..
 
